@@ -1,0 +1,6 @@
+sites/*.conf
+*.crt
+*.csr
+*.key
+*.pem
+logs

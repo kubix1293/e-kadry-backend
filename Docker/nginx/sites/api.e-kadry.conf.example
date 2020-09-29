@@ -1,0 +1,33 @@
+upstream e-kadry {
+    server e-kadry:5000;
+    keepalive 64;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    
+    ssl_certificate /etc/nginx/ssl/api.e-kadry.crt;
+    ssl_certificate_key /etc/nginx/ssl/api.e-kadry.key;
+    
+    server_name api.e-kadry.staging www.api.e-kadry.staging;
+    error_log /var/log/nginx/api.e-kadry.log;
+    access_log /var/log/nginx/api.e-kadry.log;
+    
+    location / {
+        proxy_pass http://e-kadry;
+        proxy_redirect off;
+    }
+    
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt;
+        log_not_found off;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name api.e-kadry.staging www.api.e-kadry.staging;
+    return 301 https://$host$request_uri;
+}
