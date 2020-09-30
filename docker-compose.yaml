@@ -34,12 +34,13 @@ services:
       context: docker/oracle/.
       dockerfile: Dockerfile
     environment:
+      ORACLE_PDB: ${ORACLE_PDB}
       ORACLE_PWD: ${ORACLE_PWD}
       ORACLE_CHARACTERSET: ${ORACLE_CHARACTERSET}
     volumes:
-      - ${DATA_PATH_HOST}/oracle/oradata:/opt/oracle/oradata
-      - ${DATA_PATH_HOST}/oracle/scripts/setup:/opt/oracle/scripts/setup
-      - ${DATA_PATH_HOST}/oracle/scripts/startup:/opt/oracle/scripts/startup
+      - ./docker/oracle/.data:/opt/oracle/oradata
+      - ./docker/oracle/docker-entrypoint-initdb.d:/opt/oracle/scripts/setup
+      - ./docker/oracle/startup:/opt/oracle/scripts/startup
     ports:
       - ${ORACLE_PORT}:1521
       - ${ORACLE_MANAGE_PORT}:5500
@@ -55,7 +56,7 @@ services:
     networks:
       - backend
     volumes:
-      - ${DATA_PATH_HOST}/redis:/data
+      - ./docker/redis/.data:/data
 
 networks:
   backend:

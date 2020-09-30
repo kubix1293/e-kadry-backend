@@ -64,10 +64,7 @@ RUN chmod ug+x $INSTALL_DIR/*.sh && \
     rm -rf /var/cache/yum && \
     rm -rf /var/tmp/yum-*
    
-RUN mkdir -p $ORACLE_BASE/scripts/setup && \
-    mkdir $ORACLE_BASE/scripts/startup && \
-    ln -s $ORACLE_BASE/scripts /docker-entrypoint-initdb.d && \
-    mkdir -p $ORACLE_BASE/oradata /home/oracle && \
+RUN ln -s $ORACLE_BASE/scripts /docker-entrypoint-initdb.d && \
     chown -R oracle:oinstall $ORACLE_BASE /home/oracle && \
     mv $INSTALL_DIR/$RUN_FILE $ORACLE_BASE/ && \
     mv $INSTALL_DIR/$PWD_FILE $ORACLE_BASE/ && \
