@@ -1,5 +1,5 @@
-upstream e-kadry {
-    server e-kadry:5000;
+upstream api {
+    server api:5000;
     keepalive 64;
 }
 
@@ -15,7 +15,7 @@ server {
     access_log /var/log/nginx/api.e-kadry.log;
     
     location / {
-        proxy_pass http://e-kadry;
+        proxy_pass http://api;
         proxy_redirect off;
     }
     

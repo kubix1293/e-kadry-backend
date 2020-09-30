@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
 
 WORKDIR /app
-COPY . .
+COPY ./src/API .
 
 RUN dotnet restore && dotnet build -c Release
 

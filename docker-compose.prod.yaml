@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: docker/api/.
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - ./src/API:/app/
     ports:
@@ -49,7 +49,7 @@ services:
   redis:
     build:
       context: docker/redis/.
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - ${REDIS_PORT}:6379
     networks:
