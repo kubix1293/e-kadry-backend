@@ -306,4 +306,93 @@ COMMENT ON COLUMN kadry.umowy.stjb IS
 
 ALTER TABLE kadry.umowy ADD CONSTRAINT umowy_pk PRIMARY KEY ( id );
 
+------ TYPUM
+
+CREATE SEQUENCE typum_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.typum (
+    id             INTEGER DEFAULT typum_seq.NEXTVAL NOT NULL,
+    nazwa          VARCHAR2(50),
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           CHAR(1) DEFAULT 'N' NOT NULL,
+    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
+    stws           CHAR(1) DEFAULT 'N' NOT NULL,
+    stjb           CHAR(1) DEFAULT 'N' NOT NULL,
+    rodz_um        NUMBER(1)
+);
+
+ALTER TABLE kadry.typum ADD CONSTRAINT typum_pk PRIMARY KEY ( id );
+
+------ TYPOBEC
+
+CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.typobec (
+    id             INTEGER DEFAULT typobec_seq.NEXTVAL NOT NULL,
+    nazwa          VARCHAR2(50),
+    cdot           VARCHAR2(5),
+    kod_zus        VARCHAR2(3),
+    czy_lim        CHAR(1),
+    rodz_lim       CHAR(1),
+    lim            NUMBER(10,4)
+);
+
+ALTER TABLE kadry.typobec ADD CONSTRAINT typobec_pk PRIMARY KEY ( id );
+
+COMMENT ON COLUMN kadry.typobec.cdot IS
+    'Czego dotyczy obecnosc (CHR - choroba, UWP - Urlop wypoczynkowy, GPR - godziny pracy itd.)';
+    
+COMMENT ON COLUMN kadry.typobec.kod_zus IS
+    'KOD zwolnienia wedug ZUS (dla chorobowych)'; 
+    
+COMMENT ON COLUMN kadry.typobec.rodz_lim IS
+    'Rodzaj imitu: r - roczny, i - indywidualny';    
+	
+COMMENT ON COLUMN kadry.typobec.lim IS
+    'Ile dni limitu';   
+
+------ OPER (OPERATOR)
+
+CREATE SEQUENCE oper_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.oper ( 
+	id			INTEGER DEFAULT oper_seq.NEXTVAL NOT NULL,
+	imie		VARCHAR2(20) NOT NULL,
+	nazwisko	VARCHAR2(35) NOT NULL,
+	login		VARCHAR2(50) NOT NULL,
+	passw		VARCHAR2(40) NOT NULL,
+	aktw		CHAR(1) DEFAULT 'T' NOT NULL
+	);
+	
+ALTER TABLE kadry.oper ADD CONSTRAINT oper_pk PRIMARY KEY (id);	
+
+------ URZEDY (URZEDY)
+
+CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.urzedy ( 
+	id			INTEGER DEFAULT urzedy_seq.NEXTVAL NOT NULL,
+	woje		VARCHAR2(20) NOT NULL,
+	typ     	VARCHAR2(35) NOT NULL,
+	kod 		VARCHAR2(70) NOT NULL,
+	adres		VARCHAR2(70) NOT NULL,
+	kodisus		VARCHAR2(40) NOT NULL
+	);
+	
+ALTER TABLE kadry.urzedy ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+
+
 -------------------------------------------------------------------------------------------------------------------
