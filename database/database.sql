@@ -1,7 +1,7 @@
 ------------------------------------------------------------------- Tworzenie schematu i nadawanie uprawnień
 CONNECT system/manager AS sysdba
 
-alter session set "_ORACLE_SCRIPT"=true;
+alter session set "_ORACLE_SCRIPT" = true;
 
 CREATE USER kadry IDENTIFIED BY kadry;
 
@@ -390,7 +390,237 @@ CREATE TABLE kadry.urzedy (
 	
 ALTER TABLE kadry.urzedy ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
 
+-------------------------------------------------------------------  CIENIE
+
+------ PRACONICY_C
+
+CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pracownicy_c (
+    c_id      INTEGER DEFAULT pracownicy_c_seq.NEXTVAL NOT NULL, 
+    c_data    DATE DEFAULT sysdate NOT NULL,
+    c_oper    INTEGER NOT NULL,
+    id        INTEGER DEFAULT pracownicy_seq.NEXTVAL NOT NULL,
+    imie      VARCHAR2(20) NOT NULL,
+    nazwisko  VARCHAR2(40) NOT NULL,
+	dtur	  DATE,
+	misc_uro  VARCHAR2(50),
+    pesel     VARCHAR2(11) NOT NULL,
+    dok_typ   CHAR(5),
+    nr_dok    VARCHAR(20),
+	plec	  CHAR(1),
+    id_misc   INTEGER,
+    ulica     VARCHAR2(50),
+    nr_dom    VARCHAR2(10),
+    nr_lok    VARCHAR2(10),
+	nr_akt	  VARCHAR2(10),
+	imie_mat  VARCHAR2(20),
+	imie_ojc  VARCHAR2(40),
+	tele	  VARCHAR2(15),
+	id_oper	  INTEGER
+);
+
+ALTER TABLE kadry.pracownicy_c ADD CONSTRAINT pracownicy_c_pk PRIMARY KEY ( c_id );
+
+------ ABSENCJE_C
+
+CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.absencje_c (
+    c_id        INTEGER DEFAULT absencje_c_seq.NEXTVAL NOT NULL,
+    c_data      DATE DEFAULT sysdate NOT NULL,
+    c_oper      INTEGER NOT NULL,
+    id          INTEGER NOT NULL,
+    dtod        DATE NOT NULL,
+    dtdo        DATE NOT NULL,
+    id_typobec  INTEGER NOT NULL,
+    id_prc      INTEGER NOT NULL,
+    id_ump      INTEGER NOT NULL,
+    zada        CHAR(1) DEFAULT  'N' NOT NULL
+);
+
+ALTER TABLE kadry.absencje_c ADD CONSTRAINT absencje_c_pk PRIMARY KEY ( c_id );
+
+------  ADRESY_C
+
+CREATE SEQUENCE adresy_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.adresy_c (
+    c_id                INTEGER DEFAULT adresy_c_seq.NEXTVAL NOT NULL,
+    c_data              DATE NOT NULL,
+    c_oper              INTEGER NOT NULL,
+    id                  INTEGER NOT NULL,
+    misc	            VARCHAR2(50) NOT NULL,
+    gmina               VARCHAR2(50) NOT NULL,
+    powiat              VARCHAR2(50) NOT NULL,
+    wojew	            VARCHAR2(50) NOT NULL,
+    teryt               NUMBER(8) NOT NULL,
+    kod_pocz 			VARCHAR2(6) NOT NULL
+);
+
+ALTER TABLE kadry.adresy_c ADD CONSTRAINT adresy_c_pk PRIMARY KEY ( c_id );
+
+------ HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
+
+CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.hps_c (
+    c_id    INTEGER DEFAULT hps_c_seq.NEXTVAL NOT NULL,
+    c_data  DATE NOT NULL,
+    c_oper  INTEGER NOT NULL,
+    id      INTEGER NOT NULL,
+    dtod    DATE NOT NULL,
+    dtdo    DATE,
+    stog    CHAR(1) DEFAULT 'N' NOT NULL,
+    stzw    CHAR(1) DEFAULT 'N' NOT NULL,
+    stws    CHAR(1) DEFAULT 'N' NOT NULL,
+    stjb    CHAR(1) DEFAULT 'N' NOT NULL,
+    id_prc  INTEGER NOT NULL
+);
+
+ALTER TABLE kadry.hps_c ADD CONSTRAINT hps_c_pk PRIMARY KEY ( c_id );
+
+------ OKRESY_C
+
+CREATE SEQUENCE okresy_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.okresy_c (
+    c_id     INTEGER DEFAULT okresy_c_seq.NEXTVAL NOT NULL,
+    c_data   DATE NOT NULL,
+    c_oper   INTEGER NOT NULL,
+    id       INTEGER NOT NULL,
+    dtod     DATE NOT NULL,
+    dtdo     DATE NOT NULL,
+    dni_kal  NUMBER(4) NOT NULL,
+    dni_rob  NUMBER(4)NOT NULL,
+    norma    FLOAT(15) NOT NULL
+);
+
+ALTER TABLE kadry.okresy_c ADD CONSTRAINT okresy_c_pk PRIMARY KEY ( c_id );
+
+------ OPER_C
+
+CREATE SEQUENCE oper_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.oper_c ( 
+    c_id        INTEGER DEFAULT oper_c_seq.NEXTVAL NOT NULL, 
+    c_data      DATE DEFAULT sysdate NOT NULL,
+    c_oper      INTEGER NOT NULL,
+	id			INTEGER NOT NULL,
+	imie		VARCHAR2(20) NOT NULL,
+	nazwisko	VARCHAR2(35) NOT NULL,
+	login		VARCHAR2(50) NOT NULL,
+	passw		VARCHAR2(40) NOT NULL,
+	aktw		CHAR(1) DEFAULT 'T' NOT NULL
+	);      
+	
+ALTER TABLE kadry.oper_c ADD CONSTRAINT oper_c_pk PRIMARY KEY ( c_id );
+
+------  PKZP_C
+
+CREATE SEQUENCE pkzp_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pkzp_c (
+    c_id    INTEGER DEFAULT pkzp_c_seq.NEXTVAL NOT NULL,
+    c_data  DATE NOT NULL,
+    c_oper  INTEGER NOT NULL,
+    id      INTEGER NOT NULL,
+    id_prc  INTEGER NOT NULL,
+    saldo   FLOAT(15) DEFAULT 0,
+    dt      FLOAT(15) DEFAULT 0,
+    ct      FLOAT(15) DEFAULT 0,
+    rodz    CHAR(1) NOT NULL
+);
+
+ALTER TABLE kadry.pkzp_c ADD CONSTRAINT pkzp_c_pk PRIMARY KEY ( c_id );
+
+------  PKZP_POZ_C
+
+CREATE SEQUENCE pkzp_poz_c_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pkzp_poz_c (
+    c_id     INTEGER DEFAULT pkzp_poz_c_seq.NEXTVAL NOT NULL,
+    c_data   DATE DEFAULT sysdate NOT NULL,
+    c_oper   INTEGER NOT NULL,
+    id       INTEGER NOT NULL,
+    rodz     CHAR(1) NOT NULL,
+    kwot     FLOAT(15) DEFAULT 0 NOT NULL,
+    id_pkzp  INTEGER NOT NULL
+);
+
+ALTER TABLE kadry.pkzp_poz_c ADD CONSTRAINT pkzp_poz_c_pk PRIMARY KEY ( c_id );
+
+------ STANOW_C (STANOWISKA)
+
+CREATE SEQUENCE stanow_c_seq INCREMENT BY 1 NOCACHE;
+--
+CREATE TABLE kadry.stanow_c (
+    c_id      INTEGER DEFAULT stanow_c_seq.NEXTVAL NOT NULL, 
+    c_data    DATE DEFAULT sysdate NOT NULL,
+    c_oper    INTEGER NOT NULL,
+    id       INTEGER NOT NULL,
+    nazwa    VARCHAR2(50),
+    kod_gus  NUMBER(10)
+);
+--
+ALTER TABLE kadry.stanow_c ADD CONSTRAINT stanow_c_pk PRIMARY KEY ( id );
+
 -------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------  CONSTRAINTS
+
+ALTER TABLE kadry.absencje
+    ADD CONSTRAINT absencje_pracownicy_fk FOREIGN KEY ( id_prc )
+        REFERENCES kadry.pracownicy ( id );
+
+ALTER TABLE kadry.absencje
+    ADD CONSTRAINT absencje_umowy_fk FOREIGN KEY ( id_ump )
+        REFERENCES kadry.umowy ( id );
+		
+ALTER TABLE kadry.absencje
+    ADD CONSTRAINT absencje_typobec_fk FOREIGN KEY ( id_typobec )
+        REFERENCES kadry.typobec ( id );				
+
+ALTER TABLE kadry.hps
+    ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY ( id_prc )
+        REFERENCES kadry.pracownicy ( id );
+
+ALTER TABLE kadry.pkzp
+    ADD CONSTRAINT pkzp_pracownicy_fk FOREIGN KEY ( id_prc )
+        REFERENCES kadry.pracownicy ( id );
+
+ALTER TABLE kadry.pkzp_poz
+    ADD CONSTRAINT pkzppoz_pkzp_fk FOREIGN KEY ( id_pkzp )
+        REFERENCES kadry.pkzp ( id );
+
+ALTER TABLE kadry.pracownicy
+    ADD CONSTRAINT pracownicy_adresy_fk FOREIGN KEY ( id_misc )
+        REFERENCES kadry.adresy ( id );
+		
+ALTER TABLE kadry.pracownicy
+    ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY ( id_oper )
+        REFERENCES kadry.oper ( id );		
+
+ALTER TABLE kadry.staztab
+    ADD CONSTRAINT staztab_okresy_fk FOREIGN KEY ( id_oks )
+        REFERENCES kadry.okresy ( id );
+
+ALTER TABLE kadry.staztab
+    ADD CONSTRAINT staztab_pracownicy_fk FOREIGN KEY ( id_prc )
+        REFERENCES kadry.pracownicy ( id );
+
+ALTER TABLE kadry.umowy
+    ADD CONSTRAINT umowy_pracownicy_fk FOREIGN KEY ( id_prc )
+        REFERENCES kadry.pracownicy ( id );
+
+ALTER TABLE kadry.umowy
+    ADD CONSTRAINT umowy_stanow_fk FOREIGN KEY ( id_stanow )
+        REFERENCES kadry.stanow ( id );
+
+ALTER TABLE kadry.umowy
+    ADD CONSTRAINT umowy_typum_fk FOREIGN KEY ( id_typum )
+        REFERENCES kadry.typum ( id );
+
 
 
 
