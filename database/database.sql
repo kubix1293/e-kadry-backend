@@ -97,6 +97,213 @@ ALTER TABLE kadry.hps ADD CONSTRAINT hps_pk PRIMARY KEY ( id );
 
 ------ OKRESY
 
+CREATE SEQUENCE okresy_seq INCREMENT BY 1 NOCACHE;
 
+CREATE TABLE kadry.okresy (
+    id       INTEGER DEFAULT okresy_seq.NEXTVAL NOT NULL,
+    dtod     DATE NOT NULL,
+    dtdo     DATE NOT NULL,
+    dni_kal  NUMBER(4) NOT NULL,
+    dni_rob  NUMBER(4)NOT NULL,
+    norma    FLOAT(15) NOT NULL
+);
+
+COMMENT ON COLUMN kadry.okresy.dtod IS
+    'pierwszy dzień miesiąca';
+
+COMMENT ON COLUMN kadry.okresy.dtdo IS
+    'ostatni dzień miesiąca';
+
+COMMENT ON COLUMN kadry.okresy.dni_kal IS
+    'dni kalendarzowe';
+
+COMMENT ON COLUMN kadry.okresy.dni_rob IS
+    'dni robocze';
+
+COMMENT ON COLUMN kadry.okresy.norma IS
+    'normatywny czas pracy';
+
+ALTER TABLE kadry.okresy ADD CONSTRAINT okresy_pk PRIMARY KEY ( id );
+
+------  PKZP
+
+CREATE SEQUENCE pkzp_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pkzp (
+    id      INTEGER DEFAULT pkzp_seq.NEXTVAL NOT NULL,
+    id_prc  INTEGER NOT NULL,
+    saldo   FLOAT(15) DEFAULT 0,
+    dt      FLOAT(15) DEFAULT 0,
+    ct      FLOAT(15) DEFAULT 0,
+    rodz    CHAR(1) NOT NULL
+);
+
+COMMENT ON COLUMN kadry.pkzp.id_prc IS
+    'Id pracownika';
+
+COMMENT ON COLUMN kadry.pkzp.saldo IS
+    'Saldo PKZP danego rodzaju';
+
+COMMENT ON COLUMN kadry.pkzp.dt IS
+    'Debit - na "-"';
+
+COMMENT ON COLUMN kadry.pkzp.ct IS
+    'Credit - na "+"';
+
+COMMENT ON COLUMN kadry.pkzp.rodz IS
+    'Rodzaj PKZP
+W - wkłady	
+P - pożyczka';
+
+ALTER TABLE kadry.pkzp ADD CONSTRAINT pkzp_pk PRIMARY KEY ( id );
+
+------  PKZP_POZ
+
+CREATE SEQUENCE pkzp_poz_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pkzp_poz (
+    id       INTEGER DEFAULT pkzp_poz_seq.NEXTVAL NOT NULL,
+    rodz     CHAR(1) NOT NULL,
+    kwot     FLOAT(15) DEFAULT 0 NOT NULL,
+    id_pkzp  INTEGER NOT NULL
+);
+
+COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
+    'Rodzaj PKZP
+W - wkład
+P - pożyczka';
+
+COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
+    'Kwota spłaty lub wkładu';
+
+ALTER TABLE kadry.pkzp_poz ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY ( id );
+
+------ PRACOWNICY
+
+CREATE SEQUENCE pracownicy_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.pracownicy (
+    id        INTEGER DEFAULT pracownicy_seq.NEXTVAL NOT NULL,
+    imie      VARCHAR2(20) NOT NULL,
+    nazwisko  VARCHAR2(40) NOT NULL,
+	dtur	  DATE,
+	misc_uro  VARCHAR2(50),
+    pesel     VARCHAR2(11) NOT NULL,
+    dok_typ   CHAR(5),
+    nr_dok    VARCHAR(20),
+	plec	  CHAR(1),
+    id_misc   INTEGER,
+    ulica     VARCHAR2(50),
+    nr_dom    VARCHAR2(10),
+    nr_lok    VARCHAR2(10),
+	nr_akt	  VARCHAR2(10),
+	imie_mat  VARCHAR2(20),
+	imie_ojc  VARCHAR2(40),
+	tele	  VARCHAR2(15),
+	id_oper	  INTEGER
+);
+
+COMMENT ON COLUMN kadry.pracownicy.dok_typ IS
+    'Rodzaj dokumentu (dowod d, paszport p, karta_pobytu k)';
+
+ALTER TABLE kadry.pracownicy ADD CONSTRAINT pracownicy_pk PRIMARY KEY ( id );
+
+ALTER TABLE kadry.pracownicy ADD CONSTRAINT pracownicy_pesel_un UNIQUE ( pesel );
+
+------ STANOW (STANOWISKA)
+
+CREATE SEQUENCE stanow_seq INCREMENT BY 1 NOCACHE;
+--
+CREATE TABLE kadry.stanow (
+    id       INTEGER DEFAULT stanow_seq.NEXTVAL NOT NULL,
+    nazwa    VARCHAR2(50),
+    kod_gus  NUMBER(10)
+);
+--
+ALTER TABLE kadry.stanow ADD CONSTRAINT stanow_pk PRIMARY KEY ( id );
+
+------ STAZTAB (TABELA STAŻÓW)
+
+CREATE SEQUENCE staztab_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.staztab (
+    id       INTEGER DEFAULT staztab_seq.NEXTVAL NOT NULL,
+    stog     FLOAT(15) DEFAULT  0 NOT NULL,
+    stwz     FLOAT(15) DEFAULT  0 NOT NULL,
+    stws     FLOAT(15) DEFAULT  0 NOT NULL,
+    stjb     FLOAT(15) DEFAULT  0 NOT NULL,
+    id_prc   INTEGER NOT NULL,
+    id_oks   INTEGER NOT NULL,
+    url_prz  FLOAT(4) DEFAULT  0 NOT NULL,
+    url_wyk  FLOAT(4) DEFAULT  0 NOT NULL,
+    url_zal  FLOAT(4) DEFAULT  0 NOT NULL,
+    url_sum  FLOAT(4) DEFAULT  0 NOT NULL
+);
+
+COMMENT ON COLUMN kadry.staztab.stog IS
+    'staż ogółem - suma';
+--
+COMMENT ON COLUMN kadry.staztab.stwz IS
+    'staż w zawodzie - suma';
+--
+COMMENT ON COLUMN kadry.staztab.stws IS
+    'staż do wysługi - suma';
+--
+COMMENT ON COLUMN kadry.staztab.stjb IS
+    'staż do jubileuszu - suma';
+--
+COMMENT ON COLUMN kadry.staztab.id_prc IS
+    'id pracownika';
+--
+COMMENT ON COLUMN kadry.staztab.url_prz IS
+    'urlop przysługujący';
+
+ALTER TABLE kadry.staztab ADD CONSTRAINT staztab_pk PRIMARY KEY ( id );
+
+------ UMOWY
+
+CREATE SEQUENCE umowy_seq INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE kadry.umowy (
+    id             INTEGER DEFAULT umowy_seq.NEXTVAL NOT NULL,
+    dtzaw          DATE NOT NULL,
+    dtroz          DATE,
+    zasad          FLOAT(15) DEFAULT 0 NOT NULL,
+    id_stanow      INTEGER NOT NULL,
+    id_typum       INTEGER NOT NULL,
+    id_prc         INTEGER NOT NULL,
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           CHAR(1) DEFAULT 'N' NOT NULL,
+    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
+    stws           CHAR(1) DEFAULT 'N' NOT NULL,
+    stjb           CHAR(1) DEFAULT 'N' NOT NULL
+);
+
+COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
+    'Czas wprowadzany w postaci dziesiętnej. Aplikacja wywoła funckje, która po wpisaniu np.: 8:35 zmienia na liczbę naturalną z ułamkiem dziesiętnym. 
+Zrobić funkcję, która przelicza liczbę dziesiętną na godzinę i funkcję odwrotną.';
+
+COMMENT ON COLUMN kadry.umowy.stog IS
+    'staż ogółem';
+
+COMMENT ON COLUMN kadry.umowy.stzw IS
+    'staż w zawodzie';
+
+COMMENT ON COLUMN kadry.umowy.stws IS
+    'staż do wysługi';
+
+COMMENT ON COLUMN kadry.umowy.stjb IS
+    'staż do jubileuszu';
+
+ALTER TABLE kadry.umowy ADD CONSTRAINT umowy_pk PRIMARY KEY ( id );
 
 -------------------------------------------------------------------------------------------------------------------
