@@ -22,7 +22,7 @@ CREATE TABLE kadry.absencje (
     id_typobec  INTEGER NOT NULL,
     id_prc      INTEGER NOT NULL,
     id_ump      INTEGER NOT NULL,
-    zada        CHAR(1) DEFAULT  'N' NOT NULL
+    zada        NUMBER(1) DEFAULT  0 NOT NULL
 );
 /	
 COMMENT ON COLUMN kadry.absencje.dtod IS
@@ -69,10 +69,10 @@ CREATE TABLE kadry.hps (
     id      INTEGER DEFAULT hps_seq.NEXTVAL NOT NULL,
     dtod    DATE NOT NULL,
     dtdo    DATE,
-    stog    CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw    CHAR(1) DEFAULT 'N' NOT NULL,
-    stws    CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb    CHAR(1) DEFAULT 'N' NOT NULL,
+    stog    NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw    NUMBER(1) DEFAULT 0 NOT NULL,
+    stws    NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb    NUMBER(1) DEFAULT 0 NOT NULL,
     id_prc  INTEGER NOT NULL
 );
 /
@@ -264,19 +264,19 @@ CREATE TABLE kadry.umowy (
     id_typum       INTEGER NOT NULL,
     id_prc         INTEGER NOT NULL,
     nr_tyt_zus     NUMBER(5),
-    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0 NOT NULL,
     nrm_czas_prac  FLOAT(15),
-    stog           CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
-    stws           CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb           CHAR(1) DEFAULT 'N' NOT NULL
+    stog           NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0 NOT NULL,
+    stws           NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0 NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
@@ -304,19 +304,19 @@ CREATE TABLE kadry.typum (
     id             INTEGER DEFAULT typum_seq.NEXTVAL NOT NULL,
     nazwa          VARCHAR2(50),
     nr_tyt_zus     NUMBER(5),
-    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0 NOT NULL,
     nrm_czas_prac  FLOAT(15),
-    stog           CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
-    stws           CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb           CHAR(1) DEFAULT 'N' NOT NULL,
+    stog           NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0 NOT NULL,
+    stws           NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0 NOT NULL,
     rodz_um        NUMBER(1)
 );
 /
@@ -330,7 +330,7 @@ CREATE TABLE kadry.typobec (
     nazwa          VARCHAR2(50),
     cdot           VARCHAR2(5),
     kod_zus        VARCHAR2(3),
-    czy_lim        CHAR(1),
+    czy_lim        NUMBER(1),
     rodz_lim       CHAR(1),
     lim            NUMBER(10,4)
 );
@@ -342,6 +342,9 @@ COMMENT ON COLUMN kadry.typobec.cdot IS
 /    
 COMMENT ON COLUMN kadry.typobec.kod_zus IS
     'KOD zwolnienia wedug ZUS (dla chorobowych)'; 
+/   
+COMMENT ON COLUMN kadry.typobec.CZY_lim IS
+    'Czy obejmuje limit 0 - nie - 1 - tak'; 
 /   
 COMMENT ON COLUMN kadry.typobec.rodz_lim IS
     'Rodzaj imitu: r - roczny, i - indywidualny';    
@@ -358,7 +361,7 @@ CREATE TABLE kadry.oper (
 	nazwisko	VARCHAR2(35) NOT NULL,
 	login		VARCHAR2(50) NOT NULL,
 	passw		VARCHAR2(40) NOT NULL,
-	aktw		CHAR(1) DEFAULT 'T' NOT NULL
+	aktw		NUMBER(1) DEFAULT 1 NOT NULL
 	);
 /	
 ALTER TABLE kadry.oper ADD CONSTRAINT oper_pk PRIMARY KEY (id);	
@@ -452,10 +455,10 @@ CREATE TABLE kadry.hps_c (
     id      INTEGER NOT NULL,
     dtod    DATE NOT NULL,
     dtdo    DATE,
-    stog    CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw    CHAR(1) DEFAULT 'N' NOT NULL,
-    stws    CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb    CHAR(1) DEFAULT 'N' NOT NULL,
+    stog    NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw    NUMBER(1) DEFAULT 0 NOT NULL,
+    stws    NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb    NUMBER(1) DEFAULT 0 NOT NULL,
     id_prc  INTEGER NOT NULL
 );
 /
@@ -490,7 +493,7 @@ CREATE TABLE kadry.oper_c (
 	nazwisko	VARCHAR2(35) NOT NULL,
 	login		VARCHAR2(50) NOT NULL,
 	passw		VARCHAR2(40) NOT NULL,
-	aktw		CHAR(1) DEFAULT 'T' NOT NULL
+	aktw		NUMBER(1) DEFAULT 1 NOT NULL
 	);      
 /	
 ALTER TABLE kadry.oper_c ADD CONSTRAINT oper_c_pk PRIMARY KEY ( c_id );
@@ -578,19 +581,19 @@ CREATE TABLE kadry.umowy_c (
     id_typum       INTEGER NOT NULL,
     id_prc         INTEGER NOT NULL,
     nr_tyt_zus     NUMBER(5),
-    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0 NOT NULL,
     nrm_czas_prac  FLOAT(15),
-    stog           CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
-    stws           CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb           CHAR(1) DEFAULT 'N' NOT NULL
+    stog           NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0 NOT NULL,
+    stws           NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0 NOT NULL
 );
 /
 ALTER TABLE kadry.umowy_c ADD CONSTRAINT umowy_c_pk PRIMARY KEY ( c_id );
@@ -605,19 +608,19 @@ CREATE TABLE kadry.typum_c (
     id             INTEGER NOT NULL,
     nazwa          VARCHAR2(50),
     nr_tyt_zus     NUMBER(5),
-    czy_chor       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ren        CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_emer       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_zdrow      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fp         CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_fgsp       CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_urlop      CHAR(1) DEFAULT 'N' NOT NULL,
-    czy_ab_chor    CHAR(1) DEFAULT 'N' NOT NULL,
+    czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0 NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0 NOT NULL,
     nrm_czas_prac  FLOAT(15),
-    stog           CHAR(1) DEFAULT 'N' NOT NULL,
-    stzw           CHAR(1) DEFAULT 'N' NOT NULL,
-    stws           CHAR(1) DEFAULT 'N' NOT NULL,
-    stjb           CHAR(1) DEFAULT 'N' NOT NULL,
+    stog           NUMBER(1) DEFAULT 0 NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0 NOT NULL,
+    stws           NUMBER(1) DEFAULT 0 NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0 NOT NULL,
     rodz_um        NUMBER(1)
 );
 /
@@ -634,7 +637,7 @@ CREATE TABLE kadry.typobec_c (
     nazwa          VARCHAR2(50),
     cdot           VARCHAR2(5),
     kod_zus        VARCHAR2(3),
-    czy_lim        CHAR(1),
+    czy_lim        NUMBER(1),
     rodz_lim       CHAR(1),
     lim            NUMBER(10,4)
 );
