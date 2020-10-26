@@ -843,3 +843,37 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+-------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------- PAKIETY (PACKAGE)
+
+--------------------------- OPER_SECURITY
+
+----- PACKAGE
+create or replace NONEDITIONABLE PACKAGE oper_security AS
+  FUNCTION get_hash (login  IN  VARCHAR2,
+                     passw  IN  VARCHAR2)
+    RETURN VARCHAR2;
+  PROCEDURE add_oper (login  IN  VARCHAR2, passw  IN  VARCHAR2, imie IN VARCHAR2,  nazwisko IN VARCHAR2);
+END;
+
+----- BODY
+create or replace NONEDITIONABLE PACKAGE BODY oper_security AS
+  FUNCTION get_hash (login  IN  VARCHAR2,
+                     passw  IN  VARCHAR2)
+    RETURN VARCHAR2 AS
+    l_salt VARCHAR2(30) := 'SD34!';
+  BEGIN
+    RETURN DBMS_CRYPTO.HASH(UTL_RAW.CAST_TO_RAW(UPPER(login) || l_salt || UPPER(passw)),DBMS_CRYPTO.HASH_SH1);
+  END;
+  PROCEDURE add_oper (login  IN  VARCHAR2, passw  IN  VARCHAR2, imie IN VARCHAR2,  nazwisko IN VARCHAR2) AS
+  BEGIN
+    INSERT INTO oper (
+      id, imie, nazwisko, login, passw
+    )
+    VALUES (
+      oper_seq.NEXTVAL, imie, nazwisko, UPPER(login), get_hash(login, passw)
+    ); 
+    COMMIT;
+  END;  
+END;
