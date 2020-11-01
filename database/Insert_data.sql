@@ -1,0 +1,2 @@
+INSERT INTO pracownicy (imie,nazwisko,dtur,misc_uro,pesel,dok_typ,nr_dok,plec,id_misc,ulica,nr_dom,nr_lok,nr_akt,imie_mat,imie_ojc,tele,id_oper)
+VALUES ('JAKUB','NOWACKI',to_date('1999-02-01','yyyy-mm-dd'),'Leszno','93020100012',1,'CJU938487','M',null,'DASZYŃSKIEGO','24','5','A1','RENATA','WLADYSLAW','509677027',null);
