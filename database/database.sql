@@ -183,7 +183,7 @@ CREATE TABLE kadry.pracownicy (
 	dtur	  DATE,
 	misc_uro  VARCHAR2(50),
     pesel     VARCHAR2(11) NOT NULL,
-    dok_typ   CHAR(5),
+    dok_typ   NUMBER(1),
     nr_dok    VARCHAR(20),
 	plec	  CHAR(1),
     id_misc   INTEGER,
@@ -198,7 +198,7 @@ CREATE TABLE kadry.pracownicy (
 );
 /
 COMMENT ON COLUMN kadry.pracownicy.dok_typ IS
-    'Rodzaj dokumentu (dowod d, paszport p, karta_pobytu k)';
+    'Rodzaj dokumentu (dowod 1, paszport 2, karta_pobytu 3)';
 /
 ALTER TABLE kadry.pracownicy ADD CONSTRAINT pracownicy_pk PRIMARY KEY ( id );
 /
@@ -843,6 +843,22 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+-------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------- FUNCKJE
+
+--------------------------- F_HOURS_TO_MIN
+
+CREATE OR REPLACE FUNCTION F_HOURS_TO_MIN
+(
+ WART NUMBER
+)
+RETURN NUMBER
+IS
+BEGIN
+  RETURN round(WART * 60);
+END;
+
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- PAKIETY (PACKAGE)
