@@ -303,7 +303,7 @@ CREATE SEQUENCE typum_seq INCREMENT BY 1 NOCACHE;
 CREATE TABLE kadry.typum (
     id             INTEGER DEFAULT typum_seq.NEXTVAL NOT NULL,
     nazwa          VARCHAR2(50),
-    nr_tyt_zus     NUMBER(5),
+    nr_tyt_zus     VARCHAR2(4),
     czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
     czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
     czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
