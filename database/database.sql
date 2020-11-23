@@ -173,6 +173,28 @@ COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
 /
 ALTER TABLE kadry.pkzp_poz ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY ( id );
 /
+
+------ PKZP_PARAM
+
+CREATE SEQUENCE pkzp_param_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.pkzp_param (   
+    forma    NUMBER(1) DEFAULT 0 NOT NULL,
+    ile_rat  NUMBER(2) DEFAULT 12 NOT NULL,
+    wklad    FLOAT(10) DEFAULT 0 NOT NULL,
+    sklad    FLOAT(10) DEFAULT 0 NOT NULL   
+);
+/
+COMMENT ON COLUMN kadry.pkzp_param.forma IS
+    'Forma składek  0 - %,  1 - zł';
+/
+COMMENT ON COLUMN kadry.pkzp_param.wklad IS
+    'wartość wkładu początkowego';
+/    
+COMMENT ON COLUMN kadry.pkzp_param.sklad IS
+    'wartość składki PKZP';    
+/
+
 ------ PRACOWNICY
 CREATE SEQUENCE pracownicy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -264,6 +286,7 @@ CREATE TABLE kadry.umowy (
     id_typum       INTEGER NOT NULL,
     id_prc         INTEGER NOT NULL,
     nr_tyt_zus     NUMBER(5),
+    czy_pkzp       NUMBER(1) DEFAULT 0 NOT NULL,
     czy_chor       NUMBER(1) DEFAULT 0 NOT NULL,
     czy_ren        NUMBER(1) DEFAULT 0 NOT NULL,
     czy_emer       NUMBER(1) DEFAULT 0 NOT NULL,
@@ -843,6 +866,7 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- FUNCKJE
@@ -857,6 +881,18 @@ RETURN NUMBER
 IS
 BEGIN
   RETURN round(WART * 60);
+END;
+
+--------------------------- F_ MIN_TO_HOURS
+
+create or replace FUNCTION F_MIN_TO_HOURS
+(
+ WART NUMBER
+)
+RETURN NUMBER
+IS
+BEGIN
+  RETURN round(WART/60);
 END;
 
 -------------------------------------------------------------------------------------------------------------------
@@ -893,3 +929,31 @@ create or replace NONEDITIONABLE PACKAGE BODY oper_security AS
     COMMIT;
   END;  
 END;
+
+--------------------------- OPER_SECURITY
+
+----- PACKAGE
+
+CREATE OR REPLACE PACKAGE pkzp_pack AS
+  FUNCTION f_pkzp_sklad (v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER) RETURN NUMBER;
+END;
+
+----- BODY
+
+CREATE OR REPLACE PACKAGE BODY pkzp_pack AS
+    FUNCTION f_pkzp_sklad (v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER)
+    RETURN NUMBER AS
+        v_kwota FLOAT;
+        v_buf FLOAT;
+        BEGIN
+            IF (v_froma = 0) THEN
+                SELECT zasad*(v_sklad/100)
+                INTO v_kwota
+                FROM umowy
+                WHERE id = v_idumowy;
+            ELSIF (v_froma = 1) THEN
+                v_kwota := v_sklad;
+            END IF;
+            RETURN(v_kwota);
+        END;
+      END;

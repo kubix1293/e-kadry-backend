@@ -43,6 +43,13 @@ VALUE(DANE ZE SŁOWNIKA XLS)
 
 ----------------  UMOWY
 
-INSERT INTO umowy (DTZAW,DTROZ,ZASAD,ID_STANOW,ID_TYPUM,ID_PRC,NR_TYT_ZUS,CZY_CHOR,CZY_REN,CZY_EMER,CZY_ZDROW,CZY_FP,CZY_FGSP,CZY_URLOP,CZY_AB_CHOR,NRM_CZAS_PRAC,STOG,STZW,STWS,STJB)
-VALUES (to_date('2008-01-01','yyyy-mm-dd'), NULL, 3500,747, 1, 1, 0110, '1','1','1','1','1','0','1','1',F_HOURS_TO_MIN(8),'1','1','1','1' );
+INSERT INTO umowy (DTZAW,DTROZ,ZASAD,ID_STANOW,ID_TYPUM,ID_PRC,NR_TYT_ZUS,CZY_PKZP,CZY_CHOR,CZY_REN,CZY_EMER,CZY_ZDROW,CZY_FP,CZY_FGSP,CZY_URLOP,CZY_AB_CHOR,NRM_CZAS_PRAC,STOG,STZW,STWS,STJB)
+VALUES (to_date('2008-01-01','yyyy-mm-dd'), NULL, 3500,747, 1, 1, '0110', 1,'1','1','1','1','1','0','1','1',F_HOURS_TO_MIN(8),'1','1','1','1' );
+
+--------------------------------------------------------------
+
+----------------  PKZP_PARAM
+
+INSERT INTO pkzp_param (forma, ile_rat, sklad, wklad) 
+VALUES (0, 12, 3, 1);
 
