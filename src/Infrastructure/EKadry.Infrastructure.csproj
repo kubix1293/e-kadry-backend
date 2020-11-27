@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.0.0" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
+        <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="6.0.1" />
+        <PackageReference Include="FluentValidation" Version="9.2.2" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.19.80" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Application\EKadry.Application.csproj" />
+        <ProjectReference Include="..\Domain\EKadry.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

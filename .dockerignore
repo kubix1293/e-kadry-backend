@@ -1,0 +1,16 @@
+.git
+.idea
+docker
+models
+
+**/bin
+**/Bin
+**/obj
+**/Obj
+*.csproj.user
+*.sln.ide
+*.ng.ts
+*.sln.ide
+.build/
+.testpublish/
+launchSettings.json

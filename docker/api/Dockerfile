@@ -1,8 +1,12 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine as build
 
 WORKDIR /app
-COPY ./src/API .
+COPY . .
+RUN dotnet restore src/API
+RUN dotnet publish src/API -c Release -o /build
 
-RUN dotnet restore && dotnet build -c Release
+FROM mcr.microsoft.com/dotnet/runtime:3.1-buster-slim as runtime
 
-CMD ["dotnet", "run", "-c Release --no-build --no-restore"]
+WORKDIR /app
+COPY --from=build /build .
+ENTRYPOINT ["dotnet", "EKadry.API.dll"]

@@ -1,7 +1,6 @@
 # EKadry
 
 ## How to develop application
-In addition to the standard launch of the .NET Core environment there is a way to do simpler by run docker.
+To run API project type in your console `dotnet watch -p src/API run` and make sure that you have correct `.env` file in API project.
 
-* Make sure that you have correct .env file
-* Run `docker up --build -d api oracle`
+If you want to provide Oracle XE database via docker you can do it easily with docker and docker-compose `docker-compose up --build -d api oracle`.

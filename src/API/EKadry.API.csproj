@@ -1,11 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.2" />
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\netcoreapp3.1\EKadry.API.XML</DocumentationFile>
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="FluentValidation" Version="9.2.2" />
+        <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+        <PackageReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Application\EKadry.Application.csproj" />
+        <ProjectReference Include="..\Domain\EKadry.Domain.csproj" />
+        <ProjectReference Include="..\Infrastructure\EKadry.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="logs" />
+    </ItemGroup>
 
 </Project>
