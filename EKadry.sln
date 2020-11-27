@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{250F283E-FE2F-4BBD-9E63-A2265B84E23F}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
@@ -8,13 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.API", "src\API\EKadry.API.csproj", "{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{84B41DEF-095F-4544-AF08-29185216ADF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.IntegrationTests", "src\Tests\EKadry.IntegrationTests\EKadry.IntegrationTests.csproj", "{6A7ACBE4-66D7-434E-9DA0-5A5A350F6C2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.UnitTests", "src\Tests\EKadry.UnitTests\EKadry.UnitTests.csproj", "{14921D0A-4A6F-49B9-9B7F-D3D3DC67E39E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.API", "src\API\EKadry.API.csproj", "{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.Infrastructure", "src\Infrastructure\EKadry.Infrastructure.csproj", "{1B2411AB-FA59-4763-9A02-53B6E88F1B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EKadry.Domain", "src\Domain\EKadry.Domain.csproj", "{FB36FF9B-C757-47E7-AB26-3ED04CAE1699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\EKadry.Application.csproj", "{08232094-0B32-42C4-BBB7-DE50709622DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A7ACBE4-66D7-434E-9DA0-5A5A350F6C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A7ACBE4-66D7-434E-9DA0-5A5A350F6C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A7ACBE4-66D7-434E-9DA0-5A5A350F6C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +35,22 @@ Global
 		{14921D0A-4A6F-49B9-9B7F-D3D3DC67E39E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14921D0A-4A6F-49B9-9B7F-D3D3DC67E39E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14921D0A-4A6F-49B9-9B7F-D3D3DC67E39E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C2E7BD1-1277-44B0-8C9E-AF0B357365E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B2411AB-FA59-4763-9A02-53B6E88F1B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B2411AB-FA59-4763-9A02-53B6E88F1B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B2411AB-FA59-4763-9A02-53B6E88F1B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B2411AB-FA59-4763-9A02-53B6E88F1B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB36FF9B-C757-47E7-AB26-3ED04CAE1699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB36FF9B-C757-47E7-AB26-3ED04CAE1699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB36FF9B-C757-47E7-AB26-3ED04CAE1699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB36FF9B-C757-47E7-AB26-3ED04CAE1699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08232094-0B32-42C4-BBB7-DE50709622DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08232094-0B32-42C4-BBB7-DE50709622DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08232094-0B32-42C4-BBB7-DE50709622DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08232094-0B32-42C4-BBB7-DE50709622DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
     GlobalSection(NestedProjects) = preSolution
         {6A7ACBE4-66D7-434E-9DA0-5A5A350F6C2E} = {84B41DEF-095F-4544-AF08-29185216ADF9}

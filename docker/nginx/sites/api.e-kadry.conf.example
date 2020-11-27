@@ -7,10 +7,11 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     
+    server_name api.e-kadry.staging www.api.e-kadry.staging;
+    
     ssl_certificate /etc/nginx/ssl/api.e-kadry.crt;
     ssl_certificate_key /etc/nginx/ssl/api.e-kadry.key;
     
-    server_name api.e-kadry.staging www.api.e-kadry.staging;
     error_log /var/log/nginx/api.e-kadry.log;
     access_log /var/log/nginx/api.e-kadry.log;
     
@@ -28,6 +29,13 @@ server {
 server {
     listen 80;
     listen [::]:80;
+    
     server_name api.e-kadry.staging www.api.e-kadry.staging;
+    
     return 301 https://$host$request_uri;
+}
+
+server {
+    listen 80 default_server;
+    return 444;
 }
