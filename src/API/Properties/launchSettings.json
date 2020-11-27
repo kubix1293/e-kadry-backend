@@ -1,25 +1,18 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:52188",
-      "sslPort": 44322
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": false,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "EKadry": {
       "commandName": "Project",
       "launchBrowser": false,
       "applicationUrl": "http://0.0.0.0:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Debug EKadry": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://0.0.0.0:5999",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
