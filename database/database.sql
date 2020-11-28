@@ -12,6 +12,7 @@ GRANT ALL PRIVILEGES TO kadry;
 grant execute on sys.dbms_crypto to kadry;
 /
 ------------------------------------------------------------------- TABELS
+/*
 ------ ABSENCJE
 CREATE SEQUENCE absencje_seq INCREMENT BY 1 NOCACHE;
 /
@@ -45,6 +46,7 @@ COMMENT ON COLUMN kadry.absencje.zada IS
 /
 ALTER TABLE kadry.absencje ADD CONSTRAINT absencje_pk PRIMARY KEY ( id );
 /
+*/
 ------  ADRESY
 CREATE SEQUENCE adresy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -62,6 +64,7 @@ ALTER TABLE kadry.adresy ADD CONSTRAINT adresy_pk PRIMARY KEY ( id );
 /
 ALTER TABLE kadry.adresy ADD CONSTRAINT adresy_teryt_un UNIQUE ( teryt );
 /
+/*
 ------ HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
 CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
 /
@@ -93,6 +96,7 @@ COMMENT ON COLUMN kadry.hps.id_prc IS
 /
 ALTER TABLE kadry.hps ADD CONSTRAINT hps_pk PRIMARY KEY ( id );
 /
+*/
 ------ OKRESY
 CREATE SEQUENCE okresy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -158,15 +162,16 @@ CREATE SEQUENCE pkzp_poz_seq INCREMENT BY 1 NOCACHE;
 /
 CREATE TABLE kadry.pkzp_poz (
     id       INTEGER DEFAULT pkzp_poz_seq.NEXTVAL NOT NULL,
-    rodz     CHAR(1) NOT NULL,
+    rodz     NUMBER(1) NOT NULL,
     kwot     FLOAT(15) DEFAULT 0 NOT NULL,
     id_pkzp  INTEGER NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
-W - wkład
-P - pożyczka';
+10 - wkład
+20 - spłata
+30 - udzielenie';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu';
@@ -200,7 +205,7 @@ CREATE SEQUENCE pracownicy_seq INCREMENT BY 1 NOCACHE;
 /
 CREATE TABLE kadry.pracownicy (
     id        INTEGER DEFAULT pracownicy_seq.NEXTVAL NOT NULL,
-    imie      VARCHA2(20) NOT NULL,
+    imie      VARCHAR2(20) NOT NULL,
     nazwisko  VARCHAR2(40) NOT NULL,
 	dtur	  DATE,
 	misc_uro  VARCHAR2(50),
@@ -237,6 +242,7 @@ CREATE TABLE kadry.stanow (
 /
 ALTER TABLE kadry.stanow ADD CONSTRAINT stanow_pk PRIMARY KEY ( id );
 /
+/*
 ------ STAZTAB (TABELA STAŻÓW)
 CREATE SEQUENCE staztab_seq INCREMENT BY 1 NOCACHE;
 /
@@ -274,6 +280,7 @@ COMMENT ON COLUMN kadry.staztab.url_prz IS
 /
 ALTER TABLE kadry.staztab ADD CONSTRAINT staztab_pk PRIMARY KEY ( id );
 /
+*/
 ------ UMOWY
 CREATE SEQUENCE umowy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -345,6 +352,7 @@ CREATE TABLE kadry.typum (
 /
 ALTER TABLE kadry.typum ADD CONSTRAINT typum_pk PRIMARY KEY ( id );
 /
+/*
 ------ TYPOBEC
 CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
 /
@@ -375,6 +383,8 @@ COMMENT ON COLUMN kadry.typobec.rodz_lim IS
 COMMENT ON COLUMN kadry.typobec.lim IS
     'Ile dni limitu';   
 /
+*/
+
 ------ OPER (OPERATOR)
 CREATE SEQUENCE oper_seq INCREMENT BY 1 NOCACHE;
 /
@@ -389,6 +399,7 @@ CREATE TABLE kadry.oper (
 /	
 ALTER TABLE kadry.oper ADD CONSTRAINT oper_pk PRIMARY KEY (id);	
 /
+/*
 ------ URZEDY (URZEDY)
 CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -402,6 +413,8 @@ CREATE TABLE kadry.urzedy (
 	);
 /	
 ALTER TABLE kadry.urzedy ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
+*/
+
 -------------------------------------------------------------------  CIENIE
 ------ PRACONICY_C
 CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
@@ -432,6 +445,7 @@ CREATE TABLE kadry.pracownicy_c (
 /
 ALTER TABLE kadry.pracownicy_c ADD CONSTRAINT pracownicy_c_pk PRIMARY KEY ( c_id );
 /
+/*
 ------ ABSENCJE_C
 CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -450,6 +464,7 @@ CREATE TABLE kadry.absencje_c (
 /
 ALTER TABLE kadry.absencje_c ADD CONSTRAINT absencje_c_pk PRIMARY KEY ( c_id );
 /
+*/
 ------  ADRESY_C
 CREATE SEQUENCE adresy_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -468,6 +483,7 @@ CREATE TABLE kadry.adresy_c (
 /
 ALTER TABLE kadry.adresy_c ADD CONSTRAINT adresy_c_pk PRIMARY KEY ( c_id );
 /
+/*
 ------ HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
 CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -487,6 +503,7 @@ CREATE TABLE kadry.hps_c (
 /
 ALTER TABLE kadry.hps_c ADD CONSTRAINT hps_c_pk PRIMARY KEY ( c_id );
 /
+*/
 ------ OKRESY_C
 CREATE SEQUENCE okresy_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -567,6 +584,7 @@ CREATE TABLE kadry.stanow_c (
 /
 ALTER TABLE kadry.stanow_c ADD CONSTRAINT stanow_c_pk PRIMARY KEY ( id );
 /
+/*
 ------ STAZTAB_C (TABELA STAZOW)
 CREATE SEQUENCE staztab_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -589,6 +607,7 @@ CREATE TABLE kadry.staztab_c (
 /
 ALTER TABLE kadry.staztab_c ADD CONSTRAINT staztab_c_pk PRIMARY KEY ( c_id );
 /
+*/
 ------ UMOWY_C
 CREATE SEQUENCE umowy_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -669,6 +688,7 @@ ALTER TABLE kadry.typobec_c ADD CONSTRAINT typobec_c_pk PRIMARY KEY ( id );
 /
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------  CONSTRAINTS
+/*
 ALTER TABLE kadry.absencje
     ADD CONSTRAINT absencje_pracownicy_fk FOREIGN KEY ( id_prc )
         REFERENCES kadry.pracownicy ( id );
@@ -685,6 +705,7 @@ ALTER TABLE kadry.hps
     ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY ( id_prc )
         REFERENCES kadry.pracownicy ( id );
 /
+*/
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pracownicy_fk FOREIGN KEY ( id_prc )
         REFERENCES kadry.pracownicy ( id );
@@ -701,6 +722,7 @@ ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY ( id_oper )
         REFERENCES kadry.oper ( id );		
 /
+/*
 ALTER TABLE kadry.staztab
     ADD CONSTRAINT staztab_okresy_fk FOREIGN KEY ( id_oks )
         REFERENCES kadry.okresy ( id );
@@ -709,6 +731,7 @@ ALTER TABLE kadry.staztab
     ADD CONSTRAINT staztab_pracownicy_fk FOREIGN KEY ( id_prc )
         REFERENCES kadry.pracownicy ( id );
 /
+*/
 ALTER TABLE kadry.umowy
     ADD CONSTRAINT umowy_pracownicy_fk FOREIGN KEY ( id_prc )
         REFERENCES kadry.pracownicy ( id );
@@ -728,19 +751,23 @@ ALTER TABLE kadry.pracownicy_c
 ALTER TABLE kadry.typobec_c
     ADD CONSTRAINT typobec_c_typobec_fk FOREIGN KEY ( id )
         REFERENCES kadry.typobec ( id );
-/		
+/
+/*		
 ALTER TABLE kadry.absencje_c
     ADD CONSTRAINT absencje_c_absencje_fk FOREIGN KEY ( id )
         REFERENCES kadry.absencje ( id );
-/		
+/
+*/		
 ALTER TABLE kadry.adresy_c
     ADD CONSTRAINT adresy_c_adresy_fk FOREIGN KEY ( id )
         REFERENCES kadry.adresy ( id );
 /
+/*
 ALTER TABLE kadry.hps_c
     ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY ( id )
         REFERENCES kadry.hps ( id );		
 /
+*/
 ALTER TABLE kadry.okresy_c
     ADD CONSTRAINT okresy_c_okresy_fk FOREIGN KEY ( id )
         REFERENCES kadry.okresy ( id );		
@@ -761,10 +788,12 @@ ALTER TABLE kadry.stanow_c
     ADD CONSTRAINT stanow_c_stanow_fk FOREIGN KEY ( id )
         REFERENCES kadry.stanow ( id );    
 /
+/*
 ALTER TABLE kadry.staztab_c
     ADD CONSTRAINT staztab_c_staztab FOREIGN KEY ( id )
         REFERENCES kadry.staztab ( id );    
 /
+*/
 ALTER TABLE kadry.typum_c
     ADD CONSTRAINT typum_c_typum_fk FOREIGN KEY ( id )
         REFERENCES kadry.typum ( id );	  
@@ -794,6 +823,7 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+/*
 --------------------------- ABSE_ABSEC_AUD
 create or replace NONEDITIONABLE TRIGGER abse_absec_aud
     AFTER UPDATE OR DELETE ON absencje 
@@ -812,6 +842,7 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+*/
 --------------------------- ADRESY_ADRESYC_AUD
 create or replace NONEDITIONABLE TRIGGER adresy_adresyc_aud
     AFTER UPDATE OR DELETE ON adresy 
@@ -829,6 +860,7 @@ EXCEPTION
  WHEN OTHERS THEN
   raise_application_error (-20002,SQLERRM);
 END;
+/*
 --------------------------- HPS_HPSC_AUD
 create or replace NONEDITIONABLE TRIGGER hps_hpsc_aud
     AFTER UPDATE OR DELETE ON hps 
@@ -848,6 +880,7 @@ EXCEPTION
   raise_application_error (-20002,SQLERRM);
 END;
 /
+*/
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace NONEDITIONABLE TRIGGER okresy_okresyc_aud
     AFTER UPDATE OR DELETE ON okresy 
