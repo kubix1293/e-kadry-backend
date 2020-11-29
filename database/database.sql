@@ -963,7 +963,7 @@ create or replace NONEDITIONABLE PACKAGE BODY oper_security AS
   END;  
 END;
 
---------------------------- OPER_SECURITY
+--------------------------- PKZP
 
 ----- PACKAGE
 
