@@ -39,11 +39,9 @@ ALTER TABLE kadry.absencje
 /
 */
 ------  ADRESY
-CREATE SEQUENCE adresy_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.adresy
 (
-    id       INTEGER DEFAULT adresy_seq.NEXTVAL NOT NULL,
+    id       RAW(32)       DEFAULT SYS_GUID()   NOT NULL,
     misc     VARCHAR2(50)                       NOT NULL,
     gmina    VARCHAR2(50)                       NOT NULL,
     powiat   VARCHAR2(50)                       NOT NULL,
@@ -59,6 +57,7 @@ ALTER TABLE kadry.adresy
     ADD CONSTRAINT adresy_teryt_un UNIQUE (teryt);
 /
 /*
+
 ------ HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
 CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
 /
@@ -95,11 +94,9 @@ ALTER TABLE kadry.hps
 */
 
 ------ OKRESY
-CREATE SEQUENCE okresy_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.okresy
 (
-    id      INTEGER DEFAULT okresy_seq.NEXTVAL NOT NULL,
+    id      RAW(32)       DEFAULT SYS_GUID()   NOT NULL,
     dtod    DATE                               NOT NULL,
     dtdo    DATE                               NOT NULL,
     dni_kal NUMBER(4)                          NOT NULL,
@@ -127,16 +124,14 @@ ALTER TABLE kadry.okresy
 /
 
 ------  PKZP
-CREATE SEQUENCE pkzp_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pkzp
 (
-    id     INTEGER   DEFAULT pkzp_seq.NEXTVAL NOT NULL,
-    id_prc INTEGER                            NOT NULL,
+    id     RAW(32)       DEFAULT SYS_GUID()   NOT NULL,
+    id_prc RAW(32)                            NOT NULL,
     saldo  FLOAT(15) DEFAULT 0,
     dt     FLOAT(15) DEFAULT 0,
     ct     FLOAT(15) DEFAULT 0,
-    rodz   CHAR(1)                            NOT NULL
+    rodz   NUMBER                             NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -153,28 +148,26 @@ COMMENT ON COLUMN kadry.pkzp.ct IS
 /
 COMMENT ON COLUMN kadry.pkzp.rodz IS
     'Rodzaj PKZP
-W - wkłady
-P - pożyczka';
+1 - wkłady
+10 - pożyczka';
 /
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pk PRIMARY KEY (id);
 /
 
 ------  PKZP_POZ
-CREATE SEQUENCE pkzp_poz_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pkzp_poz
 (
-    id      INTEGER   DEFAULT pkzp_poz_seq.NEXTVAL NOT NULL,
-    rodz    CHAR(1)                                NOT NULL,
+    id      RAW(32)           DEFAULT SYS_GUID()   NOT NULL,
+    rodz    NUMBER                                 NOT NULL,
     kwot    FLOAT(15) DEFAULT 0                    NOT NULL,
     id_pkzp INTEGER                                NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
-W - wkład
-P - pożyczka';
+1 - wkład
+10 - pożyczka';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu';
@@ -184,9 +177,6 @@ ALTER TABLE kadry.pkzp_poz
 /
 
 ------ PKZP_PARAM
-
-CREATE SEQUENCE pkzp_param_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pkzp_param (   
     forma    NUMBER(1) DEFAULT 0 NOT NULL,
     ile_rat  NUMBER(2) DEFAULT 12 NOT NULL,
@@ -205,20 +195,18 @@ COMMENT ON COLUMN kadry.pkzp_param.sklad IS
 /
 
 ------ PRACOWNICY
-CREATE SEQUENCE pracownicy_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pracownicy
 (
-    id       INTEGER DEFAULT pracownicy_seq.NEXTVAL NOT NULL,
+    id       RAW(32)           DEFAULT SYS_GUID()   NOT NULL,
     imie     VARCHAR2(20)                           NOT NULL,
     nazwisko VARCHAR2(40)                           NOT NULL,
     dtur     DATE,
     misc_uro VARCHAR2(50),
     pesel    VARCHAR2(11)                           NOT NULL,
-    dok_typ  NUMBER(1),
-    nr_dok   VARCHAR(20),
-    plec     CHAR(1),
-    id_misc  INTEGER,
+    dok_typ  NUMBER,
+    nr_dok   VARCHAR(20), 
+    plec     NUMBER(1),
+    id_misc  RAW(32),
     ulica    VARCHAR2(50),
     nr_dom   VARCHAR2(10),
     nr_lok   VARCHAR2(10),
@@ -230,7 +218,10 @@ CREATE TABLE kadry.pracownicy
 );
 /
 COMMENT ON COLUMN kadry.pracownicy.dok_typ IS
-    'Rodzaj dokumentu (dowod 1, paszport 2, karta_pobytu 3)';
+    'Rodzaj dokumentu (dowod 1, paszport 10, karta_pobytu 20)';
+/
+COMMENT ON COLUMN kadry.pracownicy.plec IS
+    'Rodzaj płci (1 - Mężczyzna, 2 - kobieta)';
 /
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_pk PRIMARY KEY (id);
@@ -239,11 +230,9 @@ ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_pesel_un UNIQUE (pesel);
 /
 ------ STANOW (STANOWISKA)
-CREATE SEQUENCE stanow_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.stanow
 (
-    id      INTEGER DEFAULT stanow_seq.NEXTVAL NOT NULL,
+    id      RAW(32)        DEFAULT SYS_GUID()   NOT NULL,
     nazwa   VARCHAR2(50),
     kod_gus NUMBER(10)
 );
@@ -252,17 +241,15 @@ ALTER TABLE kadry.stanow
     ADD CONSTRAINT stanow_pk PRIMARY KEY (id);
 /
 ------ STAZTAB (TABELA STAŻÓW)
-CREATE SEQUENCE staztab_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.staztab
 (
-    id      INTEGER   DEFAULT staztab_seq.NEXTVAL NOT NULL,
+    id      RAW(32)          DEFAULT SYS_GUID()   NOT NULL,
     stog    FLOAT(15) DEFAULT 0                   NOT NULL,
     stwz    FLOAT(15) DEFAULT 0                   NOT NULL,
     stws    FLOAT(15) DEFAULT 0                   NOT NULL,
     stjb    FLOAT(15) DEFAULT 0                   NOT NULL,
-    id_prc  INTEGER                               NOT NULL,
-    id_oks  INTEGER                               NOT NULL,
+    id_prc  RAW(32)                               NOT NULL,
+    id_oks  RAW(32)                               NOT NULL,
     url_prz FLOAT(4)  DEFAULT 0                   NOT NULL,
     url_wyk FLOAT(4)  DEFAULT 0                   NOT NULL,
     url_zal FLOAT(4)  DEFAULT 0                   NOT NULL,
@@ -291,17 +278,15 @@ ALTER TABLE kadry.staztab
     ADD CONSTRAINT staztab_pk PRIMARY KEY (id);
 /
 ------ UMOWY
-CREATE SEQUENCE umowy_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.umowy
 (
-    id            INTEGER   DEFAULT umowy_seq.NEXTVAL NOT NULL,
+    id            RAW(32)        DEFAULT SYS_GUID()   NOT NULL,
     dtzaw         DATE                                NOT NULL,
     dtroz         DATE,
     zasad         FLOAT(15) DEFAULT 0                 NOT NULL,
-    id_stanow     INTEGER                             NOT NULL,
-    id_typum      INTEGER                             NOT NULL,
-    id_prc        INTEGER                             NOT NULL,
+    id_stanow     RAW(32)                             NOT NULL,
+    id_typum      RAW(32)                             NOT NULL,
+    id_prc        RAW(32)                             NOT NULL,
     nr_tyt_zus    NUMBER(5),
     czy_chor      NUMBER(1) DEFAULT 0                 NOT NULL,
     czy_ren       NUMBER(1) DEFAULT 0                 NOT NULL,
@@ -338,11 +323,9 @@ ALTER TABLE kadry.umowy
     ADD CONSTRAINT umowy_pk PRIMARY KEY (id);
 /
 ------ TYPUM
-CREATE SEQUENCE typum_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.typum
 (
-    id            INTEGER   DEFAULT typum_seq.NEXTVAL NOT NULL,
+    id            RAW(32)        DEFAULT SYS_GUID()   NOT NULL,
     nazwa         VARCHAR2(50),
     nr_tyt_zus    NUMBER(5),
     czy_chor      NUMBER(1) DEFAULT 0                 NOT NULL,
@@ -358,12 +341,16 @@ CREATE TABLE kadry.typum
     stzw          NUMBER(1) DEFAULT 0                 NOT NULL,
     stws          NUMBER(1) DEFAULT 0                 NOT NULL,
     stjb          NUMBER(1) DEFAULT 0                 NOT NULL,
-    rodz_um       NUMBER(1)
+    rodz_um       NUMBER
 );
 /
 ALTER TABLE kadry.typum
     ADD CONSTRAINT typum_pk PRIMARY KEY (id);
 /
+COMMENT ON COLUMN kadry.typum.rodz IS
+    'rodzaj umowy, 1 - umowa o prace, 10 - umowa zlec., 20 - umowa o dziel.';
+/
+
 /*
 ------ TYPOBEC
 CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
@@ -424,7 +411,7 @@ CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
 /
 CREATE TABLE kadry.urzedy
 (
-    id      INTEGER DEFAULT urzedy_seq.NEXTVAL NOT NULL,
+    id      RAW(32)        DEFAULT SYS_GUID()  NOT NULL,
     woje    VARCHAR2(20)                       NOT NULL,
     typ     VARCHAR2(35)                       NOT NULL,
     kod     VARCHAR2(70)                       NOT NULL,
@@ -434,25 +421,25 @@ CREATE TABLE kadry.urzedy
 /
 ALTER TABLE kadry.urzedy
     ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
-    
+
 -------------------------------------------------------------------  CIENIE
 ------ PRACONICY_C
 CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
 /
 CREATE TABLE kadry.pracownicy_c
 (
-    c_id     INTEGER DEFAULT pracownicy_c_seq.NEXTVAL NOT NULL,
+    c_id     RAW(32)             DEFAULT SYS_GUID()   NOT NULL,
     c_data   DATE    DEFAULT sysdate                  NOT NULL,
-    c_oper   INTEGER                                  NOT NULL,
-    id       INTEGER DEFAULT pracownicy_seq.NEXTVAL   NOT NULL,
+    c_oper   RAW(32)                                  NOT NULL,
+    id       RAW(32)                                  NOT NULL,
     imie     VARCHAR2(20)                             NOT NULL,
     nazwisko VARCHAR2(40)                             NOT NULL,
     dtur     DATE,
     misc_uro VARCHAR2(50),
     pesel    VARCHAR2(11)                             NOT NULL,
-    dok_typ  CHAR(5),
+    dok_typ  NUMBER,
     nr_dok   VARCHAR(20),
-    plec     CHAR(1),
+    plec     NUMBER,
     id_misc  INTEGER,
     ulica    VARCHAR2(50),
     nr_dom   VARCHAR2(10),
@@ -461,12 +448,14 @@ CREATE TABLE kadry.pracownicy_c
     imie_mat VARCHAR2(20),
     imie_ojc VARCHAR2(40),
     tele     VARCHAR2(15),
-    id_oper  INTEGER
+    id_oper  RAW(32)
 );
 /
 ALTER TABLE kadry.pracownicy_c
     ADD CONSTRAINT pracownicy_c_pk PRIMARY KEY (c_id);
 /
+
+/*
 ------ ABSENCJE_C
 CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -487,15 +476,15 @@ CREATE TABLE kadry.absencje_c
 ALTER TABLE kadry.absencje_c
     ADD CONSTRAINT absencje_c_pk PRIMARY KEY (c_id);
 /
+*/
+
 ------  ADRESY_C
-CREATE SEQUENCE adresy_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.adresy_c
 (
-    c_id     INTEGER DEFAULT adresy_c_seq.NEXTVAL NOT NULL,
+    c_id     RAW(32)         DEFAULT SYS_GUID()   NOT NULL,
     c_data   DATE                                 NOT NULL,
-    c_oper   INTEGER                              NOT NULL,
-    id       INTEGER                              NOT NULL,
+    c_oper   RAW(32)                              NOT NULL,
+    id       RAW(32)                              NOT NULL,
     misc     VARCHAR2(50)                         NOT NULL,
     gmina    VARCHAR2(50)                         NOT NULL,
     powiat   VARCHAR2(50)                         NOT NULL,
@@ -507,6 +496,8 @@ CREATE TABLE kadry.adresy_c
 ALTER TABLE kadry.adresy_c
     ADD CONSTRAINT adresy_c_pk PRIMARY KEY (c_id);
 /
+
+/*
 ------ HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
 CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -528,15 +519,15 @@ CREATE TABLE kadry.hps_c
 ALTER TABLE kadry.hps_c
     ADD CONSTRAINT hps_c_pk PRIMARY KEY (c_id);
 /
+*/
+
 ------ OKRESY_C
-CREATE SEQUENCE okresy_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.okresy_c
 (
-    c_id    INTEGER DEFAULT okresy_c_seq.NEXTVAL NOT NULL,
+    c_id    RAW(32)         DEFAULT SYS_GUID()   NOT NULL,
     c_data  DATE                                 NOT NULL,
-    c_oper  INTEGER                              NOT NULL,
-    id      INTEGER                              NOT NULL,
+    c_oper  RAW(32)                              NOT NULL,
+    id      RAW(32)                              NOT NULL,
     dtod    DATE                                 NOT NULL,
     dtdo    DATE                                 NOT NULL,
     dni_kal NUMBER(4)                            NOT NULL,
@@ -547,15 +538,13 @@ CREATE TABLE kadry.okresy_c
 ALTER TABLE kadry.okresy_c
     ADD CONSTRAINT okresy_c_pk PRIMARY KEY (c_id);
 /
+
 ------ OPER_C
-CREATE SEQUENCE oper_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.oper_c
 (
     c_id           RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
     c_data         DATE      DEFAULT sysdate      NOT NULL,
-    c_oper         INTEGER
-                                                  NOT NULL,
+    c_oper         RAW(32)                        NOT NULL,
     id             RAW(32)                        NOT NULL,
     imie           VARCHAR2(20)                   NOT NULL,
     nazwisko       VARCHAR2(35)                   NOT NULL,
@@ -570,51 +559,47 @@ CREATE TABLE kadry.oper_c
 ALTER TABLE kadry.oper_c
     ADD CONSTRAINT oper_c_pk PRIMARY KEY (c_id);
 /
+
 ------  PKZP_C
-CREATE SEQUENCE pkzp_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pkzp_c
 (
-    c_id   INTEGER   DEFAULT pkzp_c_seq.NEXTVAL NOT NULL,
+    c_id   RAW(32)         DEFAULT SYS_GUID()   NOT NULL,
     c_data DATE                                 NOT NULL,
-    c_oper INTEGER                              NOT NULL,
-    id     INTEGER                              NOT NULL,
-    id_prc INTEGER                              NOT NULL,
+    c_oper RAW(32)                              NOT NULL,
+    id     RAW(32)                              NOT NULL,
+    id_prc RAW(32)                              NOT NULL,
     saldo  FLOAT(15) DEFAULT 0,
     dt     FLOAT(15) DEFAULT 0,
     ct     FLOAT(15) DEFAULT 0,
-    rodz   CHAR(1)                              NOT NULL
+    rodz   NUMBER                              NOT NULL
 );
 /
 ALTER TABLE kadry.pkzp_c
     ADD CONSTRAINT pkzp_c_pk PRIMARY KEY (c_id);
 /
+
 ------  PKZP_POZ_C
-CREATE SEQUENCE pkzp_poz_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.pkzp_poz_c
 (
-    c_id    INTEGER   DEFAULT pkzp_poz_c_seq.NEXTVAL NOT NULL,
+    c_id    RAW(32)             DEFAULT SYS_GUID()   NOT NULL,
     c_data  DATE      DEFAULT sysdate                NOT NULL,
-    c_oper  INTEGER                                  NOT NULL,
-    id      INTEGER                                  NOT NULL,
+    c_oper  RAW(32)                                  NOT NULL,
+    id      RAW(32)                                  NOT NULL,
     rodz    CHAR(1)                                  NOT NULL,
     kwot    FLOAT(15) DEFAULT 0                      NOT NULL,
-    id_pkzp INTEGER                                  NOT NULL
+    id_pkzp RAW(32)                                  NOT NULL
 );
 /
 ALTER TABLE kadry.pkzp_poz_c
     ADD CONSTRAINT pkzp_poz_c_pk PRIMARY KEY (c_id);
 /
 ------ STANOW_C (STANOWISKA)
-CREATE SEQUENCE stanow_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.stanow_c
 (
-    c_id    INTEGER DEFAULT stanow_c_seq.NEXTVAL NOT NULL,
+    c_id    RAW(32)         DEFAULT SYS_GUID()   NOT NULL,
     c_data  DATE    DEFAULT sysdate              NOT NULL,
-    c_oper  INTEGER                              NOT NULL,
-    id      INTEGER                              NOT NULL,
+    c_oper  RAW(32)                              NOT NULL,
+    id      RAW(32)                              NOT NULL,
     nazwa   VARCHAR2(50),
     kod_gus NUMBER(10)
 );
@@ -622,21 +607,20 @@ CREATE TABLE kadry.stanow_c
 ALTER TABLE kadry.stanow_c
     ADD CONSTRAINT stanow_c_pk PRIMARY KEY (id);
 /
+
 ------ STAZTAB_C (TABELA STAZOW)
-CREATE SEQUENCE staztab_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.staztab_c
 (
-    c_id    INTEGER   DEFAULT staztab_c_seq.NEXTVAL NOT NULL,
+    c_id    RAW(32)            DEFAULT SYS_GUID()   NOT NULL,
     c_data  DATE      DEFAULT sysdate               NOT NULL,
-    c_oper  INTEGER                                 NOT NULL,
-    id      INTEGER                                 NOT NULL,
+    c_oper  RAW(32)                                 NOT NULL,
+    id      RAW(32)                                 NOT NULL,
     stog    FLOAT(15) DEFAULT 0                     NOT NULL,
     stwz    FLOAT(15) DEFAULT 0                     NOT NULL,
     stws    FLOAT(15) DEFAULT 0                     NOT NULL,
     stjb    FLOAT(15) DEFAULT 0                     NOT NULL,
-    id_prc  INTEGER                                 NOT NULL,
-    id_oks  INTEGER                                 NOT NULL,
+    id_prc  RAW(32)                                 NOT NULL,
+    id_oks  RAW(32)                                 NOT NULL,
     url_prz FLOAT(4)  DEFAULT 0                     NOT NULL,
     url_wyk FLOAT(4)  DEFAULT 0                     NOT NULL,
     url_zal FLOAT(4)  DEFAULT 0                     NOT NULL,
@@ -647,20 +631,18 @@ ALTER TABLE kadry.staztab_c
     ADD CONSTRAINT staztab_c_pk PRIMARY KEY (c_id);
 /
 ------ UMOWY_C
-CREATE SEQUENCE umowy_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.umowy_c
 (
-    c_id          INTEGER   DEFAULT umowy_c_seq.NEXTVAL NOT NULL,
+    c_id          RAW(32)          DEFAULT SYS_GUID()   NOT NULL,
     c_data        DATE      DEFAULT sysdate             NOT NULL,
-    c_oper        INTEGER                               NOT NULL,
-    id            INTEGER   DEFAULT umowy_seq.NEXTVAL   NOT NULL,
+    c_oper        RAW(32)                               NOT NULL,
+    id            RAW(32)                               NOT NULL,
     dtzaw         DATE                                  NOT NULL,
     dtroz         DATE,
     zasad         FLOAT(15) DEFAULT 0                   NOT NULL,
-    id_stanow     INTEGER                               NOT NULL,
-    id_typum      INTEGER                               NOT NULL,
-    id_prc        INTEGER                               NOT NULL,
+    id_stanow     RAW(32)                               NOT NULL,
+    id_typum      RAW(32)                               NOT NULL,
+    id_prc        RAW(32)                               NOT NULL,
     nr_tyt_zus    NUMBER(5),
     czy_chor      NUMBER(1) DEFAULT 0                   NOT NULL,
     czy_ren       NUMBER(1) DEFAULT 0                   NOT NULL,
@@ -680,15 +662,14 @@ CREATE TABLE kadry.umowy_c
 ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_pk PRIMARY KEY (c_id);
 /
+
 ------ TYPUM_C
-CREATE SEQUENCE typum_c_seq INCREMENT BY 1 NOCACHE;
-/
 CREATE TABLE kadry.typum_c
 (
-    c_id          INTEGER   DEFAULT typum_c_seq.NEXTVAL NOT NULL,
+    c_id          RAW(32)          DEFAULT SYS_GUID()   NOT NULL,
     c_data        DATE      DEFAULT sysdate             NOT NULL,
-    c_oper        INTEGER                               NOT NULL,
-    id            INTEGER                               NOT NULL,
+    c_oper        RAW(32)                               NOT NULL,
+    id            RAW(32)                               NOT NULL,
     nazwa         VARCHAR2(50),
     nr_tyt_zus    NUMBER(5),
     czy_chor      NUMBER(1) DEFAULT 0                   NOT NULL,
@@ -704,12 +685,14 @@ CREATE TABLE kadry.typum_c
     stzw          NUMBER(1) DEFAULT 0                   NOT NULL,
     stws          NUMBER(1) DEFAULT 0                   NOT NULL,
     stjb          NUMBER(1) DEFAULT 0                   NOT NULL,
-    rodz_um       NUMBER(1)
+    rodz_um       NUMBER
 );
 /
 ALTER TABLE kadry.typum_c
     ADD CONSTRAINT typum_c_pk PRIMARY KEY (c_id);
 /
+
+/*
 ------ TYPOBEC_C
 CREATE SEQUENCE typobec_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -730,8 +713,10 @@ CREATE TABLE kadry.typobec_c
 ALTER TABLE kadry.typobec_c
     ADD CONSTRAINT typobec_c_pk PRIMARY KEY (id);
 /
+*/
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------  CONSTRAINTS
+/*
 ALTER TABLE kadry.absencje
     ADD CONSTRAINT absencje_pracownicy_fk FOREIGN KEY (id_prc)
         REFERENCES kadry.pracownicy (id);
@@ -748,6 +733,7 @@ ALTER TABLE kadry.hps
     ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY (id_prc)
         REFERENCES kadry.pracownicy (id);
 /
+*/
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pracownicy_fk FOREIGN KEY (id_prc)
         REFERENCES kadry.pracownicy (id);
@@ -788,6 +774,7 @@ ALTER TABLE kadry.pracownicy_c
     ADD CONSTRAINT pracownicy_c_prac_fk FOREIGN KEY (id)
         REFERENCES kadry.pracownicy (id);
 /
+/*
 ALTER TABLE kadry.typobec_c
     ADD CONSTRAINT typobec_c_typobec_fk FOREIGN KEY (id)
         REFERENCES kadry.typobec (id);
@@ -796,14 +783,17 @@ ALTER TABLE kadry.absencje_c
     ADD CONSTRAINT absencje_c_absencje_fk FOREIGN KEY (id)
         REFERENCES kadry.absencje (id);
 /
+*/
 ALTER TABLE kadry.adresy_c
     ADD CONSTRAINT adresy_c_adresy_fk FOREIGN KEY (id)
         REFERENCES kadry.adresy (id);
 /
+/*
 ALTER TABLE kadry.hps_c
     ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY (id)
         REFERENCES kadry.hps (id);
 /
+*/
 ALTER TABLE kadry.okresy_c
     ADD CONSTRAINT okresy_c_okresy_fk FOREIGN KEY (id)
         REFERENCES kadry.okresy (id);
@@ -861,6 +851,7 @@ EXCEPTION
         raise_application_error(-20002, SQLERRM);
 END;
 /
+/*
 --------------------------- ABSE_ABSEC_AUD
 create or replace NONEDITIONABLE TRIGGER abse_absec_aud
     AFTER UPDATE OR DELETE
@@ -881,6 +872,7 @@ EXCEPTION
         raise_application_error(-20002, SQLERRM);
 END;
 /
+*/
 --------------------------- ADRESY_ADRESYC_AUD
 create or replace NONEDITIONABLE TRIGGER adresy_adresyc_aud
     AFTER UPDATE OR DELETE
@@ -900,6 +892,7 @@ EXCEPTION
     WHEN OTHERS THEN
         raise_application_error(-20002, SQLERRM);
 END;
+/*
 --------------------------- HPS_HPSC_AUD
 create or replace NONEDITIONABLE TRIGGER hps_hpsc_aud
     AFTER UPDATE OR DELETE
@@ -921,6 +914,7 @@ EXCEPTION
         raise_application_error(-20002, SQLERRM);
 END;
 /
+*/
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace NONEDITIONABLE TRIGGER okresy_okresyc_aud
     AFTER UPDATE OR DELETE
@@ -954,6 +948,18 @@ BEGIN
     RETURN round(WART * 60);
 END;
 
+--------------------------- F_ MIN_TO_HOURS
+
+create or replace FUNCTION F_MIN_TO_HOURS
+(
+ WART NUMBER
+)
+RETURN NUMBER
+IS
+BEGIN
+  RETURN round(WART/60);
+END;
+
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- PAKIETY (PACKAGE)
@@ -984,3 +990,31 @@ END;
         COMMIT;
     END;
 END;
+
+--------------------------- PKZP
+
+----- PACKAGE
+
+CREATE OR REPLACE PACKAGE pkzp_pack AS
+  FUNCTION f_pkzp_sklad (v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER) RETURN NUMBER;
+END;
+
+----- BODY
+
+CREATE OR REPLACE PACKAGE BODY pkzp_pack AS
+    FUNCTION f_pkzp_sklad (v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER)
+    RETURN NUMBER AS
+        v_kwota FLOAT;
+        v_buf FLOAT;
+        BEGIN
+            IF (v_froma = 0) THEN
+                SELECT zasad*(v_sklad/100)
+                INTO v_kwota
+                FROM umowy
+                WHERE id = v_idumowy;
+            ELSIF (v_froma = 1) THEN
+                v_kwota := v_sklad;
+            END IF;
+            RETURN(v_kwota);
+        END;
+      END;
