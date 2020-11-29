@@ -1,6 +1,7 @@
 ------------------------------------------------------------------- Tworzenie schematu i nadawanie uprawnień
 
 ------------------------------------------------------------------- TABELS
+/*
 ------ ABSENCJE
 CREATE SEQUENCE absencje_seq INCREMENT BY 1 NOCACHE;
 /
@@ -36,6 +37,7 @@ COMMENT ON COLUMN kadry.absencje.zada IS
 ALTER TABLE kadry.absencje
     ADD CONSTRAINT absencje_pk PRIMARY KEY (id);
 /
+*/
 ------  ADRESY
 CREATE SEQUENCE adresy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -56,6 +58,7 @@ ALTER TABLE kadry.adresy
 ALTER TABLE kadry.adresy
     ADD CONSTRAINT adresy_teryt_un UNIQUE (teryt);
 /
+/*
 ------ HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
 CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
 /
@@ -89,6 +92,8 @@ COMMENT ON COLUMN kadry.hps.id_prc IS
 ALTER TABLE kadry.hps
     ADD CONSTRAINT hps_pk PRIMARY KEY (id);
 /
+*/
+
 ------ OKRESY
 CREATE SEQUENCE okresy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -120,6 +125,7 @@ COMMENT ON COLUMN kadry.okresy.norma IS
 ALTER TABLE kadry.okresy
     ADD CONSTRAINT okresy_pk PRIMARY KEY (id);
 /
+
 ------  PKZP
 CREATE SEQUENCE pkzp_seq INCREMENT BY 1 NOCACHE;
 /
@@ -153,6 +159,7 @@ P - pożyczka';
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pk PRIMARY KEY (id);
 /
+
 ------  PKZP_POZ
 CREATE SEQUENCE pkzp_poz_seq INCREMENT BY 1 NOCACHE;
 /
@@ -175,6 +182,28 @@ COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
 /
+
+------ PKZP_PARAM
+
+CREATE SEQUENCE pkzp_param_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.pkzp_param (   
+    forma    NUMBER(1) DEFAULT 0 NOT NULL,
+    ile_rat  NUMBER(2) DEFAULT 12 NOT NULL,
+    wklad    FLOAT(10) DEFAULT 0 NOT NULL,
+    sklad    FLOAT(10) DEFAULT 0 NOT NULL   
+);
+/
+COMMENT ON COLUMN kadry.pkzp_param.forma IS
+    'Forma składek  0 - %,  1 - zł';
+/
+COMMENT ON COLUMN kadry.pkzp_param.wklad IS
+    'wartość wkładu początkowego';
+/    
+COMMENT ON COLUMN kadry.pkzp_param.sklad IS
+    'wartość składki PKZP';    
+/
+
 ------ PRACOWNICY
 CREATE SEQUENCE pracownicy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -335,6 +364,7 @@ CREATE TABLE kadry.typum
 ALTER TABLE kadry.typum
     ADD CONSTRAINT typum_pk PRIMARY KEY (id);
 /
+/*
 ------ TYPOBEC
 CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
 /
@@ -367,6 +397,8 @@ COMMENT ON COLUMN kadry.typobec.rodz_lim IS
 COMMENT ON COLUMN kadry.typobec.lim IS
     'Ile dni limitu';
 /
+*/
+
 ------ OPER (OPERATOR)
 CREATE SEQUENCE oper_seq INCREMENT BY 1 NOCACHE;
 /
@@ -386,6 +418,7 @@ CREATE TABLE kadry.oper
 ALTER TABLE kadry.oper
     ADD CONSTRAINT oper_pk PRIMARY KEY (id);
 /
+
 ------ URZEDY (URZEDY)
 CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
 /
@@ -401,6 +434,7 @@ CREATE TABLE kadry.urzedy
 /
 ALTER TABLE kadry.urzedy
     ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
+    
 -------------------------------------------------------------------  CIENIE
 ------ PRACONICY_C
 CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
