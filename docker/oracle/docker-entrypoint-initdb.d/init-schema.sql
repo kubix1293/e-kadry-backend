@@ -13,7 +13,7 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = true;
 --     id_ump      INTEGER NOT NULL,
 --     zada        NUMBER(1) DEFAULT  0 NOT NULL
 -- );
--- /	
+-- /
 -- COMMENT ON COLUMN kadry.absencje.dtod IS
 --     'data od';
 -- /
@@ -143,7 +143,7 @@ COMMENT ON COLUMN kadry.pkzp.ct IS
 /
 COMMENT ON COLUMN kadry.pkzp.rodz IS
     'Rodzaj PKZP
-W - wkłady	
+W - wkłady
 P - pożyczka';
 /
 ALTER TABLE kadry.pkzp
@@ -206,10 +206,10 @@ CREATE TABLE kadry.pracownicy
     dtur           DATE,
     misc_uro       VARCHAR2(50),
     pesel          VARCHAR2(11)                 NOT NULL,
-    dok_typ        NUMBER(1),
+    dok_typ        INTEGER,
     nr_dok         VARCHAR(20),
-    plec           CHAR(1),
-    id_misc        INTEGER,
+    plec           INTEGER,
+    misc           VARCHAR2(50),
     ulica          VARCHAR2(50),
     nr_dom         VARCHAR2(10),
     nr_lok         VARCHAR2(10),
@@ -312,7 +312,7 @@ CREATE TABLE kadry.umowy
 );
 /
 COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
-    'Czas wprowadzany w postaci dziesiętnej. Aplikacja wywoła funckje, która po wpisaniu np.: 8:35 zmienia na liczbę naturalną z ułamkiem dziesiętnym. 
+    'Czas wprowadzany w postaci dziesiętnej. Aplikacja wywoła funckje, która po wpisaniu np.: 8:35 zmienia na liczbę naturalną z ułamkiem dziesiętnym.
 Zrobić funkcję, która przelicza liczbę dziesiętną na godzinę i funkcję odwrotną.';
 /
 COMMENT ON COLUMN kadry.umowy.stog IS
@@ -374,18 +374,18 @@ ALTER TABLE kadry.typum
 -- /
 -- COMMENT ON COLUMN kadry.typobec.cdot IS
 --     'Czego dotyczy obecnosc (CHR - choroba, UWP - Urlop wypoczynkowy, GPR - godziny pracy itd.)';
--- /    
+-- /
 -- COMMENT ON COLUMN kadry.typobec.kod_zus IS
---     'KOD zwolnienia wedug ZUS (dla chorobowych)'; 
--- /   
+--     'KOD zwolnienia wedug ZUS (dla chorobowych)';
+-- /
 -- COMMENT ON COLUMN kadry.typobec.CZY_lim IS
---     'Czy obejmuje limit 0 - nie - 1 - tak'; 
--- /   
+--     'Czy obejmuje limit 0 - nie - 1 - tak';
+-- /
 -- COMMENT ON COLUMN kadry.typobec.rodz_lim IS
---     'Rodzaj imitu: r - roczny, i - indywidualny';    
--- /	
+--     'Rodzaj imitu: r - roczny, i - indywidualny';
+-- /
 -- COMMENT ON COLUMN kadry.typobec.lim IS
---     'Ile dni limitu';   
+--     'Ile dni limitu';
 -- /
 
 ------ OPER (OPERATOR)
@@ -410,7 +410,7 @@ ALTER TABLE kadry.oper
 -- ------ URZEDY (URZEDY)
 -- CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
 -- /
--- CREATE TABLE kadry.urzedy ( 
+-- CREATE TABLE kadry.urzedy (
 -- 	id			INTEGER DEFAULT urzedy_seq.NEXTVAL NOT NULL,
 -- 	woje		VARCHAR2(20) NOT NULL,
 -- 	typ     	VARCHAR2(35) NOT NULL,
@@ -418,7 +418,7 @@ ALTER TABLE kadry.oper
 -- 	adres		VARCHAR2(70) NOT NULL,
 -- 	kodisus		VARCHAR2(40) NOT NULL
 -- 	);
--- /	
+-- /
 -- ALTER TABLE kadry.urzedy ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
 
 -------------------------------------------------------------------  CIENIE
@@ -427,30 +427,30 @@ CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
 /
 CREATE TABLE kadry.pracownicy_c
 (
-    c_id     INTEGER DEFAULT pracownicy_c_seq.NEXTVAL NOT NULL,
-    c_data   DATE    DEFAULT sysdate                  NOT NULL,
-    c_oper   INTEGER                                  NOT NULL,
-    id       RAW(32)                                  NOT NULL,
-    imie     VARCHAR2(20)                             NOT NULL,
-    nazwisko VARCHAR2(40)                             NOT NULL,
-    dtur     DATE,
-    misc_uro VARCHAR2(50),
-    pesel    VARCHAR2(11)                             NOT NULL,
-    dok_typ  CHAR(5),
-    nr_dok   VARCHAR(20),
-    plec     CHAR(1),
-    id_misc  INTEGER,
-    ulica    VARCHAR2(50),
-    nr_dom   VARCHAR2(10),
-    nr_lok   VARCHAR2(10),
-    nr_akt   VARCHAR2(10),
-    imie_mat VARCHAR2(20),
-    imie_ojc VARCHAR2(40),
-    tele     VARCHAR2(15),
-    id_oper  INTEGER,
+    c_id           INTEGER DEFAULT pracownicy_c_seq.NEXTVAL NOT NULL,
+    c_data         DATE    DEFAULT sysdate                  NOT NULL,
+    c_oper         INTEGER                                  NOT NULL,
+    id             RAW(32)                                  NOT NULL,
+    imie           VARCHAR2(20)                             NOT NULL,
+    nazwisko       VARCHAR2(40)                             NOT NULL,
+    dtur           DATE,
+    misc_uro       VARCHAR2(50),
+    pesel          VARCHAR2(11)                             NOT NULL,
+    dok_typ        INTEGER,
+    nr_dok         VARCHAR(20),
+    plec           INTEGER,
+    misc        VARCHAR2(50),
+    ulica          VARCHAR2(50),
+    nr_dom         VARCHAR2(10),
+    nr_lok         VARCHAR2(10),
+    nr_akt         VARCHAR2(10),
+    imie_mat       VARCHAR2(20),
+    imie_ojc       VARCHAR2(40),
+    tele           VARCHAR2(15),
+    id_oper        INTEGER,
     usuniety       DATE,
-    utworzony      DATE      DEFAULT current_date       NOT NULL,
-    zaktualizowany DATE      DEFAULT current_date       NOT NULL
+    utworzony      DATE    DEFAULT current_date             NOT NULL,
+    zaktualizowany DATE    DEFAULT current_date             NOT NULL
 );
 /
 -- ALTER TABLE kadry.pracownicy_c
@@ -721,10 +721,10 @@ ALTER TABLE kadry.typum_c
 -- ALTER TABLE kadry.absencje
 --     ADD CONSTRAINT absencje_umowy_fk FOREIGN KEY ( id_ump )
 --         REFERENCES kadry.umowy ( id );
--- /		
+-- /
 -- ALTER TABLE kadry.absencje
 --     ADD CONSTRAINT absencje_typobec_fk FOREIGN KEY ( id_typobec )
---         REFERENCES kadry.typobec ( id );				
+--         REFERENCES kadry.typobec ( id );
 -- /
 -- ALTER TABLE kadry.hps
 --     ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY ( id_prc )
@@ -737,10 +737,6 @@ ALTER TABLE kadry.pkzp
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzppoz_pkzp_fk FOREIGN KEY (id_pkzp)
         REFERENCES kadry.pkzp (id);
-/
-ALTER TABLE kadry.pracownicy
-    ADD CONSTRAINT pracownicy_adresy_fk FOREIGN KEY (id_misc)
-        REFERENCES kadry.adresy (id);
 /
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY (id_oper)
@@ -784,7 +780,7 @@ ALTER TABLE kadry.adresy_c
 /
 -- ALTER TABLE kadry.hps_c
 --     ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY ( id )
---         REFERENCES kadry.hps ( id );		
+--         REFERENCES kadry.hps ( id );
 -- /
 ALTER TABLE kadry.okresy_c
     ADD CONSTRAINT okresy_c_okresy_fk FOREIGN KEY (id)
@@ -808,7 +804,7 @@ ALTER TABLE kadry.stanow_c
 /
 -- ALTER TABLE kadry.staztab_c
 --     ADD CONSTRAINT staztab_c_staztab FOREIGN KEY ( id )
---         REFERENCES kadry.staztab ( id );    
+--         REFERENCES kadry.staztab ( id );
 -- /
 ALTER TABLE kadry.typum_c
     ADD CONSTRAINT typum_c_typum_fk FOREIGN KEY (id)
@@ -832,8 +828,10 @@ BEGIN
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or :NEW.id_misc <> :OLD.id_misc or
         :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok) THEN
         t_rec := pracownicy_c_seq.NEXTVAL;
-        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA, NR_DOM, NR_LOK)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL, :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ID_MISC, :OLD.ULICA,
+        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA,
+                                  NR_DOM, NR_LOK)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL,
+                :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ID_MISC, :OLD.ULICA,
                 :OLD.NR_DOM, :OLD.NR_LOK);
     END IF;
 EXCEPTION
@@ -843,11 +841,11 @@ END;
 /
 -- --------------------------- ABSE_ABSEC_AUD
 -- create or replace NONEDITIONABLE TRIGGER abse_absec_aud
---     AFTER UPDATE OR DELETE ON absencje 
---     FOR EACH ROW 
+--     AFTER UPDATE OR DELETE ON absencje
+--     FOR EACH ROW
 -- DECLARE
 --  t_rec INTEGER;
--- BEGIN    
+-- BEGIN
 --  IF (:NEW.dtod<>:OLD.dtod or :NEW.dtdo<>:OLD.dtdo or :NEW.id_typobec<>:OLD.id_typobec or
 --      :NEW.id_prc<>:OLD.id_prc or :NEW.id_ump<>:OLD.id_ump or :NEW.zada<>:OLD.zada) THEN
 --   t_rec := absencje_c_seq.NEXTVAL;
@@ -871,7 +869,8 @@ BEGIN
         :NEW.wojew <> :OLD.wojew or :NEW.teryt <> :OLD.teryt or :NEW.kod_pocz <> :OLD.kod_pocz) THEN
         t_rec := adresy_c_seq.NEXTVAL;
         INSERT INTO adresy_c (c_id, c_data, c_oper, id, misc, gmina, powiat, wojew, teryt, kod_pocz)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.misc, :OLD.gmina, :OLD.powiat, :OLD.wojew, :OLD.teryt, :OLD.kod_pocz);
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.misc, :OLD.gmina, :OLD.powiat,
+                :OLD.wojew, :OLD.teryt, :OLD.kod_pocz);
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
@@ -879,11 +878,11 @@ EXCEPTION
 END;
 -- --------------------------- HPS_HPSC_AUD
 -- create or replace NONEDITIONABLE TRIGGER hps_hpsc_aud
---     AFTER UPDATE OR DELETE ON hps 
---     FOR EACH ROW 
+--     AFTER UPDATE OR DELETE ON hps
+--     FOR EACH ROW
 -- DECLARE
 --  t_rec INTEGER;
--- BEGIN   
+-- BEGIN
 --  IF (:NEW.dtod<>:OLD.dtod or :NEW.dtdo<>:OLD.dtdo or :NEW.stog<>:OLD.stog or
 --      :NEW.stzw<>:OLD.stzw or :NEW.stws<>:OLD.stws or :NEW.stjb<>:OLD.stjb or
 --      :NEW.id_prc <> :OLD.id_prc) THEN
@@ -908,7 +907,8 @@ BEGIN
         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
         t_rec := okresy_c_seq.NEXTVAL;
         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal,
+                :OLD.dni_rob, :OLD.norma);
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
@@ -940,6 +940,25 @@ create or replace FUNCTION F_MIN_TO_HOURS(
     IS
 BEGIN
     RETURN round(WART / 60);
+END;
+
+create or replace FUNCTION GUID_TO_RAW(
+    GUID VARCHAR2
+)
+    RETURN RAW
+    IS
+BEGIN
+    RETURN hextoraw(substr(GUID, 7, 2) ||
+                    substr(GUID, 5, 2) ||
+                    substr(GUID, 3, 2) ||
+                    substr(GUID, 1, 2) ||
+                    substr(GUID, 12, 2) ||
+                    substr(GUID, 10, 2) ||
+                    substr(GUID, 17, 2) ||
+                    substr(GUID, 15, 2) ||
+                    substr(GUID, 20, 4) ||
+                    substr(GUID, 25, 12)
+        );
 END;
 
 -------------------------------------------------------------------------------------------------------------------

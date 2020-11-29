@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using EKadry.Domain.Operators;
+using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Domain.Operators;
+using EKadry.Infrastructure.Domain.Workers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -20,6 +22,10 @@ namespace EKadry.Infrastructure.Database
         {
             builder.RegisterType<OperatorRepository>()
                 .As<IOperatorRepository>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<WorkerRepository>()
+                .As<IWorkerRepository>()
                 .InstancePerLifetimeScope();
             
             builder.RegisterType<StronglyTypedIdValueConverterSelector>()

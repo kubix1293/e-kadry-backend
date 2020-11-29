@@ -19,12 +19,10 @@ namespace EKadry.API.Http.Operator
     public class OperatorsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IConfiguration _configuration;
 
-        public OperatorsController(IMediator mediator, IConfiguration configuration)
+        public OperatorsController(IMediator mediator)
         {
             _mediator = mediator;
-            _configuration = configuration;
         }
 
         /// <summary>
