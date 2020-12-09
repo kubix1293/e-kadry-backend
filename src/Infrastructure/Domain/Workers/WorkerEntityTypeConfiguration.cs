@@ -21,9 +21,9 @@ namespace EKadry.Infrastructure.Domain.Workers
             builder.Property(e => e.Birthday).HasColumnName("DTUR");
             builder.Property(e => e.CityOfBirthday).HasColumnName("MISC_URO");
             builder.Property(e => e.Pesel).HasColumnName("PESEL");
-            builder.Property(e => e.DoumnetType).HasColumnName("DOK_TYP").HasConversion(new EnumToNumberConverter<DocumentType, int>());
+            builder.Property(e => e.DocumentType).HasColumnName("DOK_TYP").HasConversion(new EnumToNumberConverter<DocumentType, int>());
             builder.Property(e => e.DocumentNumber).HasColumnName("NR_DOK");
-            builder.Property(e => e.Gender).HasColumnName("PLEC").HasConversion(new EnumToNumberConverter<Genre, int>());
+            builder.Property(e => e.Gender).HasColumnName("PLEC").HasConversion(new EnumToNumberConverter<Gender, int>());
             builder.Property(e => e.City).HasColumnName("MISC");
             builder.Property(e => e.Street).HasColumnName("ULICA");
             builder.Property(e => e.PropertyNumber).HasColumnName("NR_DOM");

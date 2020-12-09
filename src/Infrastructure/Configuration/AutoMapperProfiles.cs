@@ -3,6 +3,7 @@ using AutoMapper;
 using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
+using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain;
 using EKadry.Domain.Operators;
@@ -25,7 +26,9 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<OperatorId, Operator>();
             
             CreateMap<Worker, WorkerListDto>();
-            // CreateMap<Worker, WorkerDetailDto>();
+            CreateMap<Worker, WorkerDetailDto>()
+                .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => EnumHelper<DocumentType>.GetMap(src.DocumentType)))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => EnumHelper<Gender>.GetMap(src.Gender)));
             CreateMap<WorkerId, Worker>();
         }
     }

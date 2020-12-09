@@ -29,9 +29,9 @@ namespace EKadry.Infrastructure.Domain.Workers
             return new Pagination<Worker>(filtered, commandPage, commandPerPage);
         }
 
-        public async Task<Worker> GetAsync(WorkerId id)
+        public async Task<Worker> GetAsync(WorkerId workerId)
         {
-            return await Context.Worker.Where(x => x.Id == id.Value.ToByteArray()).FirstOrDefaultAsync();
+            return await Context.Worker.Where(x => x.Id == workerId.Value.ToByteArray()).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(Worker worker)

@@ -12,7 +12,7 @@ namespace EKadry.Domain.Workers
             string commandOrderBy,
             string commandSearch,
             CancellationToken cancellationToken);
-        Task<Worker> GetAsync(WorkerId operatorId);
+        Task<Worker> GetAsync(WorkerId workerId);
         Task AddAsync(Worker worker);
         Task<int> DeleteAsync(WorkerId requestId);
     }

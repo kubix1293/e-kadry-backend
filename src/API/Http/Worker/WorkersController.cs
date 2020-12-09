@@ -7,6 +7,7 @@ using EKadry.Application.Services.Operators.OperatorAdd;
 using EKadry.Application.Services.Operators.OperatorDelete;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
+using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain.Pagination;
 using MediatR;
@@ -61,19 +62,19 @@ namespace EKadry.API.Http.Worker
         //
         //     return Created(@operator.Id, @operator);
         // }
-        //
-        // /// <summary>
-        // /// Get worker details
-        // /// </summary>
-        // [HttpGet("{workerId}")]
-        // [ProducesResponseType(typeof(OperatorDetailDto), (int) HttpStatusCode.OK)]
-        // public async Task<IActionResult> Get([FromRoute] Guid workerId)
-        // {
-        //     var @operator = await _mediator.Send(new OperatorDetailQuery(workerId));
-        //
-        //     return Ok(@operator);
-        // }
-        //
+        
+        /// <summary>
+        /// Get worker details
+        /// </summary>
+        [HttpGet("{workerId}")]
+        [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Get([FromRoute] Guid workerId)
+        {
+            var worker = await _mediator.Send(new WorkerDetailQuery(workerId));
+        
+            return Ok(worker);
+        }
+        
         // /// <summary>
         // /// Delete worker 
         // /// </summary>

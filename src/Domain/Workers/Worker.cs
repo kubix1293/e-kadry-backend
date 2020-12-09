@@ -11,9 +11,9 @@ namespace EKadry.Domain.Workers
         public DateTime? Birthday { get; set; }
         public string CityOfBirthday { get; set; }
         public string Pesel { get; set; }
-        public DocumentType DoumnetType { get; set; }
+        public DocumentType DocumentType { get; set; }
         public string DocumentNumber { get; set; }
-        public Genre Gender { get; set; }
+        public Gender Gender { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
@@ -39,7 +39,7 @@ namespace EKadry.Domain.Workers
             string pesel,
             DocumentType documentType,
             string documentNumber,
-            Genre gender,
+            Gender gender,
             string city,
             string street,
             string propertyNumber,
@@ -58,7 +58,7 @@ namespace EKadry.Domain.Workers
                 Birthday = birthday,
                 CityOfBirthday = cityOfBirthday,
                 Pesel = pesel,
-                DoumnetType = documentType,
+                DocumentType = documentType,
                 DocumentNumber = documentNumber,
                 Gender = gender,
                 City = city,
