@@ -17,11 +17,6 @@ namespace EKadry.API.Configuration
                     Title = "E-Kadry",
                     Version = "v1",
                 });
-
-                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
-                var commentsFile = Path.Combine(baseDirectory ?? string.Empty, commentsFileName);
-                options.IncludeXmlComments(commentsFile);
             });
         }
 
