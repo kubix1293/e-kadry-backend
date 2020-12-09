@@ -14,6 +14,6 @@ namespace EKadry.Domain.Workers
             CancellationToken cancellationToken);
         Task<Worker> GetAsync(WorkerId workerId);
         Task AddAsync(Worker worker);
-        Task<int> DeleteAsync(WorkerId requestId);
+        Task<int> DeleteAsync(WorkerId workerId);
     }
 }

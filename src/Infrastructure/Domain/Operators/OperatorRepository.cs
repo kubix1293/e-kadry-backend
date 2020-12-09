@@ -31,7 +31,7 @@ namespace EKadry.Infrastructure.Domain.Operators
 
         public async Task<Operator> GetAsync(OperatorId id)
         {
-            return await Context.Operator.Where(x => x.Id == id.Value.ToByteArray()).FirstOrDefaultAsync();
+            return await Context.Operator.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(Operator @operator)
@@ -57,8 +57,9 @@ namespace EKadry.Infrastructure.Domain.Operators
 
         public async Task<int> DeleteAsync(OperatorId operatorId)
         {
-            return await Context.Database
-                .ExecuteSqlInterpolatedAsync($"DELETE FROM KADRY.OPER WHERE ID = {operatorId.Value.ToByteArray()}");
+            var @operator = new Operator {Id = operatorId};
+            Context.Entry(@operator).State = EntityState.Deleted;
+            return await Context.SaveChangesAsync();
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Application.Configuration.Commands;
 using EKadry.Domain.Operators;
+using MediatR;
 
 namespace EKadry.Application.Services.Operators.OperatorDelete
 {

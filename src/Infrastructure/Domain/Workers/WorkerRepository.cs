@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,18 +30,20 @@ namespace EKadry.Infrastructure.Domain.Workers
 
         public async Task<Worker> GetAsync(WorkerId workerId)
         {
-            return await Context.Worker.Where(x => x.Id == workerId.Value.ToByteArray()).FirstOrDefaultAsync();
+            return await Context.Worker.Where(x => x.Id == workerId).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(Worker worker)
         {
-            throw new NotImplementedException();
+            await Context.Worker.AddAsync(worker);
+            await Context.SaveChangesAsync();
         }
 
         public async Task<int> DeleteAsync(WorkerId workerId)
         {
-            return await Context.Database
-                .ExecuteSqlInterpolatedAsync($"DELETE FROM KADRY.PRACOWNICY WHERE ID = {workerId.Value.ToByteArray()}");
+            var worker = new Worker {Id = workerId};
+            Context.Entry(worker).State = EntityState.Deleted;
+            return await Context.SaveChangesAsync();
         }
     }
 }

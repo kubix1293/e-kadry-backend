@@ -7,10 +7,10 @@ namespace EKadry.API.Http.Worker.Request
         public string Birthday { get; set; }
         public string CityOfBirthday { get; set; }
         public string Pesel { get; set; }
-        public string DoumnetType { get; set; }
+        public int DoumnetType { get; set; }
         public string DocumentNumber { get; set; }
-        public string Gender { get; set; }
-        public string City { get; set; }
+        public int Gender { get; set; }
+        public string IdCity { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }

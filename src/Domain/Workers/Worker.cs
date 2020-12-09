@@ -14,7 +14,7 @@ namespace EKadry.Domain.Workers
         public DocumentType DocumentType { get; set; }
         public string DocumentNumber { get; set; }
         public Gender Gender { get; set; }
-        public string City { get; set; }
+        public string IdCity { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
@@ -34,13 +34,13 @@ namespace EKadry.Domain.Workers
         public static Worker CreateWorker(
             string firstName,
             string lastName,
-            DateTime birthday,
+            string birthday,
             string cityOfBirthday,
             string pesel,
-            DocumentType documentType,
+            int documentType,
             string documentNumber,
-            Gender gender,
-            string city,
+            int gender,
+            string idCity,
             string street,
             string propertyNumber,
             string apartmentNumber,
@@ -55,13 +55,13 @@ namespace EKadry.Domain.Workers
                 Id = new WorkerId(Guid.NewGuid()),
                 FirstName = firstName,
                 LastName = lastName,
-                Birthday = birthday,
+                Birthday = DateTime.Parse(birthday),
                 CityOfBirthday = cityOfBirthday,
                 Pesel = pesel,
-                DocumentType = documentType,
+                DocumentType = EnumHelper<DocumentType>.Parse(documentType.ToString()),
                 DocumentNumber = documentNumber,
-                Gender = gender,
-                City = city,
+                Gender = EnumHelper<Gender>.Parse(gender.ToString()),
+                IdCity = idCity,
                 Street = street,
                 PropertyNumber = propertyNumber,
                 ApartmentNumber = apartmentNumber,

@@ -1,18 +1,13 @@
 using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
-using EKadry.API.Http.Operator.Request;
-using EKadry.Application.Services.Operators.OperatorAdd;
-using EKadry.Application.Services.Operators.OperatorDelete;
-using EKadry.Application.Services.Operators.OperatorDetail;
-using EKadry.Application.Services.Operators.OperatorList;
+using EKadry.API.Http.Worker.Request;
+using EKadry.Application.Services.Workers.WorkerAdd;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace EKadry.API.Http.Worker
 {
@@ -44,25 +39,36 @@ namespace EKadry.API.Http.Worker
 
             return Ok(list);
         }
-        
-        // /// <summary>
-        // /// Create new worker 
-        // /// </summary>
-        // [HttpPost]
-        // [ProducesResponseType(typeof(Domain.Operators.Operator), (int) HttpStatusCode.Created)]
-        // public async Task<IActionResult> Create([FromBody] AddOperatorRequest request)
-        // {
-        //     var @operator = await _mediator.Send(new OperatorAddCommand(
-        //         request.Login,
-        //         request.Password,
-        //         request.FirstName,
-        //         request.LastName
-        //     ));
-        //     Thread.Sleep(500);
-        //
-        //     return Created(@operator.Id, @operator);
-        // }
-        
+
+        /// <summary>
+        /// Create new worker 
+        /// </summary>
+        [HttpPost]
+        [ProducesResponseType(typeof(Domain.Operators.Operator), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Create([FromBody] AddWorkerRequest request)
+        {
+            var @operator = await _mediator.Send(new WorkerAddCommand(
+                request.FirstName,
+                request.LastName,
+                request.Birthday,
+                request.CityOfBirthday,
+                request.Pesel,
+                request.DoumnetType,
+                request.DocumentNumber,
+                request.Gender,
+                request.IdCity,
+                request.Street,
+                request.PropertyNumber,
+                request.ApartmentNumber,
+                request.ActNumber,
+                request.MotherName,
+                request.FatherName,
+                request.Phone
+            ));
+
+            return Created(@operator.Id, @operator);
+        }
+
         /// <summary>
         /// Get worker details
         /// </summary>
@@ -71,10 +77,10 @@ namespace EKadry.API.Http.Worker
         public async Task<IActionResult> Get([FromRoute] Guid workerId)
         {
             var worker = await _mediator.Send(new WorkerDetailQuery(workerId));
-        
+
             return Ok(worker);
         }
-        
+
         // /// <summary>
         // /// Delete worker 
         // /// </summary>

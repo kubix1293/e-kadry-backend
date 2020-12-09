@@ -56,7 +56,6 @@ namespace EKadry.API.Http.Operator
                 request.FirstName,
                 request.LastName
             ));
-            Thread.Sleep(500);
         
             return Created(@operator.Id, @operator);
         }

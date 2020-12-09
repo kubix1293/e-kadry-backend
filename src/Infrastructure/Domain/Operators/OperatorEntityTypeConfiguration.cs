@@ -1,4 +1,5 @@
 ﻿using EKadry.Domain.Operators;
+using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,7 +14,7 @@ namespace EKadry.Infrastructure.Domain.Operators
             
             builder.HasKey(b => b.Id);
 
-            builder.Property(e => e.Id).HasColumnName("ID");
+            builder.Property(e => e.Id).HasColumnName("ID").HasConversion(new TypedIdValueToByteConverter<OperatorId>());
             builder.Property(e => e.Active).HasColumnName("AKTW");
             builder.Property(e => e.FirstName).HasColumnName("IMIE");
             builder.Property(e => e.Login).HasColumnName("LOGIN");

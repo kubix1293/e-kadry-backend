@@ -10,36 +10,10 @@ namespace EKadry.Domain
         {
             Value = value;
         }
-
-        public static bool operator ==(TypedIdValueBase obj1, byte[] obj2)
-        {
-            if (Equals(obj1, null))
-            {
-                if (Equals(obj2, null))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return obj1.Value.ToByteArray().Equals(obj2);
-        }
-
-        public static bool operator !=(TypedIdValueBase obj1, byte[] obj2)
-        {
-            return !(obj1 == obj2);
-        }
         
-        public override bool Equals(object obj)
+        protected TypedIdValueBase(byte[] value)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is TypedIdValueBase other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
+            Value = new Guid(value);
         }
 
         public bool Equals(TypedIdValueBase other)

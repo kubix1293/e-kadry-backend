@@ -7,5 +7,9 @@ namespace EKadry.Domain.Operators
         public OperatorId(Guid value) : base(value)
         {
         }
+        
+        public OperatorId(byte[] value) : base(value)
+        {
+        }
     }
 }

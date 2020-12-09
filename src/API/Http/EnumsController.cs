@@ -18,7 +18,6 @@ namespace EKadry.API.Http
         [ProducesResponseType(typeof(Enum[]), (int) HttpStatusCode.OK)]
         public IActionResult Get()
         {
-            // return Ok(Enum.GetNames(typeof(Gender)));
             var list = new Dictionary<string, IList<EnumApi>>
             {
                 {nameof(DocumentType), EnumHelper<DocumentType>.GetMaps(typeof(DocumentType))},
