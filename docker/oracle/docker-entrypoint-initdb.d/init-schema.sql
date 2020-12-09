@@ -837,7 +837,7 @@ BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or :NEW.id_misc <> :OLD.id_misc or
         :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok) THEN
-        t_rec := pracownicy_c_seq.NEXTVAL;
+        t_rec := SYS_GUID();
         INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA,
                                   NR_DOM, NR_LOK)
         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL,
@@ -914,24 +914,24 @@ END;
 /
 */
 --------------------------- OKRESY_OKRESYC_AUD
--- create or replace NONEDITIONABLE TRIGGER okresy_okresyc_aud
---     AFTER UPDATE OR DELETE
---     ON okresy
---     FOR EACH ROW
--- DECLARE
---     t_rec INTEGER;
--- BEGIN
---     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
---         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
---         t_rec := okresy_c_seq.NEXTVAL;
---         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
---         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal,
---                 :OLD.dni_rob, :OLD.norma);
---     END IF;
--- EXCEPTION
---     WHEN OTHERS THEN
---         raise_application_error(-20002, SQLERRM);
--- END;
+create or replace
+TRIGGER okresy_okresyc_aud
+     AFTER UPDATE OR DELETE
+     ON okresy
+     FOR EACH ROW
+ DECLARE
+     t_rec RAW(32);
+ BEGIN
+     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
+         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
+         t_rec := SYS_GUID();
+         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+     END IF;
+ EXCEPTION
+     WHEN OTHERS THEN
+         raise_application_error(-20002, SQLERRM);
+ END;
 /
 -------------------------------------------------------------------------------------------------------------------
 
