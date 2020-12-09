@@ -53,11 +53,6 @@ namespace EKadry.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -67,7 +62,12 @@ namespace EKadry.API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            app.UseSwaggerDocumentation();
+            
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwaggerDocumentation();
+            }
         }
 
         private static ILogger ConfigureLogger()
