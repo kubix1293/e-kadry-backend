@@ -64,3 +64,12 @@ END;
 BEGIN
     KADRY.OPER_SECURITY.ADD_OPER(GUID_TO_RAW('4c3d2a3b-ff96-4172-a288-97d2fa872f24'), 'j.nowacki', 'secret', 'Jakub', 'Nowacki');
 END;
+
+--------------------------------------------------------------
+---------------- OKRESY
+
+INSERT INTO okresy (dtod, dtdo, dni_kal, dni_rob, norma)
+VALUES (to_date('2020-12-01','rrrr-mm-dd'), to_date('2020-12-31','rrrr-mm-dd'), 31, 21, 168)
+/
+INSERT INTO okresy (dtod, dtdo, dni_kal, dni_rob, norma)
+VALUES (to_date('2021-01-01','rrrr-mm-dd'), to_date('2021-01-31','rrrr-mm-dd'), 31, 19, 152)

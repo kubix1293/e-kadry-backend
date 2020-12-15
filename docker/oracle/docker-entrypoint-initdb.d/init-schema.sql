@@ -161,7 +161,9 @@ CREATE TABLE kadry.pkzp_poz
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_pkzp RAW(32)                      NOT NULL
+    id_pkzp RAW(32)                      NOT NULL,
+    id_oks  RAW(32)                      NOT NULL,
+    zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -173,6 +175,11 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
 /
+COMMENT ON COLUMN kadry.pkzp_poz.zamk IS
+    'Czy pozycja zamknięta, zatwierdzona
+    0 - otwarte
+    1 - zamknięte';
+/    
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
 /
@@ -1013,25 +1020,43 @@ END;
 ----- PACKAGE
 
 CREATE OR REPLACE PACKAGE pkzp_pack AS
-    FUNCTION f_pkzp_sklad(v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER) RETURN NUMBER;
+    FUNCTION f_pkzp_sklad(v_forma VARCHAR2, v_sklad NUMBER, v_idumowy RAW) RETURN NUMBER;
+    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW)  RETURN NUMBER;
 END;
 
 ----- BODY
 
 CREATE OR REPLACE PACKAGE BODY pkzp_pack AS
-    FUNCTION f_pkzp_sklad(v_froma VARCHAR2, v_sklad VARCHAR2, v_idumowy NUMBER)
+    FUNCTION f_pkzp_sklad(v_forma VARCHAR2, v_sklad NUMBER, v_idumowy RAW)
         RETURN NUMBER AS
         v_kwota FLOAT;
         v_buf   FLOAT;
     BEGIN
-        IF (v_froma = 0) THEN
+        IF (v_forma = 0) THEN
             SELECT zasad * (v_sklad / 100)
             INTO v_kwota
             FROM umowy
             WHERE id = v_idumowy;
-        ELSIF (v_froma = 1) THEN
+        ELSIF (v_forma = 1) THEN
             v_kwota := v_sklad;
         END IF;
         RETURN (v_kwota);
     END;
+    ----
+    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW)
+        RETURN NUMBER AS
+        v_kwota FLOAT;
+        v_buf   FLOAT;
+    BEGIN
+        IF (v_forma = 0) THEN
+            SELECT zasad * (v_wpis / 100)
+            INTO v_kwota
+            FROM umowy
+            WHERE id = v_idumowy;
+        ELSIF (v_forma = 1) THEN
+            v_kwota := v_wpis;
+        END IF;
+        RETURN (v_kwota);
+    END;
+    --
 END;
