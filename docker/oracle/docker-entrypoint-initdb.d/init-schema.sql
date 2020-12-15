@@ -171,7 +171,7 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
 20 - wpisowe'; 
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
-    'Kwota spłaty lub wkładu';
+    'Kwota spłaty lub wkładu ';
 /
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
