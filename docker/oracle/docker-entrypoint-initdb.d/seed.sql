@@ -29,10 +29,13 @@ VALUES (GUID_TO_RAW('b06d4267-698b-4227-b268-c55322cc29ae'), 'Mariusz', 'Wolski'
 ----------------  TYPY UMÓW
 
 INSERT INTO typum (ID, NAZWA, NR_TYT_ZUS, CZY_CHOR, CZY_REN, CZY_EMER, CZY_ZDROW, CZY_FP, CZY_FGSP, CZY_URLOP, CZY_AB_CHOR, NRM_CZAS_PRAC, STOG, STZW, STWS, STJB, RODZ_UM)
-VALUES (GUID_TO_RAW('b06d4267-698b-4227-b268-c55322cc29ae'), 'Umowa o pracę', '0110', '1', '1', '1', '1', '1', '0', '1', '1', F_HOURS_TO_MIN(8), '1', '1', '1', '1', 0);
-
+VALUES (GUID_TO_RAW('b06d4267-698b-4227-b268-c55322cc29ae'), 'Umowa o pracę', '0110', '1', '1', '1', '1', '1', '0', '1', '1', F_HOURS_TO_MIN(8), '1', '1', '1', '1', 1);
+/
 INSERT INTO typum (ID, NAZWA, NR_TYT_ZUS, CZY_CHOR, CZY_REN, CZY_EMER, CZY_ZDROW, CZY_FP, CZY_FGSP, CZY_URLOP, CZY_AB_CHOR, NRM_CZAS_PRAC, STOG, STZW, STWS, STJB, RODZ_UM)
-VALUES (GUID_TO_RAW('dca5842c-bafe-4d8d-a585-d58ab27682f5'), 'Umowa zlecenie', '0410', '0', '0', '0', '0', '0', '0', '0', '0', F_HOURS_TO_MIN(0), '0', '0', '0', '0', 1);
+VALUES (GUID_TO_RAW('dca5842c-bafe-4d8d-a585-d58ab27682f5'), 'Umowa zlecenie', '0410', '0', '0', '0', '0', '0', '0', '0', '0', F_HOURS_TO_MIN(0), '0', '0', '0', '0', 10);
+/
+INSERT INTO typum (NAZWA, NR_TYT_ZUS, CZY_CHOR, CZY_REN, CZY_EMER, CZY_ZDROW, CZY_FP, CZY_FGSP, CZY_URLOP, CZY_AB_CHOR, NRM_CZAS_PRAC, STOG, STZW, STWS, STJB, RODZ_UM)
+VALUES ( 'Umowa o dzieło', '0410', '0', '0', '0', '0', '0', '0', '0', '0', F_HOURS_TO_MIN(0), '0', '0', '0', '0', 20);
 
 
 --------------------------------------------------------------

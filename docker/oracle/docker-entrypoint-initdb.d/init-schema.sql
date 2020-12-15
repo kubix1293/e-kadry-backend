@@ -167,7 +167,8 @@ CREATE TABLE kadry.pkzp_poz
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
 1 - wkład
-10 - pożyczka';
+10 - pożyczka
+20 - wpisowe';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu';
