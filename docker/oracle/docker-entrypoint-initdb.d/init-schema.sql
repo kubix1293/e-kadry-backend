@@ -161,6 +161,7 @@ CREATE TABLE kadry.pkzp_poz
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
+    ile_rat NUMBER                   DEFAULT NULL,
     id_pkzp RAW(32)                      NOT NULL,
     id_oks  RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
@@ -170,7 +171,8 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
 1 - wkład
 10 - pożyczka
-20 - wpisowe'; 
+20 - wpisowe
+30 - spłata'; 
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
@@ -182,6 +184,31 @@ COMMENT ON COLUMN kadry.pkzp_poz.zamk IS
 /    
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
+/
+
+------  PKZP_HARM
+CREATE TABLE kadry.pkzp_harm
+(
+    id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    kwot    FLOAT(15) DEFAULT 0          NOT NULL,
+    id_pkzp RAW(32)                      NOT NULL,
+    okres   DATE                         NOT NULL,
+    zamk    NUMBER    DEFAULT 0          NOT NULL
+);
+/
+COMMENT ON COLUMN kadry.pkzp_harm.kwot IS
+    'Kwota raty ';
+/
+COMMENT ON COLUMN kadry.pkzp_harm.zamk IS
+    'Czy pozycja zamknięta, zatwierdzona
+    0 - otwarte
+    1 - zamknięte';
+/   
+COMMENT ON COLUMN kadry.pkzp_harm.okres IS
+    'okres spłaty danej raty np: 01-2021';
+/    
+ALTER TABLE kadry.pkzp_harm
+    ADD CONSTRAINT pkzp_harm_pk PRIMARY KEY (id);
 /
 
 ------ PKZP_PARAM
@@ -1058,5 +1085,5 @@ CREATE OR REPLACE PACKAGE BODY pkzp_pack AS
         END IF;
         RETURN (v_kwota);
     END;
-    --
+    ----
 END;
