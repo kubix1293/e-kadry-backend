@@ -1067,15 +1067,17 @@ END;
 
 ----- PACKAGE
 
-CREATE OR REPLACE PACKAGE pkzp_pack AS
+create or replace
+PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
     FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
     PROCEDURE pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
+    PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE);  
 END;
 
 ----- BODY
 
-create or replace
+CREATE OR REPLACE
 PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
@@ -1134,12 +1136,19 @@ PACKAGE BODY pkzp_pack AS
                           INSERT INTO test(test) 
                           VALUES (lRata);
                     END IF;
-                END IF;
-                PROCEDURE(zmienne);  
+                END IF;  
             END IF;   
         END;
-    PROCEDURE pkzp_harmo (iIdprc RAW, lRata FLOAT, iIlerat NUMBER);   
+    PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
         IS
+            lOks DATE;
         BEGIN 
-            FOR 1 .. iIlerat
+            lOks := iOks;
+            FOR i IN 1 .. iIlerat LOOP
+                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                VALUES (lRata, iIdpkzp, lOks);
+                --
+                lOks := lOks + 1;
+            END LOOP;
+        END;
 END;
