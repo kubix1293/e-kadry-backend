@@ -157,7 +157,7 @@ ALTER TABLE kadry.pkzp
 
 ------  PKZP_POZ
 CREATE TABLE kadry.pkzp_poz
-(
+(   
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
@@ -618,14 +618,35 @@ CREATE TABLE kadry.pkzp_poz_c
     c_data  DATE      DEFAULT sysdate    NOT NULL,
     c_oper  RAW(32)                      NOT NULL,
     id      RAW(32)                      NOT NULL,
-    rodz    CHAR(1)                      NOT NULL,
+    rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_pkzp RAW(32)                      NOT NULL
+    ile_rat NUMBER                   DEFAULT NULL,
+    id_pkzp RAW(32)                      NOT NULL,
+    id_oks  RAW(32)                      NOT NULL,
+    zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
 ALTER TABLE kadry.pkzp_poz_c
     ADD CONSTRAINT pkzp_poz_c_pk PRIMARY KEY (c_id);
 /
+
+------  PKZP_HARM_C
+CREATE TABLE kadry.pkzp_harm_c
+(
+    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    c_data  DATE      DEFAULT sysdate    NOT NULL,
+    c_oper  RAW(32)                      NOT NULL,
+    id      RAW(32)                      NOT NULL,
+    kwot    FLOAT(15) DEFAULT 0          NOT NULL,
+    id_pkzp RAW(32)                      NOT NULL,
+    okres   DATE                         NOT NULL,
+    zamk    NUMBER    DEFAULT 0          NOT NULL
+);
+/
+ALTER TABLE kadry.pkzp_harm_c
+    ADD CONSTRAINT pkzp_harm_c_pk PRIMARY KEY (c_id);
+/
+
 ------ STANOW_C (STANOWISKA)
 CREATE TABLE kadry.stanow_c
 (
@@ -1047,43 +1068,78 @@ END;
 ----- PACKAGE
 
 CREATE OR REPLACE PACKAGE pkzp_pack AS
-    FUNCTION f_pkzp_sklad(v_forma VARCHAR2, v_sklad NUMBER, v_idumowy RAW) RETURN NUMBER;
-    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW)  RETURN NUMBER;
+    FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
+    FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
+    PROCEDURE pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
 END;
 
 ----- BODY
 
-CREATE OR REPLACE PACKAGE BODY pkzp_pack AS
-    FUNCTION f_pkzp_sklad(v_forma VARCHAR2, v_sklad NUMBER, v_idumowy RAW)
+create or replace
+PACKAGE BODY pkzp_pack AS
+    FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
-        v_kwota FLOAT;
-        v_buf   FLOAT;
+        lKwota FLOAT;
     BEGIN
-        IF (v_forma = 0) THEN
-            SELECT zasad * (v_sklad / 100)
-            INTO v_kwota
+        IF (iForma = 0) THEN
+            SELECT zasad * (iSklad / 100)
+            INTO lKwota
             FROM umowy
-            WHERE id = v_idumowy;
-        ELSIF (v_forma = 1) THEN
-            v_kwota := v_sklad;
+            WHERE id = iIdumowy;
+        ELSIF (iForma = 1) THEN
+            lKwota := iSklad;
         END IF;
-        RETURN (v_kwota);
+        RETURN (lKwota);
     END;
     ----
-    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW)
+    FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
-        v_kwota FLOAT;
-        v_buf   FLOAT;
+        lKwota FLOAT;
     BEGIN
-        IF (v_forma = 0) THEN
-            SELECT zasad * (v_wpis / 100)
-            INTO v_kwota
+        IF (iForma = 0) THEN
+            SELECT zasad * (iWpis / 100)
+            INTO lKwota
             FROM umowy
-            WHERE id = v_idumowy;
-        ELSIF (v_forma = 1) THEN
-            v_kwota := v_wpis;
+            WHERE id = iIdumowy;
+        ELSIF (iForma = 1) THEN
+            lKwota := iWpis;
         END IF;
-        RETURN (v_kwota);
+        RETURN (lKwota);
     END;
     ----
+    PROCEDURE pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+        IS
+        lSumaWkladow pkzp.ct%TYPE;
+        lZasad umowy.zasad%TYPE;
+        lRata FLOAT;
+        BEGIN
+            IF (iIdprc > 0) THEN
+                SELECT SUM(zasad)
+                INTO lZasad
+                FROM umowy
+                WHERE id_prc = iIdprc
+                AND dtzaw <= sysdate 
+                AND (dtroz > sysdate OR dtroz IS null);
+                --
+                SELECT ct 
+                INTO lSumaWkladow
+                FROM pkzp
+                WHERE id_prc = iIdprc
+                AND rodz =  1;
+                --
+                IF (iKwota > 0 AND iIlerat > 0) THEN
+                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                          lRata := ROUND(iKwota/iIlerat,2);
+                          --
+                          INSERT INTO test(test) 
+                          VALUES (lRata);
+                    END IF;
+                END IF;
+                PROCEDURE(zmienne);  
+            END IF;   
+        END;
+    PROCEDURE pkzp_harmo (iIdprc RAW, lRata FLOAT, iIlerat NUMBER);   
+        IS
+        BEGIN 
+            FOR 1 .. iIlerat
 END;
