@@ -329,6 +329,7 @@ CREATE TABLE kadry.umowy
     czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
     czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
     czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_pkzp      NUMBER(1) DEFAULT 0          NOT NULL,
     nrm_czas_prac FLOAT(15),
     stog          NUMBER(1) DEFAULT 0          NOT NULL,
     stzw          NUMBER(1) DEFAULT 0          NOT NULL,
@@ -1071,7 +1072,7 @@ create or replace
 PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
     FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
-    PROCEDURE pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
+    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN NUMBER; 
     PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE);  
 END;
 
@@ -1109,8 +1110,8 @@ PACKAGE BODY pkzp_pack AS
         RETURN (lKwota);
     END;
     ----
-    PROCEDURE pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
-        IS
+    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+        RETURN NUMBER AS
         lSumaWkladow pkzp.ct%TYPE;
         lZasad umowy.zasad%TYPE;
         lRata FLOAT;
@@ -1121,7 +1122,8 @@ PACKAGE BODY pkzp_pack AS
                 FROM umowy
                 WHERE id_prc = iIdprc
                 AND dtzaw <= sysdate 
-                AND (dtroz > sysdate OR dtroz IS null);
+                AND (dtroz > sysdate OR dtroz IS null)
+                AND czy_pkzp = 1;
                 --
                 SELECT ct 
                 INTO lSumaWkladow
@@ -1137,7 +1139,8 @@ PACKAGE BODY pkzp_pack AS
                           VALUES (lRata);
                     END IF;
                 END IF;  
-            END IF;   
+            END IF;
+            RETURN (lRata);   
         END;
     PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
         IS
