@@ -9,6 +9,7 @@ using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace EKadry.Infrastructure
 {
@@ -43,7 +44,7 @@ namespace EKadry.Infrastructure
             containerBuilder.Populate(services);
 
             containerBuilder.RegisterModule(new LoggingModule(logger.ForContext("Module", "Application")));
-            containerBuilder.RegisterModule(new DataAccessModule(connectionString));
+            containerBuilder.RegisterModule(new DataAccessModule(connectionString, new SerilogLoggerFactory(logger)));
             containerBuilder.RegisterModule(new MediatorModule());
 
             containerBuilder.RegisterInstance(executionContextAccessor);

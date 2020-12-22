@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,15 +23,21 @@ namespace EKadry.Infrastructure.Domain.Workers
             string commandSearch,
             CancellationToken cancellationToken)
         {
-            var query = Context.Worker.AsQueryable();
+            var query = Context.Worker
+                .Include(p => p.Contracts)
+                .AsQueryable();
             var filtered = new WorkerFilter(query, commandOrderBy, commandOrderDirection, commandSearch).GetFilteredQuery();
 
-            return new Pagination<Worker>(filtered, commandPage, commandPerPage);
+            var pag = new Pagination<Worker>(filtered, commandPage, commandPerPage);
+            
+            return pag;
         }
 
         public async Task<Worker> GetAsync(WorkerId workerId)
         {
-            return await Context.Worker.Where(x => x.Id == workerId).FirstOrDefaultAsync();
+            return await Context.Worker
+                .Include(p => p.Contracts)
+                .FirstOrDefaultAsync(x => x.Id == workerId);
         }
 
         public async Task AddAsync(Worker worker)

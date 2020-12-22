@@ -170,7 +170,7 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
 1 - wkład
 10 - pożyczka
-20 - wpisowe'; 
+20 - wpisowe';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
@@ -179,7 +179,7 @@ COMMENT ON COLUMN kadry.pkzp_poz.zamk IS
     'Czy pozycja zamknięta, zatwierdzona
     0 - otwarte
     1 - zamknięte';
-/    
+/
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
 /
@@ -286,27 +286,30 @@ ALTER TABLE kadry.staztab
 ------ UMOWY
 CREATE TABLE kadry.umowy
 (
-    id            RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    dtzaw         DATE                         NOT NULL,
-    dtroz         DATE,
-    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
-    id_stanow     RAW(32)                      NOT NULL,
-    id_typum      RAW(32)                      NOT NULL,
-    id_prc        RAW(32)                      NOT NULL,
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL
+    id             RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    dtzaw          DATE                           NOT NULL,
+    dtroz          DATE,
+    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
+    id_stanow      RAW(32)                        NOT NULL,
+    id_typum       RAW(32)                        NOT NULL,
+    id_prc         RAW(32)                        NOT NULL,
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           NUMBER(1) DEFAULT 0            NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
+    stws           NUMBER(1) DEFAULT 0            NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
+    usuniety       DATE,
+    utworzony      DATE      DEFAULT current_date NOT NULL,
+    zaktualizowany DATE      DEFAULT current_date NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
@@ -639,30 +642,33 @@ ALTER TABLE kadry.staztab_c
 ------ UMOWY_C
 CREATE TABLE kadry.umowy_c
 (
-    c_id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data        DATE      DEFAULT sysdate    NOT NULL,
-    c_oper        RAW(32)                      NOT NULL,
-    id            RAW(32)                      NOT NULL,
-    dtzaw         DATE                         NOT NULL,
-    dtroz         DATE,
-    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
-    id_stanow     RAW(32)                      NOT NULL,
-    id_typum      RAW(32)                      NOT NULL,
-    id_prc        RAW(32)                      NOT NULL,
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL
+    c_id           RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    c_data         DATE      DEFAULT sysdate      NOT NULL,
+    c_oper         RAW(32)                        NOT NULL,
+    id             RAW(32)                        NOT NULL,
+    dtzaw          DATE                           NOT NULL,
+    dtroz          DATE,
+    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
+    id_stanow      RAW(32)                        NOT NULL,
+    id_typum       RAW(32)                        NOT NULL,
+    id_prc         RAW(32)                        NOT NULL,
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           NUMBER(1) DEFAULT 0            NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
+    stws           NUMBER(1) DEFAULT 0            NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
+    usuniety       DATE,
+    utworzony      DATE      DEFAULT current_date NOT NULL,
+    zaktualizowany DATE      DEFAULT current_date NOT NULL
 );
 /
 ALTER TABLE kadry.umowy_c
@@ -923,23 +929,23 @@ END;
 */
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace
-TRIGGER okresy_okresyc_aud
-     AFTER UPDATE OR DELETE
-     ON okresy
-     FOR EACH ROW
- DECLARE
-     t_rec RAW(32);
- BEGIN
-     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
-         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
-         t_rec := SYS_GUID();
-         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
-     END IF;
- EXCEPTION
-     WHEN OTHERS THEN
-         raise_application_error(-20002, SQLERRM);
- END;
+    TRIGGER okresy_okresyc_aud
+    AFTER UPDATE OR DELETE
+    ON okresy
+    FOR EACH ROW
+DECLARE
+    t_rec RAW(32);
+BEGIN
+    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
+        :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
+        t_rec := SYS_GUID();
+        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
 /
 -------------------------------------------------------------------------------------------------------------------
 
@@ -1021,7 +1027,7 @@ END;
 
 CREATE OR REPLACE PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(v_forma VARCHAR2, v_sklad NUMBER, v_idumowy RAW) RETURN NUMBER;
-    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW)  RETURN NUMBER;
+    FUNCTION f_pkzp_wpis(v_forma VARCHAR2, v_wpis NUMBER, v_idumowy RAW) RETURN NUMBER;
 END;
 
 ----- BODY

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using EKadry.Domain.Contracts;
 using EKadry.Domain.Operators;
 
 namespace EKadry.Domain.Workers
@@ -26,6 +28,8 @@ namespace EKadry.Domain.Workers
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public ICollection<Contract> Contracts { get; set; }
 
         public Worker()
         {

@@ -1,11 +1,13 @@
 using System;
 using AutoMapper;
+using EKadry.Application.Services.Contracts.ContractList;
 using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain;
+using EKadry.Domain.Contracts;
 using EKadry.Domain.Operators;
 using EKadry.Domain.Pagination;
 using EKadry.Domain.Workers;
@@ -19,6 +21,9 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<TypedIdValueBase, Guid>().ConvertUsing(s => s.Value);
             CreateMap<DocumentType, string>().ConvertUsing(s => s.ToString());
             CreateMap(typeof(PagedList<>), typeof(PagedList<>));
+            
+            CreateMap<Contract, ContractListDto>();
+            CreateMap<ContractId, Contract>(); 
             
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();
