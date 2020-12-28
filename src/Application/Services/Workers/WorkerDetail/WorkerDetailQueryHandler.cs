@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,7 +20,7 @@ namespace EKadry.Application.Services.Workers.WorkerDetail
 
         public async Task<WorkerDetailDto> Handle(WorkerDetailQuery request, CancellationToken cancellationToken)
         {
-            var worker = await _workerRepository.GetAsync(new WorkerId(request.WorkerId));
+            var worker = await _workerRepository.GetAsync(new Guid(request.Guid.ToByteArray()));
 
             return _mapper.Map<Worker, WorkerDetailDto>(worker);
         }

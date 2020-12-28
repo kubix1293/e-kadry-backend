@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using EKadry.Domain.Operators;
 
 namespace EKadry.Application.Configuration.Commands

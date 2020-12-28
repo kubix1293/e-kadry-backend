@@ -40,6 +40,7 @@ namespace EKadry.API
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
             
             services.AddSwaggerDocumentation();

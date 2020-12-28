@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using EKadry.Domain.Contracts;
-using EKadry.Domain.Operators;
 
 namespace EKadry.Domain.Workers
 {
-    public class Worker : Entity, IAggregateRoot
+    public class Worker 
     {
-        public WorkerId Id { get; set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? Birthday { get; set; }
@@ -24,12 +23,11 @@ namespace EKadry.Domain.Workers
         public string MotherName { get; set; }
         public string FatherName { get; set; }
         public string Phone { get; set; }
-        public OperatorId OperatorId { get; set; }
+        public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
-        public ICollection<Contract> Contracts { get; set; }
+        public virtual ICollection<Contract> Contracts { get; set; }
 
         public Worker()
         {
@@ -56,7 +54,7 @@ namespace EKadry.Domain.Workers
         {
             return new Worker()
             {
-                Id = new WorkerId(Guid.NewGuid()),
+                Id = Guid.NewGuid(),
                 FirstName = firstName,
                 LastName = lastName,
                 Birthday = DateTime.Parse(birthday),

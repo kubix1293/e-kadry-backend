@@ -37,7 +37,7 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
                 request.Phone
                 );
             await _operatorRepository.AddAsync(@operator);
-            return new WorkerDto {Id = @operator.Id.Value};
+            return new WorkerDto {Id = @operator.Id};
         }
     }
 }

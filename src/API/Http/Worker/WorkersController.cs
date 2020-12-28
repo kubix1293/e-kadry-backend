@@ -6,6 +6,7 @@ using EKadry.Application.Services.Workers.WorkerAdd;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain.Pagination;
+using EKadry.Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,14 @@ namespace EKadry.API.Http.Worker
     public class WorkersController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly EKadryContext _context;
 
-        public WorkersController(IMediator mediator)
+        public WorkersController(IMediator mediator, EKadryContext context)
         {
             _mediator = mediator;
+            _context = context;
         }
-
+        
         /// <summary>
         /// List of workers
         /// </summary>
@@ -36,7 +39,7 @@ namespace EKadry.API.Http.Worker
                 request.OrderBy,
                 request.Search
             ));
-
+        
             return Ok(list);
         }
 

@@ -12,8 +12,7 @@ namespace EKadry.Application.Services.Workers.WorkerList
         public string LastName { get; set; }
         public DocumentType DoumnetType { get; set; }
         public string City { get; set; }
-        // public IEnumerable<Contract> Contracts { get; set; }
-        public Contract Contract { get; set; }
+        public ICollection<Contract> Contracts { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

@@ -26,7 +26,7 @@ namespace EKadry.Application.Services.Workers.WorkerList
                 query.OrderDirection,
                 query.OrderBy,
                 query.Search,
-                cancellationToken).ToList();
+                cancellationToken).ToListAsync();
             
             return _mapper.Map<PagedList<Worker>, PagedList<WorkerListDto>>(operators);
         }

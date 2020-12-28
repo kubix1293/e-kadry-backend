@@ -4,6 +4,7 @@ namespace EKadry.Domain.Pagination
 {
     public interface IPagination<T> where T : class
     {
-        Task<PagedList<T>> ToList();
+        PagedList<T> ToList();
+        Task<PagedList<T>> ToListAsync();
     }
 }

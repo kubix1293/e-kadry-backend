@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Worker.Request;
+using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
 using EKadry.Application.Services.Workers.WorkerAdd;
 using EKadry.Application.Services.Workers.WorkerDetail;
@@ -73,13 +74,13 @@ namespace EKadry.API.Http.Contract
         /// <summary>
         /// Get worker details
         /// </summary>
-        [HttpGet("{workerId}")]
-        [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> Get([FromRoute] Guid workerId)
+        [HttpGet("{contractId}")]
+        [ProducesResponseType(typeof(ContractDetailDto), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Get([FromRoute] Guid contractId)
         {
-            var worker = await _mediator.Send(new WorkerDetailQuery(workerId));
+            var contract = await _mediator.Send(new ContractDetailQuery(contractId));
 
-            return Ok(worker);
+            return Ok(contract);
         }
 
         // /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Application.Configuration.Commands;
@@ -17,7 +18,7 @@ namespace EKadry.Application.Services.Operators.OperatorDelete
 
         public async Task<int> Handle(OperatorDeleteCommand request, CancellationToken cancellationToken)
         {
-            return await _operatorRepository.DeleteAsync(new OperatorId(request.Id));
+            return await _operatorRepository.DeleteAsync(new Guid(request.Id.ToByteArray()));
         }
     }
 }

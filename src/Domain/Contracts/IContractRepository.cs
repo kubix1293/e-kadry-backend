@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Pagination;
@@ -12,8 +13,8 @@ namespace EKadry.Domain.Contracts
             string commandOrderBy,
             string commandSearch,
             CancellationToken cancellationToken);
-        Task<Contract> GetAsync(ContractId contractId);
+        Task<Contract> GetAsync(Guid contractId);
         // Task AddAsync(Contract worker);
-        Task<int> DeleteAsync(ContractId workerId);
+        Task<int> DeleteAsync(Guid workerId);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,8 +14,8 @@ namespace EKadry.Domain.Workers
             string commandOrderBy,
             string commandSearch,
             CancellationToken cancellationToken);
-        Task<Worker> GetAsync(WorkerId workerId);
+        Task<Worker> GetAsync(Guid workerId);
         Task AddAsync(Worker worker);
-        Task<int> DeleteAsync(WorkerId workerId);
+        Task<int> DeleteAsync(Guid workerId);
     }
 }

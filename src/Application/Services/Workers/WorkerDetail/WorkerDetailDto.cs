@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using EKadry.Application.Services.Contracts;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Operators;
 
@@ -23,8 +25,7 @@ namespace EKadry.Application.Services.Workers.WorkerDetail
         public string MotherName { get; set; }
         public string FatherName { get; set; }
         public string Phone { get; set; }
-        public Contract Contract { get; set; }
-        public OperatorId OperatorId { get; set; }
+        public ICollection<Contract> Contracts { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
