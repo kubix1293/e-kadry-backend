@@ -1,4 +1,5 @@
 using System;
+using EKadry.Domain.Contracts;
 using EKadry.Domain.Operators;
 
 namespace EKadry.Application.Services.Workers.WorkerDetail
@@ -22,6 +23,7 @@ namespace EKadry.Application.Services.Workers.WorkerDetail
         public string MotherName { get; set; }
         public string FatherName { get; set; }
         public string Phone { get; set; }
+        public Contract Contract { get; set; }
         public OperatorId OperatorId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

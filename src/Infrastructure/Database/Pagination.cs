@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,9 @@ namespace EKadry.Infrastructure.Database
             _data = _query
                 .Skip((_page - 1) * _perPage)
                 .Take(_perPage);
-
-            _totalResults = await _query
-                .CountAsync();
+            //
+            // _totalResults = await _query
+            //     .CountAsync();
 
             return new PagedList<T>(await _data.ToListAsync(), _page, _perPage, _totalResults);
         }
