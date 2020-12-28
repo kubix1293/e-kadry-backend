@@ -4,7 +4,7 @@ namespace EKadry.Domain.Operators
 {
     public class Operator : Entity, IAggregateRoot
     {
-        public OperatorId Id { get; set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Login { get; set; }
@@ -18,7 +18,7 @@ namespace EKadry.Domain.Operators
         {
             return new Operator()
             {
-                Id = new OperatorId(Guid.NewGuid()),
+                Id = Guid.NewGuid(),
                 Login = login,
                 Password = password,
                 FirstName = firstName,

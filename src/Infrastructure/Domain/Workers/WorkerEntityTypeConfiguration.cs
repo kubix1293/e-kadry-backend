@@ -1,5 +1,4 @@
-﻿using System;
-using EKadry.Domain.Contracts;
+﻿﻿using System;
 using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
@@ -11,15 +10,13 @@ namespace EKadry.Infrastructure.Domain.Workers
 {
     internal sealed class WorkerEntityTypeConfiguration : IEntityTypeConfiguration<Worker>
     {
-        internal const string Contracts = "_contracts";
-
         public void Configure(EntityTypeBuilder<Worker> builder)
         {
             builder.ToTable(SchemaNames.Workers);
 
             builder.HasKey(b => b.Id);
 
-            builder.Property(e => e.Id).HasColumnName("ID").HasConversion(new TypedIdValueToByteConverter<WorkerId>());
+            builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.FirstName).HasColumnName("IMIE");
             builder.Property(e => e.LastName).HasColumnName("NAZWISKO");
             builder.Property(e => e.Birthday).HasColumnName("DTUR");
@@ -40,13 +37,7 @@ namespace EKadry.Infrastructure.Domain.Workers
             builder.Property(e => e.DeletedAt).HasColumnName("USUNIETY");
             builder.Property(e => e.CreatedAt).HasColumnName("UTWORZONY");
             builder.Property(e => e.UpdatedAt).HasColumnName("ZAKTUALIZOWANY");
-
-            builder.HasMany(d => d.Contracts)
-                .WithOne(p => p.Worker)
-                // .IsRequired(false)
-                .HasForeignKey(p => p.IdWorker)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
+            
             builder.HasQueryFilter(f => EF.Property<DateTime>(f, nameof(f.DeletedAt)) == null);
         }
     }

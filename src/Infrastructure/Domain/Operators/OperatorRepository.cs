@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace EKadry.Infrastructure.Domain.Operators
             return new Pagination<Operator>(filtered, commandPage, commandPerPage);
         }
 
-        public async Task<Operator> GetAsync(OperatorId id)
+        public async Task<Operator> GetAsync(Guid id)
         {
             return await Context.Operator.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
@@ -40,7 +41,7 @@ namespace EKadry.Infrastructure.Domain.Operators
                 "BEGIN KADRY.OPER_SECURITY.ADD_OPER(:GUID, :LOGIN, :PASSWORD, :FIRST_NAME, :LAST_NAME); END;",
                 new object[]
                 {
-                    new OracleParameter("GUID", @operator.Id.Value.ToByteArray()),
+                    new OracleParameter("GUID", @operator.Id.ToByteArray()),
                     new OracleParameter("LOGIN", @operator.Login),
                     new OracleParameter("PASSWORD", @operator.Password),
                     new OracleParameter("FIRST_NAME", @operator.FirstName),
@@ -55,7 +56,7 @@ namespace EKadry.Infrastructure.Domain.Operators
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> DeleteAsync(OperatorId operatorId)
+        public async Task<int> DeleteAsync(Guid operatorId)
         {
             var @operator = new Operator {Id = operatorId};
             Context.Entry(@operator).State = EntityState.Deleted;

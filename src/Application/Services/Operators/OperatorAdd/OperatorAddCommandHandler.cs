@@ -18,7 +18,7 @@ namespace EKadry.Application.Services.Operators.OperatorAdd
         {
             var @operator = Operator.CreateOperator(request.Login, request.Password, request.FirstName, request.LastName);
             await _operatorRepository.AddAsync(@operator);
-            return new OperatorDto {Id = @operator.Id.Value};
+            return new OperatorDto {Id = @operator.Id};
         }
     }
 }

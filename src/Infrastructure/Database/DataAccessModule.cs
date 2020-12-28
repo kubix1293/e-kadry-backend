@@ -38,17 +38,12 @@ namespace EKadry.Infrastructure.Database
                 .As<IWorkerRepository>()
                 .InstancePerLifetimeScope();
             
-            builder.RegisterType<StronglyTypedIdValueConverterSelector>()
-                .As<IValueConverterSelector>()
-                .InstancePerLifetimeScope();
-
             builder.Register(c =>
                     new EKadryContext(
                         new DbContextOptionsBuilder<EKadryContext>()
                             .UseLoggerFactory(_logger)
                             .EnableSensitiveDataLogging()
                             .UseOracle(_databaseConnectionString)
-                            .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                             .Options
                     )
                 )

@@ -1,5 +1,4 @@
 using System;
-using EKadry.Domain.Workers;
 
 namespace EKadry.Application.Services.Contracts.ContractList
 {
@@ -12,7 +11,7 @@ namespace EKadry.Application.Services.Contracts.ContractList
         // public int IdJobPosition { get; set; }
         // public int IdContractType { get; set; }
         public Guid IdWorker { get; set; }
-        public Worker Worker { get; set; }
+        public WorkerDetailDto Worker { get; set; }
         public int IdentifierZusNumber { get; set; }
         public bool IsSick { get; set; }
         public bool IsAnnuitant { get; set; }

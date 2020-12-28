@@ -6,11 +6,11 @@ namespace EKadry.Application.Services.Operators.OperatorDetail
 {
     public class OperatorDetailQuery : IQuery<OperatorDetailDto>
     {
-        public readonly Guid OperatorId;
+        public readonly Guid Guid;
 
         public OperatorDetailQuery(Guid operatorId)
         {
-            OperatorId = operatorId;
+            Guid = operatorId;
         }
     }
 }

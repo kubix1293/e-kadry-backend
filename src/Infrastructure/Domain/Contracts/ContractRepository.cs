@@ -1,8 +1,10 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Pagination;
+using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,19 +24,23 @@ namespace EKadry.Infrastructure.Domain.Contracts
             string commandSearch,
             CancellationToken cancellationToken)
         {
-            var query = Context.Contract
-                .Include(p => p.Worker)
-                .AsQueryable();
-            
-            var filtered = new ContractFilter(query, commandOrderBy, commandOrderDirection, commandSearch)
-                .GetFilteredQuery();
+            var query = new ContractFilter(Context.Contract, commandOrderBy, commandOrderDirection, commandSearch)
+                .GetFilteredQuery()
+                .Include(x => x.Worker);
 
-            return new Pagination<Contract>(filtered, commandPage, commandPerPage);
+            return new Pagination<Contract>(query, commandPage, commandPerPage);
         }
 
-        public async Task<Contract> GetAsync(ContractId contractId)
+        public async Task<Contract> GetAsync(Guid contractId)
         {
-            return await Context.Contract.Where(x => x.Id == contractId).FirstOrDefaultAsync();
+            var contract = await Context.Contract
+                .Include(x => x.Worker)
+                // .Where(x => x.Id == contractId)
+                .FirstOrDefaultAsync();
+
+            // contract.Worker = await Context.Worker.FirstOrDefaultAsync(x => x.Id == contract.IdWorker);
+
+            return contract;
         }
 
         public async Task AddAsync(Contract contract)
@@ -43,7 +49,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             await Context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteAsync(ContractId workerId)
+        public async Task<int> DeleteAsync(Guid workerId)
         {
             var worker = new Contract {Id = workerId};
             Context.Entry(worker).State = EntityState.Deleted;

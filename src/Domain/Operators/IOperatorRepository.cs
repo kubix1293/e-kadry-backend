@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Pagination;
@@ -12,9 +13,9 @@ namespace EKadry.Domain.Operators
             string commandOrderBy,
             string commandSearch,
             CancellationToken cancellationToken);
-        Task<Operator> GetAsync(OperatorId operatorId);
+        Task<Operator> GetAsync(Guid operatorId);
         Task AddAsync(Operator @operator);
         Task<Operator> Authenticate(string login, string password);
-        Task<int> DeleteAsync(OperatorId requestId);
+        Task<int> DeleteAsync(Guid requestId);
     }
 }

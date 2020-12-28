@@ -5,11 +5,11 @@ namespace EKadry.Application.Services.Workers.WorkerDetail
 {
     public class WorkerDetailQuery : IQuery<WorkerDetailDto>
     {
-        public readonly Guid WorkerId;
+        public readonly Guid Guid;
 
         public WorkerDetailQuery(Guid workerId)
         {
-            WorkerId = workerId;
+            Guid = workerId;
         }
     }
 }

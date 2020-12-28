@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,7 +20,7 @@ namespace EKadry.Application.Services.Operators.OperatorDetail
 
         public async Task<OperatorDetailDto> Handle(OperatorDetailQuery request, CancellationToken cancellationToken)
         {
-            var operators = await _operatorRepository.GetAsync(new OperatorId(request.OperatorId));
+            var operators = await _operatorRepository.GetAsync(new Guid(request.Guid.ToByteArray()));
 
             return _mapper.Map<Operator, OperatorDetailDto>(operators);
         }

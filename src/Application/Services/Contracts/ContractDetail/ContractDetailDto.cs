@@ -1,15 +1,15 @@
 using System;
+using System.Collections.Generic;
+using EKadry.Domain.Operators;
 using EKadry.Domain.Workers;
 
-namespace EKadry.Domain.Contracts
+namespace EKadry.Application.Services.Contracts.ContractDetail
 {
-    public class Contract
+    public class ContractDetailDto
     {
         public Guid Id { get; set; }
         public DateTime EmployedAt { get; set; }
-
         public DateTime? EmployedEndAt { get; set; }
-
         // public decimal BaseSalary { get; set; }
         // public int IdJobPosition { get; set; }
         // public int IdContractType { get; set; }
@@ -32,17 +32,5 @@ namespace EKadry.Domain.Contracts
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
-        public Contract()
-        {
-        }
-
-        public static Contract CreateContract()
-        {
-            return new Contract()
-            {
-                Id = Guid.NewGuid(),
-            };
-        }
     }
 }

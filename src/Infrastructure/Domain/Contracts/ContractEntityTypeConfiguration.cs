@@ -1,5 +1,6 @@
-﻿using System;
+﻿﻿using System;
 using EKadry.Domain.Contracts;
+using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,8 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.ToTable(SchemaNames.Contracts);
             
             builder.HasKey(b => b.Id);
-
-            builder.Property(e => e.Id).HasColumnName("ID").HasConversion(new TypedIdValueToByteConverter<ContractId>());
+            
+            builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.EmployedAt).HasColumnName("DTZAW");
             builder.Property(e => e.EmployedEndAt).HasColumnName("DTROZ");
             // builder.Property(e => e.BaseSalary).HasColumnName("ZASAD");
@@ -40,12 +41,10 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.CreatedAt).HasColumnName("UTWORZONY");
             builder.Property(e => e.UpdatedAt).HasColumnName("ZAKTUALIZOWANY");
 
-            // builder.HasOne(d => d.Worker)
-            //     .WithMany(p => p.Contracts)
-            //     .IsRequired(false)
-            //     .HasForeignKey(p => p.IdWorker)
-            //     .OnDelete(DeleteBehavior.ClientSetNull)
-            //     .HasConstraintName("UMOWY_PRACOWNICY_FK");
+            builder.HasOne(d => d.Worker)
+                .WithMany(n => n.Contracts)
+                .HasForeignKey(p => p.IdWorker)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasQueryFilter(f => EF.Property<DateTime>(f, nameof(f.DeletedAt)) == null);
         }

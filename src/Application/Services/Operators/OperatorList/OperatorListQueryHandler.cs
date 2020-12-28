@@ -26,7 +26,7 @@ namespace EKadry.Application.Services.Operators.OperatorList
                 query.OrderDirection,
                 query.OrderBy,
                 query.Search,
-                cancellationToken).ToList();
+                cancellationToken).ToListAsync();
             
             return _mapper.Map<PagedList<Operator>, PagedList<OperatorListDto>>(operators);
         }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,21 +23,24 @@ namespace EKadry.Infrastructure.Domain.Workers
             string commandSearch,
             CancellationToken cancellationToken)
         {
-            var query = Context.Worker
-                .Include(p => p.Contracts)
-                .AsQueryable();
-            var filtered = new WorkerFilter(query, commandOrderBy, commandOrderDirection, commandSearch).GetFilteredQuery();
+            var query = new WorkerFilter(Context.Worker, commandOrderBy, commandOrderDirection, commandSearch)
+                .GetFilteredQuery()
+                // .Include(x => x.Contracts)
+                .Where(x => x.Pesel == "93020100012");
 
-            var pag = new Pagination<Worker>(filtered, commandPage, commandPerPage);
-            
-            return pag;
+            return new Pagination<Worker>(query, commandPage, commandPerPage);
         }
 
-        public async Task<Worker> GetAsync(WorkerId workerId)
+        public async Task<Worker> GetAsync(Guid workerId)
         {
-            return await Context.Worker
-                .Include(p => p.Contracts)
+            var worker = await Context.Worker
                 .FirstOrDefaultAsync(x => x.Id == workerId);
+
+            worker.Contracts = await Context.Contract
+                .Where(p => p.IdWorker == workerId)
+                .ToListAsync();
+            
+            return worker;
         }
 
         public async Task AddAsync(Worker worker)
@@ -46,7 +49,7 @@ namespace EKadry.Infrastructure.Domain.Workers
             await Context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteAsync(WorkerId workerId)
+        public async Task<int> DeleteAsync(Guid workerId)
         {
             var worker = new Worker {Id = workerId};
             Context.Entry(worker).State = EntityState.Deleted;
