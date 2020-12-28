@@ -126,12 +126,13 @@ ALTER TABLE kadry.okresy
 ------  PKZP
 CREATE TABLE kadry.pkzp
 (
-    id     RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    id_prc RAW(32)                      NOT NULL,
-    saldo  FLOAT(15) DEFAULT 0,
-    dt     FLOAT(15) DEFAULT 0,
-    ct     FLOAT(15) DEFAULT 0,
-    rodz   NUMBER                       NOT NULL
+    id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    id_prc      RAW(32)                      NOT NULL,
+    saldo       FLOAT(15) DEFAULT 0,
+    dt          FLOAT(15) DEFAULT 0,
+    ct          FLOAT(15) DEFAULT 0,
+    rodz        NUMBER                       NOT NULL,
+    pkzp_poz    RAW(32)                         
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -157,12 +158,10 @@ ALTER TABLE kadry.pkzp
 
 ------  PKZP_POZ
 CREATE TABLE kadry.pkzp_poz
-(
+(   
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    ile_rat NUMBER                   DEFAULT NULL,
-    id_pkzp RAW(32)                      NOT NULL,
     id_oks  RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
@@ -181,7 +180,7 @@ COMMENT ON COLUMN kadry.pkzp_poz.zamk IS
     'Czy pozycja zamknięta, zatwierdzona
     0 - otwarte
     1 - zamknięte';
-/
+/    
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
 /
@@ -191,8 +190,8 @@ CREATE TABLE kadry.pkzp_harm
 (
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_pkzp RAW(32)                      NOT NULL,
     okres   VARCHAR2(10)                 NOT NULL,
+    id_prc  RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
@@ -313,31 +312,28 @@ ALTER TABLE kadry.staztab
 ------ UMOWY
 CREATE TABLE kadry.umowy
 (
-    id             RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
-    dtzaw          DATE                           NOT NULL,
-    dtroz          DATE,
-    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
-    id_stanow      RAW(32)                        NOT NULL,
-    id_typum       RAW(32)                        NOT NULL,
-    id_prc         RAW(32)                        NOT NULL,
-    nr_tyt_zus     NUMBER(5),
-    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_pkzp       NUMBER(1) DEFAULT 0            NOT NULL,
-    nrm_czas_prac  FLOAT(15),
-    stog           NUMBER(1) DEFAULT 0            NOT NULL,
-    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
-    stws           NUMBER(1) DEFAULT 0            NOT NULL,
-    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
-    usuniety       DATE,
-    utworzony      DATE      DEFAULT current_date NOT NULL,
-    zaktualizowany DATE      DEFAULT current_date NOT NULL
+    id            RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    dtzaw         DATE                         NOT NULL,
+    dtroz         DATE,
+    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
+    id_stanow     RAW(32)                      NOT NULL,
+    id_typum      RAW(32)                      NOT NULL,
+    id_prc        RAW(32)                      NOT NULL,
+    nr_tyt_zus    NUMBER(5),
+    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_pkzp      NUMBER(1) DEFAULT 0          NOT NULL,
+    nrm_czas_prac FLOAT(15),
+    stog          NUMBER(1) DEFAULT 0          NOT NULL,
+    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
+    stws          NUMBER(1) DEFAULT 0          NOT NULL,
+    stjb          NUMBER(1) DEFAULT 0          NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
@@ -691,34 +687,30 @@ ALTER TABLE kadry.staztab_c
 ------ UMOWY_C
 CREATE TABLE kadry.umowy_c
 (
-    c_id           RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
-    c_data         DATE      DEFAULT sysdate      NOT NULL,
-    c_oper         RAW(32)                        NOT NULL,
-    id             RAW(32)                        NOT NULL,
-    dtzaw          DATE                           NOT NULL,
-    dtroz          DATE,
-    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
-    id_stanow      RAW(32)                        NOT NULL,
-    id_typum       RAW(32)                        NOT NULL,
-    id_prc         RAW(32)                        NOT NULL,
-    nr_tyt_zus     NUMBER(5),
-    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
-    czy_pkzp       NUMBER(1) DEFAULT 0            NOT NULL,
-    nrm_czas_prac  FLOAT(15),
-    stog           NUMBER(1) DEFAULT 0            NOT NULL,
-    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
-    stws           NUMBER(1) DEFAULT 0            NOT NULL,
-    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
-    usuniety       DATE,
-    utworzony      DATE      DEFAULT current_date NOT NULL,
-    zaktualizowany DATE      DEFAULT current_date NOT NULL
+    c_id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    c_data        DATE      DEFAULT sysdate    NOT NULL,
+    c_oper        RAW(32)                      NOT NULL,
+    id            RAW(32)                      NOT NULL,
+    dtzaw         DATE                         NOT NULL,
+    dtroz         DATE,
+    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
+    id_stanow     RAW(32)                      NOT NULL,
+    id_typum      RAW(32)                      NOT NULL,
+    id_prc        RAW(32)                      NOT NULL,
+    nr_tyt_zus    NUMBER(5),
+    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
+    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
+    nrm_czas_prac FLOAT(15),
+    stog          NUMBER(1) DEFAULT 0          NOT NULL,
+    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
+    stws          NUMBER(1) DEFAULT 0          NOT NULL,
+    stjb          NUMBER(1) DEFAULT 0          NOT NULL
 );
 /
 ALTER TABLE kadry.umowy_c
@@ -801,8 +793,12 @@ ALTER TABLE kadry.pkzp
         REFERENCES kadry.pracownicy (id);
 /
 ALTER TABLE kadry.pkzp_poz
-    ADD CONSTRAINT pkzppoz_pkzp_fk FOREIGN KEY (id_pkzp)
-        REFERENCES kadry.pkzp (id);
+    ADD CONSTRAINT pkzppoz_pracwnicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);
+/
+ALTER TABLE kadry.pkzp
+    ADD CONSTRAINT pkzp_pkzppoz_fk FOREIGN KEY (pkzp_poz)
+        REFERENCES kadry.pkzp_poz (id);
 /
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_adresy_fk FOREIGN KEY (id_misc)
@@ -979,24 +975,40 @@ END;
 */
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace
-    TRIGGER okresy_okresyc_aud
-    AFTER UPDATE OR DELETE
-    ON okresy
-    FOR EACH ROW
-DECLARE
-    t_rec RAW(32);
-BEGIN
-    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
-        :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
-        t_rec := SYS_GUID();
-        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
-    END IF;
-EXCEPTION
-    WHEN OTHERS THEN
-        raise_application_error(-20002, SQLERRM);
-END;
+TRIGGER okresy_okresyc_aud
+     AFTER UPDATE OR DELETE
+     ON okresy
+     FOR EACH ROW
+ DECLARE
+     t_rec RAW(32);
+ BEGIN
+     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
+         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
+         t_rec := SYS_GUID();
+         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+     END IF;
+ EXCEPTION
+     WHEN OTHERS THEN
+         raise_application_error(-20002, SQLERRM);
+ END;
 /
+
+--------------------------- pkzppoz_pkzp_aid
+
+create or replace NONEDITIONABLE TRIGGER pkzppoz_pkzp_aid
+    AFTER INSERT OR DELETE
+    ON pkzp_poz
+    FOR EACH ROW
+BEGIN 
+    IF (:NEW.rodz = 10) THEN
+        INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
+        VALUES (:NEW.id_prc, :NEW.kwot, 0-:NEW.kwot, :NEW.rodz, :NEW.id);
+    END IF;
+    EXCEPTION
+     WHEN OTHERS THEN
+         raise_application_error(-20002, SQLERRM);
+ END;
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- FUNCKJE
@@ -1020,6 +1032,8 @@ create or replace FUNCTION F_MIN_TO_HOURS(
 BEGIN
     RETURN round(WART / 60);
 END;
+
+--------------------------- GUID_TO_RAW
 
 create or replace FUNCTION GUID_TO_RAW(
     GUID VARCHAR2
@@ -1075,7 +1089,8 @@ END;
 
 ----- PACKAGE
 
-CREATE OR REPLACE PACKAGE pkzp_pack AS
+create or replace
+PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
     FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
     FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN NUMBER; 
@@ -1150,6 +1165,11 @@ PACKAGE BODY pkzp_pack AS
             END IF;  
             RETURN (lRata); 
         END;
+    PROCEDURE pkzp_insert (iRodz NUMBER, iKwota FLOAT)
+        IS
+        BEGIN
+            NULL;
+        END;
     PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
         IS
             lOks DATE;
@@ -1179,7 +1199,6 @@ PACKAGE BODY pkzp_pack AS
                 lBuf := lBuf + lRata;
               END IF;
             END LOOP;
-        COMMIT;
+            COMMIT;
         END;
 END;
-
