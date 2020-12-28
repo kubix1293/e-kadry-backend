@@ -192,7 +192,7 @@ CREATE TABLE kadry.pkzp_harm
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
-    okres   DATE                         NOT NULL,
+    okres   VARCHAR2(10)                 NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
@@ -1078,7 +1078,7 @@ END;
 
 ----- BODY
 
-CREATE OR REPLACE
+create or replace
 PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
@@ -1111,7 +1111,7 @@ PACKAGE BODY pkzp_pack AS
     END;
     ----
     FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
-        RETURN NUMBER AS
+        RETURN FLOAT AS
         lSumaWkladow pkzp.ct%TYPE;
         lZasad umowy.zasad%TYPE;
         lRata FLOAT;
@@ -1133,25 +1133,47 @@ PACKAGE BODY pkzp_pack AS
                 --
                 IF (iKwota > 0 AND iIlerat > 0) THEN
                     IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                          lRata := ROUND(iKwota/iIlerat,2);
-                          --
-                          INSERT INTO test(test) 
-                          VALUES (lRata);
+                          lRata := ROUND(iKwota/iIlerat,-1);
                     END IF;
-                END IF;  
-            END IF;
-            RETURN (lRata);   
+                END IF;
+                IF (iKwota > 0 AND iRata > 0) THEN
+                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                          lRata := ROUND(iKwota/iRata,0);
+                    END IF;
+                END IF;
+            END IF;  
+            RETURN (lRata); 
         END;
     PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
         IS
             lOks DATE;
+            lBuf FLOAT;
+            lKwota FLOAT;
         BEGIN 
             lOks := iOks;
+            lBuf := lRata;
+            --
+            SELECT dt
+            INTO lKwota
+            FROM pkzp
+            WHERE id = iIdpkzp;
+            --
             FOR i IN 1 .. iIlerat LOOP
+              IF (lKwota >= lBuf) THEN
                 INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata, iIdpkzp, lOks);
+                VALUES (lRata, iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
                 --
-                lOks := lOks + 1;
+                lOks := add_months(lOks, 1);
+                lBuf := lBuf + lRata;
+              ELSE 
+                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                VALUES (lRata+(lKwota-lBuf), iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
+                --
+                lOks := add_months(lOks, 1);
+                lBuf := lBuf + lRata;
+              END IF;
             END LOOP;
+        COMMIT;
         END;
 END;
+
