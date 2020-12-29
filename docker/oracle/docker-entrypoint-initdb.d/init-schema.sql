@@ -1099,8 +1099,7 @@ END;
 
 ----- BODY
 
-create or replace
-PACKAGE BODY pkzp_pack AS
+create or replace PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
@@ -1165,35 +1164,48 @@ PACKAGE BODY pkzp_pack AS
             END IF;  
             RETURN (lRata); 
         END;
-    PROCEDURE pkzp_insert (iRodz NUMBER, iKwota FLOAT)
+    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
+            zmien NUMBER;
         BEGIN
-            NULL;
+            IF (iKwota >0 ) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+            END IF;
+            IF (iKwota > 0 AND iIlerat > 0) THEN
+                pkzp_harmo (iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
+            END IF;
+            IF (iKwota > 0 AND iRata > 0) THEN
+                pkzp_harmo (iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
+            END IF;
         END;
-    PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
+    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
         IS
             lOks DATE;
             lBuf FLOAT;
             lKwota FLOAT;
         BEGIN 
-            lOks := iOks;
+            SELECT dtod INTO lOks 
+            FROM okresy 
+            WHERE id = iIdoks;
+            --
             lBuf := lRata;
             --
-            SELECT dt
+            SELECT kwot
             INTO lKwota
-            FROM pkzp
-            WHERE id = iIdpkzp;
+            FROM pkzp_poz
+            WHERE id = iIdpkzppoz;
             --
             FOR i IN 1 .. iIlerat LOOP
-              IF (lKwota >= lBuf) THEN
+              IF (lKwota >= lBuf AND i < iIlerat) THEN
                 INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata, iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
+                VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
                 --
                 lOks := add_months(lOks, 1);
                 lBuf := lBuf + lRata;
               ELSE 
                 INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata+(lKwota-lBuf), iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
+                VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
                 --
                 lOks := add_months(lOks, 1);
                 lBuf := lBuf + lRata;
