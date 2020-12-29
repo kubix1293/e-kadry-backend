@@ -7,6 +7,7 @@ using EKadry.Application.Services.Operators.OperatorAdd;
 using EKadry.Application.Services.Operators.OperatorDelete;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
+using EKadry.Application.Services.Operators.OperatorUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,25 @@ namespace EKadry.API.Http.Operator
         }
         
         /// <summary>
+        /// Update operator 
+        /// </summary>
+        [HttpPut("{operatorId}")]
+        [ProducesResponseType(typeof(Domain.Operators.Operator), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Create([FromRoute] Guid operatorId, [FromBody] UpdateOperatorRequest request)
+        {
+            await _mediator.Send(new OperatorUpdateCommand(
+                operatorId,
+                request.Login,
+                request.FirstName,
+                request.LastName,
+                request.Active,
+                request.Password
+            ));
+        
+            return SuccessResponse("Operator został zaktualizowany");
+        }
+        
+        /// <summary>
         /// Get operator details
         /// </summary>
         [HttpGet("{operatorId}")]
@@ -82,7 +102,7 @@ namespace EKadry.API.Http.Operator
         {
             if (await _mediator.Send(new OperatorDeleteCommand(operatorId)) == 0)
             {
-                return FailedResponse("Nie udało się usunięcie operatora.");
+                return FailedResponse("Nie udało się usunięcie operatora");
             }
             
             return SuccessResponse("Operator został usunięy");

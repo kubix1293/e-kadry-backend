@@ -25,5 +25,17 @@ namespace EKadry.Domain.Operators
                 LastName = lastName
             };
         }
+
+        public void Update(string login, string firstName, string lastName, bool active, string password)
+        {
+            Login = login;
+            FirstName = firstName;
+            LastName = lastName;
+            Active = active;
+            if (password != null)
+            {
+                Password = password;
+            }
+        }
     }
 }

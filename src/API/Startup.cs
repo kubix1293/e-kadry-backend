@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using AutoMapper;
 using EKadry.API.Configuration;
 using EKadry.Application.Configuration;
 using EKadry.Infrastructure;
@@ -13,8 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -40,7 +37,7 @@ namespace EKadry.API
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 });
             
             services.AddSwaggerDocumentation();

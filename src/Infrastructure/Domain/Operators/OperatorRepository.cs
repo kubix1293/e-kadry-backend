@@ -48,6 +48,12 @@ namespace EKadry.Infrastructure.Domain.Operators
                     new OracleParameter("LAST_NAME", @operator.LastName),
                 });
         }
+        
+        public async Task UpdateAsync(Operator @operator)
+        {
+            Context.Operator.Attach(@operator);
+            await Context.SaveChangesAsync();
+        }
 
         public async Task<Operator> Authenticate(string login, string password)
         {

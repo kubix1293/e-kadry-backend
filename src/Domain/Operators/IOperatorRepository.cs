@@ -17,5 +17,6 @@ namespace EKadry.Domain.Operators
         Task AddAsync(Operator @operator);
         Task<Operator> Authenticate(string login, string password);
         Task<int> DeleteAsync(Guid requestId);
+        Task UpdateAsync(Operator @operator);
     }
 }

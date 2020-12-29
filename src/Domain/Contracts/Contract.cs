@@ -19,14 +19,14 @@ namespace EKadry.Domain.Contracts
         public bool IsSick { get; set; }
         public bool IsAnnuitant { get; set; }
         public bool IsPensioner { get; set; }
-        public bool IsHealtly { get; set; }
+        public bool IsHealthy { get; set; }
         public bool IsLf { get; set; }
         public bool IsGebf { get; set; }
         public bool IsLeave { get; set; }
         public bool IsSickLeave { get; set; }
         public decimal? WorkingTime { get; set; }
         public int EntireInternship { get; set; }
-        public int ProffesionInternship { get; set; }
+        public int ProfessionInternship { get; set; }
         public int ServiceInternship { get; set; }
         public int JubileeInternship { get; set; }
         public DateTime? DeletedAt { get; set; }

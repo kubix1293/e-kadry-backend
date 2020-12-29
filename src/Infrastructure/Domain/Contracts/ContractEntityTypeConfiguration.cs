@@ -27,14 +27,14 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.IsSick).HasColumnName("CZY_CHOR").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsAnnuitant).HasColumnName("CZY_REN").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsPensioner).HasColumnName("CZY_EMER").HasConversion(new IntToBooleanConverter());
-            builder.Property(e => e.IsHealtly).HasColumnName("CZY_ZDROW").HasConversion(new IntToBooleanConverter());
+            builder.Property(e => e.IsHealthy).HasColumnName("CZY_ZDROW").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsLf).HasColumnName("CZY_FP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsGebf).HasColumnName("CZY_FGSP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsLeave).HasColumnName("CZY_URLOP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsSickLeave).HasColumnName("CZY_AB_CHOR").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.WorkingTime).HasColumnName("NRM_CZAS_PRAC");
             builder.Property(e => e.EntireInternship).HasColumnName("STOG");
-            builder.Property(e => e.ProffesionInternship).HasColumnName("STZW");
+            builder.Property(e => e.ProfessionInternship).HasColumnName("STZW");
             builder.Property(e => e.ServiceInternship).HasColumnName("STWS");
             builder.Property(e => e.JubileeInternship).HasColumnName("STJB");
             builder.Property(e => e.DeletedAt).HasColumnName("USUNIETY");
