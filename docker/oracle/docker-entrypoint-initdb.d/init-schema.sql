@@ -1099,7 +1099,8 @@ END;
 
 ----- BODY
 
-create or replace PACKAGE BODY pkzp_pack AS
+create or replace
+PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
@@ -1145,22 +1146,27 @@ create or replace PACKAGE BODY pkzp_pack AS
                 AND (dtroz > sysdate OR dtroz IS null)
                 AND czy_pkzp = 1;
                 --
-                SELECT ct 
-                INTO lSumaWkladow
-                FROM pkzp
-                WHERE id_prc = iIdprc
-                AND rodz =  1;
-                --
-                IF (iKwota > 0 AND iIlerat > 0) THEN
-                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                          lRata := ROUND(iKwota/iIlerat,-1);
+                FOR i IN (
+                    SELECT ct 
+                    FROM pkzp
+                    WHERE id_prc = iIdprc
+                    AND rodz =  1)
+                LOOP
+                    IF (i.ct <> 0) THEN
+                        IF (iKwota > 0 AND iIlerat > 0) THEN
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iIlerat,-1);
+                            END IF;
+                        END IF;
+                        IF (iKwota > 0 AND iRata > 0) THEN
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iRata,0);
+                            END IF;
+                        END IF;
+                    ELSE
+                        lRata := 0;
                     END IF;
-                END IF;
-                IF (iKwota > 0 AND iRata > 0) THEN
-                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                          lRata := ROUND(iKwota/iRata,0);
-                    END IF;
-                END IF;
+                END LOOP;
             END IF;  
             RETURN (lRata); 
         END;
@@ -1196,21 +1202,25 @@ create or replace PACKAGE BODY pkzp_pack AS
             FROM pkzp_poz
             WHERE id = iIdpkzppoz;
             --
-            FOR i IN 1 .. iIlerat LOOP
-              IF (lKwota >= lBuf AND i < iIlerat) THEN
-                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
-                --
-                lOks := add_months(lOks, 1);
-                lBuf := lBuf + lRata;
-              ELSE 
-                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
-                --
-                lOks := add_months(lOks, 1);
-                lBuf := lBuf + lRata;
-              END IF;
-            END LOOP;
+            IF (iIlerat > 0) THEN
+                FOR i IN 1 .. iIlerat LOOP
+                  IF (lKwota >= lBuf AND i < iIlerat) THEN
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  ELSE 
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  END IF;
+                END LOOP;
+            ELSE
+                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
+            END IF;
             COMMIT;
         END;
 END;
