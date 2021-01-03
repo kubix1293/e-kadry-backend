@@ -163,7 +163,8 @@ CREATE TABLE kadry.pkzp_poz
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     id_oks  RAW(32)                      NOT NULL,
-    zamk    NUMBER    DEFAULT 0          NOT NULL
+    id_prc  RAW(32)                      NOT NULL,
+    pkzp_poz RAW(32)                     NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -885,6 +886,16 @@ ALTER TABLE kadry.umowy_c
         REFERENCES kadry.umowy (id);
 /
 -------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------- VIEWS
+--------------------------- PKZP_SPLATY
+
+CREATE VIEW pkzp_splaty AS
+SELECT p.id as id_prc, p.imie, p.nazwisko, ph.kwot, pk.id as id_pkzppoz, ph.zamk
+FROM pracownicy p
+JOIN pkzp_poz pk ON p.id = pk.id_prc
+JOIN pkzp_harm ph ON pk.id = ph.id_pkzp;
+
+-------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- TRIGGERY
 --------------------------- PRAC_PRACC_AUD
 create or replace NONEDITIONABLE TRIGGER prac_pracc_aud
@@ -994,7 +1005,7 @@ TRIGGER okresy_okresyc_aud
  END;
 /
 
---------------------------- pkzppoz_pkzp_bi
+--------------------------- PKZP_BI
 
 create or replace TRIGGER pkzp_bi
     BEFORE INSERT
@@ -1019,7 +1030,7 @@ BEGIN
  END;
 
 
---------------------------- pkzppoz_pkzp_ai
+--------------------------- PKZPPOZ_PKZP_AI
 
 create or replace
 TRIGGER pkzppoz_pkzp_ai
@@ -1278,5 +1289,9 @@ PACKAGE BODY pkzp_pack AS
                 RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
             END IF;
             COMMIT;
+        END;
+    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT,  )
+        IS
+        BEGIN
         END;
 END;
