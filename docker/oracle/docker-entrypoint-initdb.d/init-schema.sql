@@ -994,21 +994,66 @@ TRIGGER okresy_okresyc_aud
  END;
 /
 
---------------------------- pkzppoz_pkzp_aid
+--------------------------- pkzppoz_pkzp_bi
 
-create or replace NONEDITIONABLE TRIGGER pkzppoz_pkzp_aid
-    AFTER INSERT OR DELETE
-    ON pkzp_poz
+create or replace TRIGGER pkzp_bi
+    BEFORE INSERT
+    ON pkzp
     FOR EACH ROW
+DECLARE 
+    rec RAW(32);
+    CURSOR c_id IS
+      SELECT id_prc FROM pkzp WHERE rodz = 1 AND id_prc = :NEW.id_prc;
 BEGIN 
-    IF (:NEW.rodz = 10) THEN
-        INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
-        VALUES (:NEW.id_prc, :NEW.kwot, 0-:NEW.kwot, :NEW.rodz, :NEW.id);
+    IF (:NEW.rodz = 1) THEN
+        OPEN c_id;
+        FETCH c_id INTO rec;
+        CLOSE c_id;
+        IF (rec IS NOT NULL) THEN
+          raise_application_error(-20002, SQLERRM||'WKŁADY JUŻ ISTNIEJĄ');  
+        END IF; 
     END IF;
     EXCEPTION
      WHEN OTHERS THEN
          raise_application_error(-20002, SQLERRM);
  END;
+
+
+--------------------------- pkzppoz_pkzp_ai
+
+create or replace
+TRIGGER pkzppoz_pkzp_ai
+    AFTER INSERT
+    ON pkzp_poz
+    FOR EACH ROW
+DECLARE
+    rec RAW(32);
+    CURSOR c_id IS
+      SELECT id_prc FROM pkzp WHERE rodz = 1 AND id_prc = :NEW.id_prc;
+BEGIN 
+    IF (:NEW.rodz = 10) THEN
+        INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
+        VALUES (:NEW.id_prc, :NEW.kwot, 0-:NEW.kwot, :NEW.rodz, :NEW.id);
+    END IF;
+    IF (:NEW.rodz = 1) THEN
+        OPEN c_id;
+        FETCH c_id INTO rec;
+        CLOSE c_id;
+        IF (rec IS NOT NULL) THEN
+            UPDATE pkzp SET ct = ct + :NEW.kwot, saldo = saldo + :NEW.kwot
+            WHERE id_prc = :NEW.id_prc 
+            AND rodz = 1;
+        ELSE
+            INSERT INTO pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
+            VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
+        END IF;
+    END IF;
+    EXCEPTION
+     WHEN OTHERS THEN
+         raise_application_error(-20002, SQLERRM);
+ END;
+
+ 
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- FUNCKJE
@@ -1146,59 +1191,92 @@ PACKAGE BODY pkzp_pack AS
                 AND (dtroz > sysdate OR dtroz IS null)
                 AND czy_pkzp = 1;
                 --
-                SELECT ct 
-                INTO lSumaWkladow
-                FROM pkzp
-                WHERE id_prc = iIdprc
-                AND rodz =  1;
-                --
-                IF (iKwota > 0 AND iIlerat > 0) THEN
-                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                          lRata := ROUND(iKwota/iIlerat,-1);
+                FOR i IN (
+                    SELECT ct 
+                    FROM pkzp
+                    WHERE id_prc = iIdprc
+                    AND rodz =  1)
+                LOOP
+                    IF (i.ct > 0) THEN
+                        IF (iKwota > 0 AND iIlerat > 0) THEN
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iIlerat,-1);
+                            END IF;
+                        END IF;
+                        IF (iKwota > 0 AND iRata > 0) THEN
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iRata,0);
+                            END IF;
+                        END IF;
+                    ELSE
+                        lRata := 0;
                     END IF;
-                END IF;
-                IF (iKwota > 0 AND iRata > 0) THEN
-                    IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                          lRata := ROUND(iKwota/iRata,0);
-                    END IF;
-                END IF;
+                END LOOP;
             END IF;  
             RETURN (lRata); 
         END;
-    PROCEDURE pkzp_insert (iRodz NUMBER, iKwota FLOAT)
+    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
+            zmien NUMBER;
         BEGIN
-            NULL;
+            IF (iRodz = 10) THEN
+                IF (iKwota > 0 AND iIlerat > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                    pkzp_harmo (iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
+                END IF;
+                IF (iKwota > 0 AND iRata > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                    pkzp_harmo (iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
+                END IF;
+                IF (iRata <= 0 AND iIlerat <= 0) THEN
+                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
+                END IF;
+            END IF;
+            IF (iRodz = 1) THEN
+                IF (iKwota > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
+                END IF;
+            END IF;
         END;
-    PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE)   
+    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
         IS
             lOks DATE;
             lBuf FLOAT;
             lKwota FLOAT;
         BEGIN 
-            lOks := iOks;
+            SELECT dtod INTO lOks 
+            FROM okresy 
+            WHERE id = iIdoks;
+            --
             lBuf := lRata;
             --
-            SELECT dt
+            SELECT kwot
             INTO lKwota
-            FROM pkzp
-            WHERE id = iIdpkzp;
+            FROM pkzp_poz
+            WHERE id = iIdpkzppoz;
             --
-            FOR i IN 1 .. iIlerat LOOP
-              IF (lKwota >= lBuf) THEN
-                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata, iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
-                --
-                lOks := add_months(lOks, 1);
-                lBuf := lBuf + lRata;
-              ELSE 
-                INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                VALUES (lRata+(lKwota-lBuf), iIdpkzp, to_date(lOks,'rrrr-mm-dd'));
-                --
-                lOks := add_months(lOks, 1);
-                lBuf := lBuf + lRata;
-              END IF;
-            END LOOP;
+            IF (iIlerat > 0) THEN
+                FOR i IN 1 .. iIlerat LOOP
+                  IF (lKwota >= lBuf AND i < iIlerat) THEN
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  ELSE 
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  END IF;
+                END LOOP;
+            ELSE
+                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
+            END IF;
             COMMIT;
         END;
 END;
