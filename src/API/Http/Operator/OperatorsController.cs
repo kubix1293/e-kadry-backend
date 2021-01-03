@@ -65,7 +65,7 @@ namespace EKadry.API.Http.Operator
         /// Update operator 
         /// </summary>
         [HttpPut("{operatorId}")]
-        [ProducesResponseType(typeof(Domain.Operators.Operator), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Create([FromRoute] Guid operatorId, [FromBody] UpdateOperatorRequest request)
         {
             await _mediator.Send(new OperatorUpdateCommand(
