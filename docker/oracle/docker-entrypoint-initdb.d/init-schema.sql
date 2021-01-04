@@ -177,11 +177,6 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
 /
-COMMENT ON COLUMN kadry.pkzp_poz.zamk IS
-    'Czy pozycja zamknięta, zatwierdzona
-    0 - otwarte
-    1 - zamknięte';
-/    
 ALTER TABLE kadry.pkzp_poz
     ADD CONSTRAINT pkzp_poz_pk PRIMARY KEY (id);
 /
@@ -193,6 +188,7 @@ CREATE TABLE kadry.pkzp_harm
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     okres   VARCHAR2(10)                 NOT NULL,
     id_prc  RAW(32)                      NOT NULL,
+    id_pkzp RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
