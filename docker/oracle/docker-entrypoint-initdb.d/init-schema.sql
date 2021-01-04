@@ -1145,9 +1145,12 @@ create or replace
 PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
     FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
-    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN NUMBER; 
-    PROCEDURE pkzp_harmo (iIdpkzp RAW, lRata FLOAT, iIlerat NUMBER, iOks DATE);  
+    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN FLOAT; 
+    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
+    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW);  
+    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0);
 END;
+
 
 ----- BODY
 
@@ -1286,8 +1289,19 @@ PACKAGE BODY pkzp_pack AS
             END IF;
             COMMIT;
         END;
-    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT,  )
+    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
         IS
+            lOkres DATE;
         BEGIN
+            IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
+                UPDATE pkzp_harm SET zamk = 1 
+                WHERE id_pkzp = iIdpkzppoz 
+                AND okres = lOkres;
+            ELSIF (iRodz = 1 AND iKwota >0 AND iZamk = 1) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);  
+            ELSE
+                RAISE_APPLICATION_ERROR (-20201,'BARK KTÓREGOŚ Z PARAMETRÓW');
+            END IF;
         END;
 END;
