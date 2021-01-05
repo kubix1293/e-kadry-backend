@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using EKadry.Domain;
+using EKadry.Domain.Pkzp;
+using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +24,8 @@ namespace EKadry.API.Http
             {
                 {nameof(DocumentType), EnumHelper<DocumentType>.GetMaps(typeof(DocumentType))},
                 {nameof(Gender), EnumHelper<Gender>.GetMaps(typeof(Gender))},
+                {nameof(PkzpType), EnumHelper<PkzpType>.GetMaps(typeof(PkzpType))},
+                {nameof(PkzpPositionType), EnumHelper<PkzpPositionType>.GetMaps(typeof(PkzpPositionType))},
             };
 
             return Ok(list);
