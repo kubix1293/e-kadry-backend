@@ -235,7 +235,7 @@ CREATE TABLE kadry.pracownicy
     dtur           DATE,
     misc_uro       VARCHAR2(50),
     pesel          VARCHAR2(11)                 NOT NULL,
-    dok_typ        INTEGER,
+    dok_typ        NUMBER,
     nr_dok         VARCHAR(20),
     plec           INTEGER,
     ulica          VARCHAR2(50),
@@ -383,7 +383,7 @@ ALTER TABLE kadry.typum
     ADD CONSTRAINT typum_pk PRIMARY KEY (id);
 /
 COMMENT ON COLUMN kadry.typum.rodz_um IS
-    'rodzaj umowy, 1 - umowa o prace, 10 - umowa zlec., 20 - umowa o dziel.';
+    'rodzaj umowy, 10 - umowa o prace, 20 - umowa zlec., 30 - umowa o dziel.';
 /
 
 /*
@@ -1280,8 +1280,47 @@ create or replace
                 VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
                 pkzp_harmo(iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
             END IF;
+<<<<<<< HEAD
+        END;
+    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
+        IS
+            lOks DATE;
+            lBuf FLOAT;
+            lKwota FLOAT;
+        BEGIN 
+            SELECT dtod INTO lOks 
+            FROM okresy 
+            WHERE id = iIdoks;
+            --
+            lBuf := lRata;
+            --
+            SELECT kwot
+            INTO lKwota
+            FROM pkzp_poz
+            WHERE id = iIdpkzppoz;
+            --
+            IF (iIlerat > 0) THEN
+                FOR i IN 1 .. iIlerat LOOP
+                  IF (lKwota >= lBuf AND i < iIlerat) THEN
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  ELSE 
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
+                    --
+                    lOks := add_months(lOks, 1);
+                    lBuf := lBuf + lRata;
+                  END IF;
+                END LOOP;
+            ELSE
+                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
+=======
             IF (iRata <= 0 AND iIlerat <= 0) THEN
                 RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+>>>>>>> d702cd4eaa03a77f374edde95585b83efacd25a5
             END IF;
         END IF;
         IF (iRodz = 1) THEN
