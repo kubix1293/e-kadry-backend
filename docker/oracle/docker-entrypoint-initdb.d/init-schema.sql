@@ -894,21 +894,20 @@ JOIN pkzp_harm ph ON pk.id = ph.id_pkzp;
 -------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- TRIGGERY
 --------------------------- PRAC_PRACC_AUD
-create or replace NONEDITIONABLE TRIGGER prac_pracc_aud
+create or replace
+TRIGGER prac_pracc_aud
     AFTER UPDATE OR DELETE
     ON pracownicy
     FOR EACH ROW
 DECLARE
-    t_rec INTEGER;
+    t_rec RAW(32);
 BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or :NEW.id_misc <> :OLD.id_misc or
         :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok) THEN
         t_rec := SYS_GUID();
-        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA,
-                                  NR_DOM, NR_LOK)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL,
-                :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ID_MISC, :OLD.ULICA,
+        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA, NR_DOM, NR_LOK)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL,:OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ID_MISC, :OLD.ULICA,
                 :OLD.NR_DOM, :OLD.NR_LOK);
     END IF;
 EXCEPTION
@@ -1086,7 +1085,6 @@ BEGIN
         VALUES (:NEW.kwot, 30, lOks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
-
 
  
 -------------------------------------------------------------------------------------------------------------------
