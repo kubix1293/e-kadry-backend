@@ -24,9 +24,7 @@ namespace EKadry.Infrastructure.Domain.Workers
             CancellationToken cancellationToken)
         {
             var query = new WorkerFilter(Context.Worker, commandOrderBy, commandOrderDirection, commandSearch)
-                .GetFilteredQuery()
-                // .Include(x => x.Contracts)
-                .Where(x => x.Pesel == "93020100012");
+                .GetFilteredQuery();
 
             return new Pagination<Worker>(query, commandPage, commandPerPage);
         }

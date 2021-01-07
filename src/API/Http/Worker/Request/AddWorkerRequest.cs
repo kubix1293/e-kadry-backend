@@ -1,3 +1,5 @@
+using EKadry.Domain.Workers;
+
 namespace EKadry.API.Http.Worker.Request
 {
     public class AddWorkerRequest
@@ -7,9 +9,9 @@ namespace EKadry.API.Http.Worker.Request
         public string Birthday { get; set; }
         public string CityOfBirthday { get; set; }
         public string Pesel { get; set; }
-        public int DoumnetType { get; set; }
+        public DocumentType DoumnetType { get; set; }
         public string DocumentNumber { get; set; }
-        public int Gender { get; set; }
+        public Gender Gender { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }

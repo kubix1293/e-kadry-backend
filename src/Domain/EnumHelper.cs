@@ -17,6 +17,11 @@ namespace EKadry.Domain
     public static class EnumHelper<T>
         where T : struct, Enum // This constraint requires C# 7.3 or later.
     {
+        public static T GetEnum(int value)
+        {
+            return (T) Enum.ToObject(typeof(T), value);
+        }
+        
         public static IList GetValues(Type value)
         {
             var enumValues = new List<T>();
