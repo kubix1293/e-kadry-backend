@@ -12,10 +12,12 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
         public int DocumentType { get; set; }
         public string DocumentNumber { get; set; }
         public int Gender { get; set; }
-        public string IdCity { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
         public string ActNumber { get; set; }
         public string MotherName { get; set; }
         public string FatherName { get; set; }
@@ -30,10 +32,12 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
             int documentType,
             string documentNumber,
             int gender,
-            string idCity,
             string street,
             string propertyNumber,
             string apartmentNumber,
+            string zipCode,
+            string city,
+            string country,
             string actNumber,
             string motherName,
             string fatherName,
@@ -47,10 +51,12 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
             DocumentType = documentType;
             DocumentNumber = documentNumber;
             Gender = gender;
-            IdCity = idCity;
             Street = street;
             PropertyNumber = propertyNumber;
             ApartmentNumber = apartmentNumber;
+            ZipCode = zipCode;
+            City = city;
+            Country = country;
             ActNumber = actNumber;
             MotherName = motherName;
             FatherName = fatherName;

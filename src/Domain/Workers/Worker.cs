@@ -15,10 +15,12 @@ namespace EKadry.Domain.Workers
         public DocumentType DocumentType { get; set; }
         public string DocumentNumber { get; set; }
         public Gender Gender { get; set; }
-        public string IdCity { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
         public string ActNumber { get; set; }
         public string MotherName { get; set; }
         public string FatherName { get; set; }
@@ -42,10 +44,12 @@ namespace EKadry.Domain.Workers
             int documentType,
             string documentNumber,
             int gender,
-            string idCity,
             string street,
             string propertyNumber,
             string apartmentNumber,
+            string zipCode,
+            string city,
+            string country,
             string actNumber,
             string motherName,
             string fatherName,
@@ -63,10 +67,12 @@ namespace EKadry.Domain.Workers
                 DocumentType = EnumHelper<DocumentType>.Parse(documentType.ToString()),
                 DocumentNumber = documentNumber,
                 Gender = EnumHelper<Gender>.Parse(gender.ToString()),
-                IdCity = idCity,
                 Street = street,
                 PropertyNumber = propertyNumber,
                 ApartmentNumber = apartmentNumber,
+                ZipCode = zipCode,
+                City = city,
+                Country = country,
                 ActNumber = actNumber,
                 MotherName = motherName,
                 FatherName = fatherName,

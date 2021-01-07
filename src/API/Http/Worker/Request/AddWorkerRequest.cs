@@ -10,10 +10,12 @@ namespace EKadry.API.Http.Worker.Request
         public int DoumnetType { get; set; }
         public string DocumentNumber { get; set; }
         public int Gender { get; set; }
-        public string IdCity { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
         public string ActNumber { get; set; }
         public string MotherName { get; set; }
         public string FatherName { get; set; }
