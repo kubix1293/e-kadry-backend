@@ -186,7 +186,7 @@ CREATE TABLE kadry.pkzp_harm
 (
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    okres   VARCHAR2(10)                 NOT NULL,
+    okres   VARCHAR2(7)                  NOT NULL,
     id_prc  RAW(32)                      NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
@@ -1060,6 +1060,34 @@ BEGIN
          raise_application_error(-20002, SQLERRM);
  END;
 
+
+--------------------------- PKZPSPLATY_PKZPPOZ_AU
+create or replace
+TRIGGER pkzpharm_pkzppoz_au
+    AFTER UPDATE
+    ON pkzp_harm
+    FOR EACH ROW
+DECLARE
+    lOks RAW(32);
+    lIdprc RAW(32);
+BEGIN
+    IF (:NEW.zamk = 1) THEN
+        SELECT id
+        INTO lOks
+        FROM okresy
+        WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
+        --
+        SELECT id_prc
+        INTO lIdprc
+        FROM pkzp_poz
+        WHERE id = :NEW.id_pkzp;
+        --
+        INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
+        VALUES (:NEW.kwot, 30, lOks, lIdprc, :NEW.id_pkzp);
+    END IF;
+END;
+
+
  
 -------------------------------------------------------------------------------------------------------------------
 
@@ -1271,14 +1299,14 @@ PACKAGE BODY pkzp_pack AS
             IF (iIlerat > 0) THEN
                 FOR i IN 1 .. iIlerat LOOP
                   IF (lKwota >= lBuf AND i < iIlerat) THEN
-                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
+                    VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'), iIdoks);
                     --
                     lOks := add_months(lOks, 1);
                     lBuf := lBuf + lRata;
                   ELSE 
-                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
+                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'), iIdoks);
                     --
                     lOks := add_months(lOks, 1);
                     lBuf := lBuf + lRata;
@@ -1291,12 +1319,17 @@ PACKAGE BODY pkzp_pack AS
         END;
     PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
         IS
-            lOkres DATE;
+            lOks VARCHAR2(7);
         BEGIN
+            SELECT to_char(dtod, 'RRRR-MM')
+            INTO lOks 
+            FROM okresy
+            WHERE id = iIdoks;
+            --
             IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
                 UPDATE pkzp_harm SET zamk = 1 
                 WHERE id_pkzp = iIdpkzppoz 
-                AND okres = lOkres;
+                AND okres = lOks;
             ELSIF (iRodz = 1 AND iKwota >0 AND iZamk = 1) THEN
                 INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
                 VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);  
