@@ -56,7 +56,7 @@ namespace EKadry.API.Http.Worker
                 request.Birthday,
                 request.CityOfBirthday,
                 request.Pesel,
-                request.DoumnetType,
+                request.DocumentType,
                 request.DocumentNumber,
                 request.Gender,
                 request.Street,

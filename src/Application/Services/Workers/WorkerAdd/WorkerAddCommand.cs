@@ -11,9 +11,9 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
         public string Birthday { get; set; }
         public string CityOfBirthday { get; set; }
         public string Pesel { get; set; }
-        public DocumentType DocumentType { get; set; }
+        public int DocumentType { get; set; }
         public string DocumentNumber { get; set; }
-        public Gender Gender { get; set; }
+        public int Gender { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
@@ -31,9 +31,9 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
             string birthday,
             string cityOfBirthday,
             string pesel,
-            DocumentType documentType,
+            int documentType,
             string documentNumber,
-            Gender gender,
+            int gender,
             string street,
             string propertyNumber,
             string apartmentNumber,
