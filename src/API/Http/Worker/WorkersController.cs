@@ -112,7 +112,7 @@ namespace EKadry.API.Http.Worker
         /// Get worker details
         /// </summary>
         [HttpGet("{workerId}")]
-        [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
+        // [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromRoute] Guid workerId)
         {
             var worker = await _mediator.Send(new WorkerDetailQuery(workerId));

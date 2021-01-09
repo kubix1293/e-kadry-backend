@@ -38,7 +38,9 @@ namespace EKadry.API.Http.Contract
                 request.OrderDirection,
                 request.OrderBy,
                 request.Search,
-                request.ShowInactiveContracts == true
+                request.ShowInactiveContracts == true,
+                request.DateFrom,
+                request.DateTo
             ));
 
             return Ok(list);

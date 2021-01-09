@@ -12,7 +12,9 @@ namespace EKadry.Domain.Contracts
             string commandOrderDirection,
             string commandOrderBy,
             string commandSearch,
-            bool showInactiveContracts,
+            bool commandShowInactiveContracts,
+            DateTime? commandDateFrom,
+            DateTime? commandDateTo,
             CancellationToken cancellationToken);
         Task<Contract> GetAsync(Guid contractId);
         // Task AddAsync(Contract worker);

@@ -22,6 +22,8 @@ namespace EKadry.Infrastructure.Domain.Contracts
             string commandOrderBy,
             string commandSearch,
             bool commandShowInactiveContracts,
+            DateTime? commandDateFrom,
+            DateTime? commandDateTo,
             CancellationToken cancellationToken)
         {
             var query = new ContractFilter(
@@ -29,7 +31,9 @@ namespace EKadry.Infrastructure.Domain.Contracts
                     commandOrderBy,
                     commandOrderDirection,
                     commandSearch,
-                    commandShowInactiveContracts
+                    commandShowInactiveContracts,
+                    commandDateFrom,
+                    commandDateTo
                 )
                 .GetFilteredQuery()
                 .Include(x => x.Worker)
