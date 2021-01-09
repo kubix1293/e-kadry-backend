@@ -6,6 +6,7 @@ using EKadry.Application.Services.Workers.WorkerAdd;
 using EKadry.Application.Services.Workers.WorkerDelete;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
+using EKadry.Application.Services.Workers.WorkerUpdate;
 using EKadry.Domain.Pagination;
 using EKadry.Infrastructure.Database;
 using MediatR;
@@ -73,6 +74,38 @@ namespace EKadry.API.Http.Worker
             ));
 
             return Created(@operator.Id, @operator);
+        }
+        
+        /// <summary>
+        /// Update operator 
+        /// </summary>
+        [HttpPut("{workerId}")]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Create([FromRoute] Guid workerId, [FromBody] UpdateWorkerRequest request)
+        {
+            await _mediator.Send(new WorkerUpdateCommand(
+                workerId,
+                request.FirstName,
+                request.LastName,
+                request.Birthday,
+                request.CityOfBirthday,
+                request.Pesel,
+                request.DocumentType,
+                request.DocumentNumber,
+                request.Gender,
+                request.Street,
+                request.PropertyNumber,
+                request.ApartmentNumber,
+                request.ZipCode,
+                request.City,
+                request.Country,
+                request.ActNumber,
+                request.MotherName,
+                request.FatherName,
+                request.Phone
+            ));
+        
+            return SuccessResponse("Operator został zaktualizowany");
         }
 
         /// <summary>

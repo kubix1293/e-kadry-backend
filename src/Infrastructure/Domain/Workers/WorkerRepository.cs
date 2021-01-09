@@ -46,6 +46,12 @@ namespace EKadry.Infrastructure.Domain.Workers
             await Context.Worker.AddAsync(worker);
             await Context.SaveChangesAsync();
         }
+        
+        public async Task UpdateAsync(Worker worker)
+        {
+            Context.Worker.Attach(worker);
+            await Context.SaveChangesAsync();
+        }
 
         public async Task<int> DeleteAsync(Guid workerId)
         {

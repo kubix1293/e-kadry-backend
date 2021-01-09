@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using EKadry.Domain.Contracts;
 
 namespace EKadry.Domain.Workers
@@ -34,7 +33,7 @@ namespace EKadry.Domain.Workers
         {
         }
 
-        public static Worker CreateWorker(
+        public static Worker Create(
             string firstName,
             string lastName,
             string birthday,
@@ -77,6 +76,47 @@ namespace EKadry.Domain.Workers
                 FatherName = fatherName,
                 Phone = phone,
             };
+        }
+        
+        public void Update(
+            string firstName,
+            string lastName,
+            string birthday,
+            string cityOfBirthday,
+            string pesel,
+            int documentType,
+            string documentNumber,
+            int gender,
+            string street,
+            string propertyNumber,
+            string apartmentNumber,
+            string zipCode,
+            string city,
+            string country,
+            string actNumber,
+            string motherName,
+            string fatherName,
+            string phone
+        )
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Birthday = DateTime.Parse(birthday);
+            CityOfBirthday = cityOfBirthday;
+            Pesel = pesel;
+            DocumentType = EnumHelper<DocumentType>.Parse(documentType.ToString());
+            DocumentNumber = documentNumber;
+            Gender = EnumHelper<Gender>.Parse(gender.ToString());
+            Street = street;
+            PropertyNumber = propertyNumber;
+            ApartmentNumber = apartmentNumber;
+            ZipCode = zipCode;
+            City = city;
+            Country = country;
+            ActNumber = actNumber;
+            MotherName = motherName;
+            FatherName = fatherName;
+            Phone = phone;
         }
     }
 }
