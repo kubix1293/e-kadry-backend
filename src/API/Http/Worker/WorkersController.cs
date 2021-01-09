@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Worker.Request;
 using EKadry.Application.Services.Workers.WorkerAdd;
+using EKadry.Application.Services.Workers.WorkerDelete;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Domain.Pagination;
@@ -86,20 +87,20 @@ namespace EKadry.API.Http.Worker
             return Ok(worker);
         }
 
-        // /// <summary>
-        // /// Delete worker 
-        // /// </summary>
-        // [HttpDelete("{workerId}")]
-        // [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
-        // [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
-        // public async Task<IActionResult> Delete([FromRoute] Guid workerId)
-        // {
-        //     if (await _mediator.Send(new OperatorDeleteCommand(workerId)) == 0)
-        //     {
-        //         return FailedResponse("Nie udało się usunięcie pracownika");
-        //     }
-        //     
-        //     return SuccessResponse("Pracownik został usunięy");
-        // }
+        /// <summary>
+        /// Delete worker 
+        /// </summary>
+        [HttpDelete("{workerId}")]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Delete([FromRoute] Guid workerId)
+        {
+            if (await _mediator.Send(new WorkerDeleteCommand(workerId)) == 0)
+            {
+                return FailedResponse("Nie udało się usunięcie pracownika");
+            }
+            
+            return SuccessResponse("Pracownik został usunięy");
+        }
     }
 }
