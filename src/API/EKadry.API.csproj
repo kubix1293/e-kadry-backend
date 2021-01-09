@@ -38,7 +38,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Http\Contract\Request" />
         <Folder Include="logs" />
     </ItemGroup>
 

@@ -21,11 +21,19 @@ namespace EKadry.Infrastructure.Domain.Contracts
             string commandOrderDirection,
             string commandOrderBy,
             string commandSearch,
+            bool commandShowInactiveContracts,
             CancellationToken cancellationToken)
         {
-            var query = new ContractFilter(Context.Contract, commandOrderBy, commandOrderDirection, commandSearch)
+            var query = new ContractFilter(
+                    Context.Contract,
+                    commandOrderBy,
+                    commandOrderDirection,
+                    commandSearch,
+                    commandShowInactiveContracts
+                )
                 .GetFilteredQuery()
-                .Include(x => x.Worker);
+                .Include(x => x.Worker)
+                .Include(x => x.JobPosition);
 
             return new Pagination<Contract>(query, commandPage, commandPerPage);
         }

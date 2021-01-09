@@ -1,6 +1,5 @@
-﻿﻿using System;
+﻿using System;
 using EKadry.Domain.Contracts;
-using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +18,8 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.EmployedAt).HasColumnName("DTZAW");
             builder.Property(e => e.EmployedEndAt).HasColumnName("DTROZ");
-            // builder.Property(e => e.BaseSalary).HasColumnName("ZASAD");
-            // builder.Property(e => e.IdJobPosition).HasColumnName("ID_STANOW");
-            // builder.Property(e => e.IdContractType).HasColumnName("ID_TYPUM");
+            builder.Property(e => e.BaseSalary).HasColumnName("ZASAD");
+            builder.Property(e => e.IdJobPosition).HasColumnName("ID_STANOW");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
             builder.Property(e => e.IdentifierZusNumber).HasColumnName("NR_TYT_ZUS");
             builder.Property(e => e.IsSick).HasColumnName("CZY_CHOR").HasConversion(new IntToBooleanConverter());
@@ -43,8 +41,11 @@ namespace EKadry.Infrastructure.Domain.Contracts
 
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.Contracts)
-                .HasForeignKey(p => p.IdWorker)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.IdWorker);
+
+            builder.HasOne(d => d.JobPosition)
+                .WithMany(n => n.Contracts)
+                .HasForeignKey(p => p.IdJobPosition);
 
             builder.HasQueryFilter(f => EF.Property<DateTime>(f, nameof(f.DeletedAt)) == null);
         }

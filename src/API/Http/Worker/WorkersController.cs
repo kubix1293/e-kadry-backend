@@ -105,7 +105,7 @@ namespace EKadry.API.Http.Worker
                 request.Phone
             ));
         
-            return SuccessResponse("Operator został zaktualizowany");
+            return SuccessResponse("Pracownik został zaktualizowany");
         }
 
         /// <summary>

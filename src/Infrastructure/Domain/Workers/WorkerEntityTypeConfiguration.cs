@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;

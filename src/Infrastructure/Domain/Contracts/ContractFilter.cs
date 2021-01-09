@@ -1,6 +1,5 @@
 using System.Linq;
 using EKadry.Domain.Contracts;
-using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Database;
 
 namespace EKadry.Infrastructure.Domain.Contracts
@@ -11,13 +10,24 @@ namespace EKadry.Infrastructure.Domain.Contracts
             IQueryable<Contract> query, 
             string orderBy = null, 
             string orderDirection = null, 
-            string searchString = null)
+            string searchString = null,
+            bool showInactiveContracts = true)
             : base(query, orderBy, orderDirection)
         {
+            Search(searchString);
+            InactiveContract(showInactiveContracts);
         }
 
         private void Search(string search)
         {
+        }
+        
+        private void InactiveContract(bool showInactiveContracts)
+        {
+            if (!showInactiveContracts)
+            {
+                Query = Query.Where(x => x.EmployedEndAt == null);
+            }
         }
     }
 }
