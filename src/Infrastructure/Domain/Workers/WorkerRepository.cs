@@ -24,7 +24,8 @@ namespace EKadry.Infrastructure.Domain.Workers
             CancellationToken cancellationToken)
         {
             var query = new WorkerFilter(Context.Worker, commandOrderBy, commandOrderDirection, commandSearch)
-                .GetFilteredQuery();
+                .GetFilteredQuery()
+                .Include(x => x.Contracts);
 
             return new Pagination<Worker>(query, commandPage, commandPerPage);
         }
@@ -32,11 +33,8 @@ namespace EKadry.Infrastructure.Domain.Workers
         public async Task<Worker> GetAsync(Guid workerId)
         {
             var worker = await Context.Worker
+                .Include(x => x.Contracts)
                 .FirstOrDefaultAsync(x => x.Id == workerId);
-
-            worker.Contracts = await Context.Contract
-                .Where(p => p.IdWorker == workerId)
-                .ToListAsync();
             
             return worker;
         }
