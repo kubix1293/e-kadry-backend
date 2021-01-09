@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using EKadry.Domain.Contracts;
 
 namespace EKadry.Domain.Workers
 {
-    public class Worker 
+    public class Worker : BaseEntity
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }
@@ -27,8 +28,6 @@ namespace EKadry.Domain.Workers
         public string Phone { get; set; }
         public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
 
         public Worker()

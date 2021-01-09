@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Pagination;
-using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,11 +33,9 @@ namespace EKadry.Infrastructure.Domain.Contracts
         public async Task<Contract> GetAsync(Guid contractId)
         {
             var contract = await Context.Contract
+                .Where(x => x.Id == contractId)
                 .Include(x => x.Worker)
-                // .Where(x => x.Id == contractId)
                 .FirstOrDefaultAsync();
-
-            // contract.Worker = await Context.Worker.FirstOrDefaultAsync(x => x.Id == contract.IdWorker);
 
             return contract;
         }
