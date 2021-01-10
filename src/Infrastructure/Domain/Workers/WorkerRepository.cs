@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +38,17 @@ namespace EKadry.Infrastructure.Domain.Workers
                 .FirstOrDefaultAsync(x => x.Id == workerId);
             
             return worker;
+        }
+
+        public async Task<List<Worker>> Search(string searchKey, int limit)
+        {
+            var worker = Context.Worker
+                .Where(s => s.FirstName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
+                         s.LastName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
+                         (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")))
+                .Take(limit);
+            
+            return await worker.ToListAsync();
         }
 
         public async Task AddAsync(Worker worker)

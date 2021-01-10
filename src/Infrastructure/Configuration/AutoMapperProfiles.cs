@@ -6,6 +6,7 @@ using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Workers.WorkerList;
+using EKadry.Application.Services.Workers.WorkerSearch;
 using EKadry.Domain;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
@@ -36,6 +37,7 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<Guid, Operator>();
             
             CreateMap<Worker, WorkerListDto>();
+            CreateMap<Worker, WorkerSearchDto>();
             CreateMap<Worker, WorkerDetailDto>()
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => EnumHelper<DocumentType>.GetMap(src.DocumentType)))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => EnumHelper<Gender>.GetMap(src.Gender)));

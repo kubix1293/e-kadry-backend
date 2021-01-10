@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Worker.Request;
@@ -6,6 +7,7 @@ using EKadry.Application.Services.Workers.WorkerAdd;
 using EKadry.Application.Services.Workers.WorkerDelete;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
+using EKadry.Application.Services.Workers.WorkerSearch;
 using EKadry.Application.Services.Workers.WorkerUpdate;
 using EKadry.Domain.Pagination;
 using EKadry.Infrastructure.Database;
@@ -116,6 +118,18 @@ namespace EKadry.API.Http.Worker
         public async Task<IActionResult> Get([FromRoute] Guid workerId)
         {
             var worker = await _mediator.Send(new WorkerDetailQuery(workerId));
+
+            return Ok(worker);
+        }
+        
+        /// <summary>
+        /// Search workers
+        /// </summary>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(List<WorkerSearchDto>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Get([FromQuery] SearchEntityRequest searchParams)
+        {
+            var worker = await _mediator.Send(new WorkerSearchQuery(searchParams.SearchKey, searchParams.Limit));
 
             return Ok(worker);
         }
