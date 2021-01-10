@@ -26,6 +26,7 @@ namespace EKadry.Application.Services.Contracts.ContractList
                 query.OrderDirection,
                 query.OrderBy,
                 query.Search,
+                query.JobPosition,
                 query.ShowInactiveContracts,
                 query.DateFrom,
                 query.DateTo,

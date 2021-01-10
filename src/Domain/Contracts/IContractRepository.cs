@@ -12,6 +12,7 @@ namespace EKadry.Domain.Contracts
             string commandOrderDirection,
             string commandOrderBy,
             string commandSearch,
+            Guid? jobPosition,
             bool commandShowInactiveContracts,
             DateTime? commandDateFrom,
             DateTime? commandDateTo,

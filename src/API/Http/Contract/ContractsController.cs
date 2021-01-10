@@ -38,6 +38,7 @@ namespace EKadry.API.Http.Contract
                 request.OrderDirection,
                 request.OrderBy,
                 request.Search,
+                request.JobPosition,
                 request.ShowInactiveContracts == true,
                 request.DateFrom,
                 request.DateTo

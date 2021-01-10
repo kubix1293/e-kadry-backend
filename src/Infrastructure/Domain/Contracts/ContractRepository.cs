@@ -15,12 +15,12 @@ namespace EKadry.Infrastructure.Domain.Contracts
         {
         }
 
-        public IPagination<Contract> ToListPaginated(
-            int commandPage,
+        public IPagination<Contract> ToListPaginated(int commandPage,
             int commandPerPage,
             string commandOrderDirection,
             string commandOrderBy,
             string commandSearch,
+            Guid? commandJobPosition,
             bool commandShowInactiveContracts,
             DateTime? commandDateFrom,
             DateTime? commandDateTo,
@@ -31,6 +31,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
                     commandOrderBy,
                     commandOrderDirection,
                     commandSearch,
+                    commandJobPosition,
                     commandShowInactiveContracts,
                     commandDateFrom,
                     commandDateTo
