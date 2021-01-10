@@ -24,7 +24,9 @@ namespace EKadry.Infrastructure.Domain.Workers
                 Query = Query.Where(
                     s => s.FirstName.ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", "")) ||
                     s.LastName.ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", "")) ||
-                    (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", ""))
+                    (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", "")) ||
+                    s.Pesel.Replace(" ", "").Contains(search.Replace(" ", "")) ||
+                    s.DocumentNumber.Replace(" ", "").Contains(search.Replace(" ", ""))
                     );
             }
         }
