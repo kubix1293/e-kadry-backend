@@ -1,13 +1,12 @@
-﻿using EKadry.Domain.Contracts.JobPosition;
-using EKadry.Infrastructure.Database;
+﻿using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EKadry.Infrastructure.Domain.Contracts
+namespace EKadry.Infrastructure.Domain.Contracts.JobPosition
 {
-    internal sealed class JobPositionEntityTypeConfiguration : IEntityTypeConfiguration<JobPosition>
+    internal sealed class JobPositionEntityTypeConfiguration : IEntityTypeConfiguration<EKadry.Domain.Contracts.JobPosition.JobPosition>
     {
-        public void Configure(EntityTypeBuilder<JobPosition> builder)
+        public void Configure(EntityTypeBuilder<EKadry.Domain.Contracts.JobPosition.JobPosition> builder)
         {
             builder.ToTable(SchemaNames.JobPostions);
 

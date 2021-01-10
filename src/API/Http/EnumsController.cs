@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using EKadry.Domain;
+using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Workers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,13 @@ namespace EKadry.API.Http
     [Route("api/enums")]
     public class EnumsController : ControllerBase
     {
+        private readonly IJobPositionRepository _jobPositionRepository;
+
+        public EnumsController(IJobPositionRepository jobPositionRepository)
+        {
+            _jobPositionRepository = jobPositionRepository;
+        }
+
         /// <summary>
         /// Get all enums
         /// </summary>
@@ -22,6 +30,7 @@ namespace EKadry.API.Http
             {
                 {nameof(DocumentType), EnumHelper<DocumentType>.GetMaps(typeof(DocumentType))},
                 {nameof(Gender), EnumHelper<Gender>.GetMaps(typeof(Gender))},
+                {nameof(JobPosition), _jobPositionRepository.ToListEnum()}
             };
 
             return Ok(list);

@@ -62,7 +62,10 @@ namespace EKadry.Infrastructure
         
         private static IMapper ConfigureMapper()
         {
-            var mapperConfig = new MapperConfiguration(m => { m.AddProfile(new AutoMapperProfiles()); });
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new AutoMapperProfiles());
+            });
 
             return mapperConfig.CreateMapper();
         }
