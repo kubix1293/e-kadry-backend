@@ -127,7 +127,7 @@ namespace EKadry.API.Http.Worker
         /// </summary>
         [HttpGet("search")]
         [ProducesResponseType(typeof(List<WorkerSearchDto>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> Get([FromQuery] SearchEntityRequest searchParams)
+        public async Task<IActionResult> Get([FromQuery] SearchQueryRequest searchParams)
         {
             var worker = await _mediator.Send(new WorkerSearchQuery(searchParams.SearchKey, searchParams.Limit));
 
