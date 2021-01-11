@@ -126,13 +126,13 @@ ALTER TABLE kadry.okresy
 ------  PKZP
 CREATE TABLE kadry.pkzp
 (
-    id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    id_prc      RAW(32)                      NOT NULL,
-    saldo       FLOAT(15) DEFAULT 0,
-    dt          FLOAT(15) DEFAULT 0,
-    ct          FLOAT(15) DEFAULT 0,
-    rodz        NUMBER                       NOT NULL,
-    pkzp_poz    RAW(32)                         
+    id       RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    id_prc   RAW(32)                      NOT NULL,
+    saldo    FLOAT(15) DEFAULT 0,
+    dt       FLOAT(15) DEFAULT 0,
+    ct       FLOAT(15) DEFAULT 0,
+    rodz     NUMBER                       NOT NULL,
+    pkzp_poz RAW(32)
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -158,13 +158,13 @@ ALTER TABLE kadry.pkzp
 
 ------  PKZP_POZ
 CREATE TABLE kadry.pkzp_poz
-(   
-    id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    rodz    NUMBER                       NOT NULL,
-    kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32)                     NOT NULL
+(
+    id       RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    rodz     NUMBER                       NOT NULL,
+    kwot     FLOAT(15) DEFAULT 0          NOT NULL,
+    id_oks   RAW(32)                      NOT NULL,
+    id_prc   RAW(32)                      NOT NULL,
+    pkzp_poz RAW(32)                      NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -172,7 +172,7 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
 1 - wkład
 10 - pożyczka
 20 - wpisowe
-30 - spłata'; 
+30 - spłata';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
@@ -186,7 +186,7 @@ CREATE TABLE kadry.pkzp_harm
 (
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    okres   VARCHAR2(10)                 NOT NULL,
+    okres   VARCHAR2(7)                  NOT NULL,
     id_prc  RAW(32)                      NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
@@ -199,10 +199,10 @@ COMMENT ON COLUMN kadry.pkzp_harm.zamk IS
     'Czy pozycja zamknięta, zatwierdzona
     0 - otwarte
     1 - zamknięte';
-/   
+/
 COMMENT ON COLUMN kadry.pkzp_harm.okres IS
     'okres spłaty danej raty np: 01-2021';
-/    
+/
 ALTER TABLE kadry.pkzp_harm
     ADD CONSTRAINT pkzp_harm_pk PRIMARY KEY (id);
 /
@@ -235,13 +235,15 @@ CREATE TABLE kadry.pracownicy
     dtur           DATE,
     misc_uro       VARCHAR2(50),
     pesel          VARCHAR2(11)                 NOT NULL,
-    dok_typ        INTEGER,
+    dok_typ        NUMBER,
     nr_dok         VARCHAR(20),
     plec           INTEGER,
-    id_misc        RAW(32),
     ulica          VARCHAR2(50),
     nr_dom         VARCHAR2(10),
     nr_lok         VARCHAR2(10),
+    kod_pocz       VARCHAR2(10),
+    miasto         VARCHAR2(50),
+    kraj           VARCHAR2(50),
     nr_akt         VARCHAR2(10),
     imie_mat       VARCHAR2(20),
     imie_ojc       VARCHAR2(40),
@@ -309,28 +311,31 @@ ALTER TABLE kadry.staztab
 ------ UMOWY
 CREATE TABLE kadry.umowy
 (
-    id            RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    dtzaw         DATE                         NOT NULL,
-    dtroz         DATE,
-    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
-    id_stanow     RAW(32)                      NOT NULL,
-    id_typum      RAW(32)                      NOT NULL,
-    id_prc        RAW(32)                      NOT NULL,
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_pkzp      NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL
+    id             RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    dtzaw          DATE                           NOT NULL,
+    dtroz          DATE,
+    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
+    id_stanow      RAW(32)                        NOT NULL,
+    id_typum       RAW(32)                        NOT NULL,
+    id_prc         RAW(32)                        NOT NULL,
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_pkzp       NUMBER(1) DEFAULT 0            NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           NUMBER(1) DEFAULT 0            NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
+    stws           NUMBER(1) DEFAULT 0            NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
+    usuniety       DATE,
+    utworzony      DATE      DEFAULT current_date NOT NULL,
+    zaktualizowany DATE      DEFAULT current_date NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.umowy.nrm_czas_prac IS
@@ -378,7 +383,7 @@ ALTER TABLE kadry.typum
     ADD CONSTRAINT typum_pk PRIMARY KEY (id);
 /
 COMMENT ON COLUMN kadry.typum.rodz_um IS
-    'rodzaj umowy, 1 - umowa o prace, 10 - umowa zlec., 20 - umowa o dziel.';
+    'rodzaj umowy, 10 - umowa o prace, 20 - umowa zlec., 30 - umowa o dziel.';
 /
 
 /*
@@ -470,10 +475,12 @@ CREATE TABLE kadry.pracownicy_c
     dok_typ  NUMBER,
     nr_dok   VARCHAR(20),
     plec     NUMBER,
-    id_misc  RAW(32),
     ulica    VARCHAR2(50),
     nr_dom   VARCHAR2(10),
     nr_lok   VARCHAR2(10),
+    kod_pocz VARCHAR2(10),
+    miasto   VARCHAR2(50),
+    kraj     VARCHAR2(50),
     nr_akt   VARCHAR2(10),
     imie_mat VARCHAR2(20),
     imie_ojc VARCHAR2(40),
@@ -617,7 +624,7 @@ CREATE TABLE kadry.pkzp_poz_c
     id      RAW(32)                      NOT NULL,
     rodz    NUMBER                       NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    ile_rat NUMBER                   DEFAULT NULL,
+    ile_rat NUMBER    DEFAULT NULL,
     id_pkzp RAW(32)                      NOT NULL,
     id_oks  RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
@@ -684,30 +691,33 @@ ALTER TABLE kadry.staztab_c
 ------ UMOWY_C
 CREATE TABLE kadry.umowy_c
 (
-    c_id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data        DATE      DEFAULT sysdate    NOT NULL,
-    c_oper        RAW(32)                      NOT NULL,
-    id            RAW(32)                      NOT NULL,
-    dtzaw         DATE                         NOT NULL,
-    dtroz         DATE,
-    zasad         FLOAT(15) DEFAULT 0          NOT NULL,
-    id_stanow     RAW(32)                      NOT NULL,
-    id_typum      RAW(32)                      NOT NULL,
-    id_prc        RAW(32)                      NOT NULL,
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL
+    c_id           RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    c_data         DATE      DEFAULT sysdate      NOT NULL,
+    c_oper         RAW(32)                        NOT NULL,
+    id             RAW(32)                        NOT NULL,
+    dtzaw          DATE                           NOT NULL,
+    dtroz          DATE,
+    zasad          FLOAT(15) DEFAULT 0            NOT NULL,
+    id_stanow      RAW(32)                        NOT NULL,
+    id_typum       RAW(32)                        NOT NULL,
+    id_prc         RAW(32)                        NOT NULL,
+    nr_tyt_zus     NUMBER(5),
+    czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_zdrow      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fp         NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_fgsp       NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_urlop      NUMBER(1) DEFAULT 0            NOT NULL,
+    czy_ab_chor    NUMBER(1) DEFAULT 0            NOT NULL,
+    nrm_czas_prac  FLOAT(15),
+    stog           NUMBER(1) DEFAULT 0            NOT NULL,
+    stzw           NUMBER(1) DEFAULT 0            NOT NULL,
+    stws           NUMBER(1) DEFAULT 0            NOT NULL,
+    stjb           NUMBER(1) DEFAULT 0            NOT NULL,
+    usuniety       DATE,
+    utworzony      DATE      DEFAULT current_date NOT NULL,
+    zaktualizowany DATE      DEFAULT current_date NOT NULL
 );
 /
 ALTER TABLE kadry.umowy_c
@@ -798,10 +808,6 @@ ALTER TABLE kadry.pkzp
         REFERENCES kadry.pkzp_poz (id);
 /
 ALTER TABLE kadry.pracownicy
-    ADD CONSTRAINT pracownicy_adresy_fk FOREIGN KEY (id_misc)
-        REFERENCES kadry.adresy (id);
-/
-ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY (id_oper)
         REFERENCES kadry.oper (id);
 /
@@ -888,28 +894,27 @@ ALTER TABLE kadry.umowy_c
 CREATE VIEW pkzp_splaty AS
 SELECT p.id as id_prc, p.imie, p.nazwisko, ph.kwot, pk.id as id_pkzppoz, ph.zamk
 FROM pracownicy p
-JOIN pkzp_poz pk ON p.id = pk.id_prc
-JOIN pkzp_harm ph ON pk.id = ph.id_pkzp;
+         JOIN pkzp_poz pk ON p.id = pk.id_prc
+         JOIN pkzp_harm ph ON pk.id = ph.id_pkzp;
 
 -------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- TRIGGERY
 --------------------------- PRAC_PRACC_AUD
-create or replace NONEDITIONABLE TRIGGER prac_pracc_aud
+create or replace
+    TRIGGER prac_pracc_aud
     AFTER UPDATE OR DELETE
     ON pracownicy
     FOR EACH ROW
 DECLARE
-    t_rec INTEGER;
+    t_rec RAW(32);
 BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
-        :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or :NEW.id_misc <> :OLD.id_misc or
-        :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok) THEN
+        :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or
+        :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok or :NEW.kod_pocz <> :OLD.kod_pocz or :NEW.miasto <> :OLD.miasto or :NEW.kraj <> :OLD.kraj) THEN
         t_rec := SYS_GUID();
-        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ID_MISC, ULICA,
-                                  NR_DOM, NR_LOK)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL,
-                :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ID_MISC, :OLD.ULICA,
-                :OLD.NR_DOM, :OLD.NR_LOK);
+        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ULICA, NR_DOM, NR_LOK, KOD_POCZ, MIASTO, KRAJ)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL, :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ULICA,
+                :OLD.NR_DOM, :OLD.NR_LOK, :OLD.kod_pocz, :OLD.miasto, :OLD.kraj);
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
@@ -982,23 +987,23 @@ END;
 */
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace
-TRIGGER okresy_okresyc_aud
-     AFTER UPDATE OR DELETE
-     ON okresy
-     FOR EACH ROW
- DECLARE
-     t_rec RAW(32);
- BEGIN
-     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
-         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
-         t_rec := SYS_GUID();
-         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
-     END IF;
- EXCEPTION
-     WHEN OTHERS THEN
-         raise_application_error(-20002, SQLERRM);
- END;
+    TRIGGER okresy_okresyc_aud
+    AFTER UPDATE OR DELETE
+    ON okresy
+    FOR EACH ROW
+DECLARE
+    t_rec RAW(32);
+BEGIN
+    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
+        :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
+        t_rec := SYS_GUID();
+        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
 /
 
 --------------------------- PKZP_BI
@@ -1007,60 +1012,95 @@ create or replace TRIGGER pkzp_bi
     BEFORE INSERT
     ON pkzp
     FOR EACH ROW
-DECLARE 
+DECLARE
     rec RAW(32);
     CURSOR c_id IS
-      SELECT id_prc FROM pkzp WHERE rodz = 1 AND id_prc = :NEW.id_prc;
-BEGIN 
+        SELECT id_prc
+        FROM pkzp
+        WHERE rodz = 1
+          AND id_prc = :NEW.id_prc;
+BEGIN
     IF (:NEW.rodz = 1) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
         IF (rec IS NOT NULL) THEN
-          raise_application_error(-20002, SQLERRM||'WKŁADY JUŻ ISTNIEJĄ');  
-        END IF; 
+            raise_application_error(-20002, SQLERRM || 'WKŁADY JUŻ ISTNIEJĄ');
+        END IF;
     END IF;
-    EXCEPTION
-     WHEN OTHERS THEN
-         raise_application_error(-20002, SQLERRM);
- END;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
 
 
 --------------------------- PKZPPOZ_PKZP_AI
 
 create or replace
-TRIGGER pkzppoz_pkzp_ai
+    TRIGGER pkzppoz_pkzp_ai
     AFTER INSERT
     ON pkzp_poz
     FOR EACH ROW
 DECLARE
     rec RAW(32);
     CURSOR c_id IS
-      SELECT id_prc FROM pkzp WHERE rodz = 1 AND id_prc = :NEW.id_prc;
-BEGIN 
+        SELECT id_prc
+        FROM pkzp
+        WHERE rodz = 1
+          AND id_prc = :NEW.id_prc;
+BEGIN
     IF (:NEW.rodz = 10) THEN
         INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
-        VALUES (:NEW.id_prc, :NEW.kwot, 0-:NEW.kwot, :NEW.rodz, :NEW.id);
+        VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
     END IF;
     IF (:NEW.rodz = 1) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
         IF (rec IS NOT NULL) THEN
-            UPDATE pkzp SET ct = ct + :NEW.kwot, saldo = saldo + :NEW.kwot
-            WHERE id_prc = :NEW.id_prc 
-            AND rodz = 1;
+            UPDATE pkzp
+            SET ct    = ct + :NEW.kwot,
+                saldo = saldo + :NEW.kwot
+            WHERE id_prc = :NEW.id_prc
+              AND rodz = 1;
         ELSE
             INSERT INTO pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
             VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
         END IF;
     END IF;
-    EXCEPTION
-     WHEN OTHERS THEN
-         raise_application_error(-20002, SQLERRM);
- END;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
 
- 
+
+--------------------------- PKZPSPLATY_PKZPPOZ_AU
+create or replace
+    TRIGGER pkzpharm_pkzppoz_au
+    AFTER UPDATE
+    ON pkzp_harm
+    FOR EACH ROW
+DECLARE
+    lOks   RAW(32);
+    lIdprc RAW(32);
+BEGIN
+    IF (:NEW.zamk = 1) THEN
+        SELECT id
+        INTO lOks
+        FROM okresy
+        WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
+        --
+        SELECT id_prc
+        INTO lIdprc
+        FROM pkzp_poz
+        WHERE id = :NEW.id_pkzp;
+        --
+        INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
+        VALUES (:NEW.kwot, 30, lOks, lIdprc, :NEW.id_pkzp);
+    END IF;
+END;
+
+
 -------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------- FUNCKJE
@@ -1142,20 +1182,20 @@ END;
 ----- PACKAGE
 
 create or replace
-PACKAGE pkzp_pack AS
+    PACKAGE pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW) RETURN NUMBER;
-    FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)  RETURN NUMBER;
-    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN FLOAT; 
-    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
-    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW);  
-    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0);
+    FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW) RETURN NUMBER;
+    FUNCTION f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0) RETURN FLOAT;
+    PROCEDURE pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0);
+    PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW);
+    PROCEDURE pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0);
 END;
 
 
 ----- BODY
 
 create or replace
-PACKAGE BODY pkzp_pack AS
+    PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
@@ -1186,70 +1226,61 @@ PACKAGE BODY pkzp_pack AS
         RETURN (lKwota);
     END;
     ----
-    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+    FUNCTION f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         RETURN FLOAT AS
         lSumaWkladow pkzp.ct%TYPE;
-        lZasad umowy.zasad%TYPE;
-        lRata FLOAT;
-        BEGIN
-            IF (iIdprc > 0) THEN
-                SELECT SUM(zasad)
-                INTO lZasad
-                FROM umowy
+        lZasad       umowy.zasad%TYPE;
+        lRata        FLOAT;
+    BEGIN
+        IF (iIdprc > 0) THEN
+            SELECT SUM(zasad)
+            INTO lZasad
+            FROM umowy
+            WHERE id_prc = iIdprc
+              AND dtzaw <= sysdate
+              AND (dtroz > sysdate OR dtroz IS null)
+              AND czy_pkzp = 1;
+            --
+            FOR i IN (
+                SELECT ct
+                FROM pkzp
                 WHERE id_prc = iIdprc
-                AND dtzaw <= sysdate 
-                AND (dtroz > sysdate OR dtroz IS null)
-                AND czy_pkzp = 1;
-                --
-                FOR i IN (
-                    SELECT ct 
-                    FROM pkzp
-                    WHERE id_prc = iIdprc
-                    AND rodz =  1)
+                  AND rodz = 1)
                 LOOP
                     IF (i.ct > 0) THEN
                         IF (iKwota > 0 AND iIlerat > 0) THEN
-                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                                  lRata := ROUND(iKwota/iIlerat,-1);
+                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                                lRata := ROUND(iKwota / iIlerat, -1);
                             END IF;
                         END IF;
                         IF (iKwota > 0 AND iRata > 0) THEN
-                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                                  lRata := ROUND(iKwota/iRata,0);
+                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                                lRata := ROUND(iKwota / iRata, 0);
                             END IF;
                         END IF;
                     ELSE
                         lRata := 0;
                     END IF;
                 END LOOP;
-            END IF;  
-            RETURN (lRata); 
-        END;
-    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+        END IF;
+        RETURN (lRata);
+    END;
+    PROCEDURE pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
-            zmien NUMBER;
-        BEGIN
-            IF (iRodz = 10) THEN
-                IF (iKwota > 0 AND iIlerat > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                    pkzp_harmo (iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
-                END IF;
-                IF (iKwota > 0 AND iRata > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                    pkzp_harmo (iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
-                END IF;
-                IF (iRata <= 0 AND iIlerat <= 0) THEN
-                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
-                END IF;
+        zmien NUMBER;
+    BEGIN
+        IF (iRodz = 10) THEN
+            IF (iKwota > 0 AND iIlerat > 0) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                pkzp_harmo(iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
             END IF;
-            IF (iRodz = 1) THEN
-                IF (iKwota > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
-                END IF;
+            IF (iKwota > 0 AND iRata > 0) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                pkzp_harmo(iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
             END IF;
+<<<<<<< HEAD
         END;
     PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
         IS
@@ -1272,13 +1303,13 @@ PACKAGE BODY pkzp_pack AS
                 FOR i IN 1 .. iIlerat LOOP
                   IF (lKwota >= lBuf AND i < iIlerat) THEN
                     INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata, iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
                     --
                     lOks := add_months(lOks, 1);
                     lBuf := lBuf + lRata;
                   ELSE 
                     INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_date(lOks,'rrrr-mm-dd'));
+                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
                     --
                     lOks := add_months(lOks, 1);
                     lBuf := lBuf + lRata;
@@ -1286,22 +1317,78 @@ PACKAGE BODY pkzp_pack AS
                 END LOOP;
             ELSE
                 RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
+=======
+            IF (iRata <= 0 AND iIlerat <= 0) THEN
+                RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+>>>>>>> d702cd4eaa03a77f374edde95585b83efacd25a5
             END IF;
-            COMMIT;
-        END;
-    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
-        IS
-            lOkres DATE;
-        BEGIN
-            IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
-                UPDATE pkzp_harm SET zamk = 1 
-                WHERE id_pkzp = iIdpkzppoz 
-                AND okres = lOkres;
-            ELSIF (iRodz = 1 AND iKwota >0 AND iZamk = 1) THEN
+        END IF;
+        IF (iRodz = 1) THEN
+            IF (iKwota > 0) THEN
                 INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);  
-            ELSE
-                RAISE_APPLICATION_ERROR (-20201,'BARK KTÓREGOŚ Z PARAMETRÓW');
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
             END IF;
-        END;
+        END IF;
+    END;
+    PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
+        IS
+        lOks   DATE;
+        lBuf   FLOAT;
+        lKwota FLOAT;
+    BEGIN
+        SELECT dtod
+        INTO lOks
+        FROM okresy
+        WHERE id = iIdoks;
+        --
+        lBuf := lRata;
+        --
+        SELECT kwot
+        INTO lKwota
+        FROM pkzp_poz
+        WHERE id = iIdpkzppoz;
+        --
+        IF (iIlerat > 0) THEN
+            FOR i IN 1 .. iIlerat
+                LOOP
+                    IF (lKwota >= lBuf AND i < iIlerat) THEN
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
+                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'), iIdoks);
+                        --
+                        lOks := add_months(lOks, 1);
+                        lBuf := lBuf + lRata;
+                    ELSE
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
+                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'), iIdoks);
+                        --
+                        lOks := add_months(lOks, 1);
+                        lBuf := lBuf + lRata;
+                    END IF;
+                END LOOP;
+        ELSE
+            RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+        END IF;
+        COMMIT;
+    END;
+    PROCEDURE pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
+        IS
+        lOks VARCHAR2(7);
+    BEGIN
+        SELECT to_char(dtod, 'RRRR-MM')
+        INTO lOks
+        FROM okresy
+        WHERE id = iIdoks;
+        --
+        IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
+            UPDATE pkzp_harm
+            SET zamk = 1
+            WHERE id_pkzp = iIdpkzppoz
+              AND okres = lOks;
+        ELSIF (iRodz = 1 AND iKwota > 0 AND iZamk = 1) THEN
+            INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+            VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+        ELSE
+            RAISE_APPLICATION_ERROR(-20201, 'BARK KTÓREGOŚ Z PARAMETRÓW');
+        END IF;
+    END;
 END;

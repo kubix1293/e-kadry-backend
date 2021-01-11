@@ -15,7 +15,9 @@ namespace EKadry.Domain.Workers
             string commandSearch,
             CancellationToken cancellationToken);
         Task<Worker> GetAsync(Guid workerId);
+        Task<List<Worker>> Search(string searchKey, int limit);
         Task AddAsync(Worker worker);
+        Task UpdateAsync(Worker worker);
         Task<int> DeleteAsync(Guid workerId);
     }
 }

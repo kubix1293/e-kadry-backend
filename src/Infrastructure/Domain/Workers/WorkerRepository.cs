@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +26,7 @@ namespace EKadry.Infrastructure.Domain.Workers
         {
             var query = new WorkerFilter(Context.Worker, commandOrderBy, commandOrderDirection, commandSearch)
                 .GetFilteredQuery()
-                // .Include(x => x.Contracts)
-                .Where(x => x.Pesel == "93020100012");
+                .Include(x => x.Contracts);
 
             return new Pagination<Worker>(query, commandPage, commandPerPage);
         }
@@ -34,18 +34,32 @@ namespace EKadry.Infrastructure.Domain.Workers
         public async Task<Worker> GetAsync(Guid workerId)
         {
             var worker = await Context.Worker
+                .Include(x => x.Contracts)
                 .FirstOrDefaultAsync(x => x.Id == workerId);
-
-            worker.Contracts = await Context.Contract
-                .Where(p => p.IdWorker == workerId)
-                .ToListAsync();
             
             return worker;
+        }
+
+        public async Task<List<Worker>> Search(string searchKey, int limit)
+        {
+            var worker = Context.Worker
+                .Where(s => s.FirstName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
+                         s.LastName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
+                         (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")))
+                .Take(limit);
+            
+            return await worker.ToListAsync();
         }
 
         public async Task AddAsync(Worker worker)
         {
             await Context.Worker.AddAsync(worker);
+            await Context.SaveChangesAsync();
+        }
+        
+        public async Task UpdateAsync(Worker worker)
+        {
+            Context.Worker.Attach(worker);
             await Context.SaveChangesAsync();
         }
 

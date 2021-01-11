@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 using Autofac;
 using EKadry.Domain.Contracts;
+using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
 using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Domain.Contracts;
+using EKadry.Infrastructure.Domain.Contracts.JobPosition;
 using EKadry.Infrastructure.Domain.Operators;
 using EKadry.Infrastructure.Domain.Workers;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +38,9 @@ namespace EKadry.Infrastructure.Database
                 .InstancePerLifetimeScope();
             builder.RegisterType<WorkerRepository>()
                 .As<IWorkerRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<JobPositionRepository>()
+                .As<IJobPositionRepository>()
                 .InstancePerLifetimeScope();
             
             builder.Register(c =>

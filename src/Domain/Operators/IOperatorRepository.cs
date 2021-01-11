@@ -15,8 +15,8 @@ namespace EKadry.Domain.Operators
             CancellationToken cancellationToken);
         Task<Operator> GetAsync(Guid operatorId);
         Task AddAsync(Operator @operator);
+        Task UpdateAsync(Operator @operator);
         Task<Operator> Authenticate(string login, string password);
         Task<int> DeleteAsync(Guid requestId);
-        Task UpdateAsync(Operator @operator);
     }
 }

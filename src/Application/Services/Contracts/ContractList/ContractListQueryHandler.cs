@@ -26,6 +26,10 @@ namespace EKadry.Application.Services.Contracts.ContractList
                 query.OrderDirection,
                 query.OrderBy,
                 query.Search,
+                query.JobPosition,
+                query.ShowInactiveContracts,
+                query.DateFrom,
+                query.DateTo,
                 cancellationToken).ToListAsync();
             
             return _mapper.Map<PagedList<Contract>, PagedList<ContractListDto>>(contracts);

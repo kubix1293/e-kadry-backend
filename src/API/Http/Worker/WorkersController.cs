@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Worker.Request;
 using EKadry.Application.Services.Workers.WorkerAdd;
+using EKadry.Application.Services.Workers.WorkerDelete;
 using EKadry.Application.Services.Workers.WorkerDetail;
 using EKadry.Application.Services.Workers.WorkerList;
+using EKadry.Application.Services.Workers.WorkerSearch;
+using EKadry.Application.Services.Workers.WorkerUpdate;
 using EKadry.Domain.Pagination;
 using EKadry.Infrastructure.Database;
 using MediatR;
@@ -56,13 +60,15 @@ namespace EKadry.API.Http.Worker
                 request.Birthday,
                 request.CityOfBirthday,
                 request.Pesel,
-                request.DoumnetType,
+                request.DocumentType,
                 request.DocumentNumber,
                 request.Gender,
-                request.IdCity,
                 request.Street,
                 request.PropertyNumber,
                 request.ApartmentNumber,
+                request.ZipCode,
+                request.City,
+                request.Country,
                 request.ActNumber,
                 request.MotherName,
                 request.FatherName,
@@ -71,33 +77,77 @@ namespace EKadry.API.Http.Worker
 
             return Created(@operator.Id, @operator);
         }
+        
+        /// <summary>
+        /// Update operator 
+        /// </summary>
+        [HttpPut("{workerId}")]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Create([FromRoute] Guid workerId, [FromBody] UpdateWorkerRequest request)
+        {
+            await _mediator.Send(new WorkerUpdateCommand(
+                workerId,
+                request.FirstName,
+                request.LastName,
+                request.Birthday,
+                request.CityOfBirthday,
+                request.Pesel,
+                request.DocumentType,
+                request.DocumentNumber,
+                request.Gender,
+                request.Street,
+                request.PropertyNumber,
+                request.ApartmentNumber,
+                request.ZipCode,
+                request.City,
+                request.Country,
+                request.ActNumber,
+                request.MotherName,
+                request.FatherName,
+                request.Phone
+            ));
+        
+            return SuccessResponse("Pracownik został zaktualizowany");
+        }
 
         /// <summary>
         /// Get worker details
         /// </summary>
         [HttpGet("{workerId}")]
-        [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
+        // [ProducesResponseType(typeof(WorkerDetailDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromRoute] Guid workerId)
         {
             var worker = await _mediator.Send(new WorkerDetailQuery(workerId));
 
             return Ok(worker);
         }
+        
+        /// <summary>
+        /// Search workers
+        /// </summary>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(List<WorkerSearchDto>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Get([FromQuery] SearchQueryRequest searchParams)
+        {
+            var worker = await _mediator.Send(new WorkerSearchQuery(searchParams.SearchKey, searchParams.Limit));
 
-        // /// <summary>
-        // /// Delete worker 
-        // /// </summary>
-        // [HttpDelete("{workerId}")]
-        // [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
-        // [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
-        // public async Task<IActionResult> Delete([FromRoute] Guid workerId)
-        // {
-        //     if (await _mediator.Send(new OperatorDeleteCommand(workerId)) == 0)
-        //     {
-        //         return FailedResponse("Nie udało się usunięcie pracownika");
-        //     }
-        //     
-        //     return SuccessResponse("Pracownik został usunięy");
-        // }
+            return Ok(worker);
+        }
+
+        /// <summary>
+        /// Delete worker 
+        /// </summary>
+        [HttpDelete("{workerId}")]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Delete([FromRoute] Guid workerId)
+        {
+            if (await _mediator.Send(new WorkerDeleteCommand(workerId)) == 0)
+            {
+                return FailedResponse("Nie udało się usunięcie pracownika");
+            }
+            
+            return SuccessResponse("Pracownik został usunięy");
+        }
     }
 }

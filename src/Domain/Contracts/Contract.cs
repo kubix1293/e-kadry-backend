@@ -10,9 +10,9 @@ namespace EKadry.Domain.Contracts
 
         public DateTime? EmployedEndAt { get; set; }
 
-        // public decimal BaseSalary { get; set; }
-        // public int IdJobPosition { get; set; }
-        // public int IdContractType { get; set; }
+        public decimal BaseSalary { get; set; }
+        public Guid IdJobPosition { get; set; }
+        public JobPosition.JobPosition JobPosition { get; set; }
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
         public int IdentifierZusNumber { get; set; }

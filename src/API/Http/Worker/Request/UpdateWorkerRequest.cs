@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using EKadry.Application.Services.Contracts;
-using EKadry.Domain.Contracts;
-using EKadry.Domain.Operators;
-
-namespace EKadry.Application.Services.Workers.WorkerDetail
+namespace EKadry.API.Http.Worker.Request
 {
-    public class WorkerDetailDto
+    public class UpdateWorkerRequest
     {
-        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime? Birthday { get; set; }
+        public string Birthday { get; set; }
         public string CityOfBirthday { get; set; }
         public string Pesel { get; set; }
-        public EnumApi DocumentType { get; set; }
+        public int DocumentType { get; set; }
         public string DocumentNumber { get; set; }
-        public EnumApi Gender { get; set; }
+        public int Gender { get; set; }
         public string Street { get; set; }
         public string PropertyNumber { get; set; }
         public string ApartmentNumber { get; set; }
@@ -27,8 +20,5 @@ namespace EKadry.Application.Services.Workers.WorkerDetail
         public string MotherName { get; set; }
         public string FatherName { get; set; }
         public string Phone { get; set; }
-        public ICollection<Contract> Contracts { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
     }
 }

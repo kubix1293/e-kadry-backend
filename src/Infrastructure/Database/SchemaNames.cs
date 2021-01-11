@@ -5,6 +5,7 @@
         public const string Table = "KADRY";
         public const string Operators = "OPER";
         public const string Workers = "PRACOWNICY";
+        public const string JobPostions = "STANOW";
         public const string Contracts = "UMOWY";
         public const string Pkzp = "PKZP";
 

@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using EKadry.API.Http.Contract.Request;
 using EKadry.API.Http.Worker.Request;
 using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
@@ -28,15 +29,19 @@ namespace EKadry.API.Http.Contract
         /// List of employment contracts
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(PagedList<WorkerListDto>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> List([FromQuery] ListRequest request)
+        [ProducesResponseType(typeof(PagedList<ContractListDto>), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> List([FromQuery] ContractListRequest request)
         {
             var list = await _mediator.Send(new ContractListQuery(
                 request.Page,
                 request.PerPage,
                 request.OrderDirection,
                 request.OrderBy,
-                request.Search
+                request.Search,
+                request.JobPosition,
+                request.ShowInactiveContracts == true,
+                request.DateFrom,
+                request.DateTo
             ));
 
             return Ok(list);
@@ -55,13 +60,15 @@ namespace EKadry.API.Http.Contract
                 request.Birthday,
                 request.CityOfBirthday,
                 request.Pesel,
-                request.DoumnetType,
+                request.DocumentType,
                 request.DocumentNumber,
                 request.Gender,
-                request.IdCity,
                 request.Street,
                 request.PropertyNumber,
                 request.ApartmentNumber,
+                request.ZipCode,
+                request.City,
+                request.Country,
                 request.ActNumber,
                 request.MotherName,
                 request.FatherName,

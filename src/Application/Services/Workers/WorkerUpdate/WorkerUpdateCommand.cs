@@ -1,11 +1,12 @@
+using System;
 using EKadry.Application.Configuration.Commands;
-using EKadry.Domain;
-using EKadry.Domain.Workers;
+using MediatR;
 
-namespace EKadry.Application.Services.Workers.WorkerAdd
+namespace EKadry.Application.Services.Workers.WorkerUpdate
 {
-    public class WorkerAddCommand : CommandBase<WorkerDto>
+    public class WorkerUpdateCommand : CommandBase<Unit>
     {
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Birthday { get; set; }
@@ -25,7 +26,8 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
         public string FatherName { get; set; }
         public string Phone { get; set; }
 
-        public WorkerAddCommand(
+        public WorkerUpdateCommand(
+            Guid id,
             string firstName,
             string lastName,
             string birthday,
@@ -45,6 +47,7 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
             string fatherName,
             string phone)
         {
+            Id = id;
             FirstName = firstName;
             LastName = lastName;
             Birthday = birthday;

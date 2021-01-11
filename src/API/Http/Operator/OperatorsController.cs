@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using EKadry.API.Http.Operator.Request;
 using EKadry.Application.Services.Operators.OperatorAdd;
@@ -11,7 +10,6 @@ using EKadry.Application.Services.Operators.OperatorUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace EKadry.API.Http.Operator
 {

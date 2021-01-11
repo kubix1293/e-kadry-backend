@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Pagination;
-using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,17 +15,30 @@ namespace EKadry.Infrastructure.Domain.Contracts
         {
         }
 
-        public IPagination<Contract> ToListPaginated(
-            int commandPage,
+        public IPagination<Contract> ToListPaginated(int commandPage,
             int commandPerPage,
             string commandOrderDirection,
             string commandOrderBy,
             string commandSearch,
+            Guid? commandJobPosition,
+            bool commandShowInactiveContracts,
+            DateTime? commandDateFrom,
+            DateTime? commandDateTo,
             CancellationToken cancellationToken)
         {
-            var query = new ContractFilter(Context.Contract, commandOrderBy, commandOrderDirection, commandSearch)
+            var query = new ContractFilter(
+                    Context.Contract,
+                    commandOrderBy,
+                    commandOrderDirection,
+                    commandSearch,
+                    commandJobPosition,
+                    commandShowInactiveContracts,
+                    commandDateFrom,
+                    commandDateTo
+                )
                 .GetFilteredQuery()
-                .Include(x => x.Worker);
+                .Include(x => x.Worker)
+                .Include(x => x.JobPosition);
 
             return new Pagination<Contract>(query, commandPage, commandPerPage);
         }
@@ -34,11 +46,9 @@ namespace EKadry.Infrastructure.Domain.Contracts
         public async Task<Contract> GetAsync(Guid contractId)
         {
             var contract = await Context.Contract
+                .Where(x => x.Id == contractId)
                 .Include(x => x.Worker)
-                // .Where(x => x.Id == contractId)
                 .FirstOrDefaultAsync();
-
-            // contract.Worker = await Context.Worker.FirstOrDefaultAsync(x => x.Id == contract.IdWorker);
 
             return contract;
         }

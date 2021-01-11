@@ -2,21 +2,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Application.Configuration.Commands;
 using EKadry.Domain.Workers;
+using MediatR;
 
-namespace EKadry.Application.Services.Workers.WorkerAdd
+namespace EKadry.Application.Services.Workers.WorkerUpdate
 {
-    public class WorkerAddCommandHandler : ICommandHandler<WorkerAddCommand, WorkerDto>
+    public class WorkerUpdateCommandHandler : ICommandHandler<WorkerUpdateCommand, Unit>
     {
-        private readonly IWorkerRepository _operatorRepository;
+        private readonly IWorkerRepository _workerRepository;
 
-        public WorkerAddCommandHandler(IWorkerRepository operatorRepository)
+        public WorkerUpdateCommandHandler(IWorkerRepository workerRepository)
         {
-            _operatorRepository = operatorRepository;
+            _workerRepository = workerRepository;
         }
 
-        public async Task<WorkerDto> Handle(WorkerAddCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(WorkerUpdateCommand request, CancellationToken cancellationToken)
         {
-            var @operator = Worker.Create(
+            var worker = await _workerRepository.GetAsync(request.Id);
+            worker.Update(
                 request.FirstName,
                 request.LastName,
                 request.Birthday,
@@ -35,9 +37,9 @@ namespace EKadry.Application.Services.Workers.WorkerAdd
                 request.MotherName,
                 request.FatherName,
                 request.Phone
-                );
-            await _operatorRepository.AddAsync(@operator);
-            return new WorkerDto {Id = @operator.Id};
+            );
+            await _workerRepository.UpdateAsync(worker);
+            return Unit.Value;
         }
     }
 }
