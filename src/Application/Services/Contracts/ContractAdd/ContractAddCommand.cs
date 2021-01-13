@@ -20,10 +20,10 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
         public bool IsLeave { get; }
         public bool IsSickLeave { get; }
         public decimal? WorkingTime { get; }
-        public int? EntireInternship { get; }
-        public int? ProfessionInternship { get; }
-        public int? ServiceInternship { get; }
-        public int? JubileeInternship { get; }
+        public bool EntireInternship { get; }
+        public bool ProfessionInternship { get; }
+        public bool ServiceInternship { get; }
+        public bool JubileeInternship { get; }
 
         public ContractAddCommand(
             DateTime employedAt,
@@ -41,10 +41,10 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
             bool isLeave,
             bool isSickLeave,
             decimal? workingTime,
-            int? entireInternship,
-            int? professionInternship,
-            int? serviceInternship,
-            int? jubileeInternship)
+            bool entireInternship,
+            bool professionInternship,
+            bool serviceInternship,
+            bool jubileeInternship)
         {
             EmployedAt = employedAt;
             EmployedEndAt = employedEndAt;

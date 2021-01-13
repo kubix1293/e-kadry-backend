@@ -23,10 +23,10 @@ namespace EKadry.Domain.Contracts
         public bool IsLeave { get; set; }
         public bool IsSickLeave { get; set; }
         public decimal? WorkingTime { get; set; }
-        public int EntireInternship { get; set; }
-        public int ProfessionInternship { get; set; }
-        public int ServiceInternship { get; set; }
-        public int JubileeInternship { get; set; }
+        public bool EntireInternship { get; set; }
+        public bool ProfessionInternship { get; set; }
+        public bool ServiceInternship { get; set; }
+        public bool JubileeInternship { get; set; }
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -59,10 +59,10 @@ namespace EKadry.Domain.Contracts
             bool isLeave,
             bool isSickLeave,
             decimal? workingTime,
-            int? entireInternship,
-            int? professionInternship,
-            int? serviceInternship,
-            int? jubileeInternship)
+            bool entireInternship,
+            bool professionInternship,
+            bool serviceInternship,
+            bool jubileeInternship)
         {
             return new Contract()
             {
@@ -82,10 +82,10 @@ namespace EKadry.Domain.Contracts
                 IsLeave = isLeave,
                 IsSickLeave = isSickLeave,
                 WorkingTime = workingTime,
-                EntireInternship = entireInternship ?? 0,
-                ProfessionInternship = professionInternship ?? 0,
-                ServiceInternship = serviceInternship ?? 0,
-                JubileeInternship = jubileeInternship ?? 0,
+                EntireInternship = entireInternship,
+                ProfessionInternship = professionInternship,
+                ServiceInternship = serviceInternship,
+                JubileeInternship = jubileeInternship,
             };
         }
     }

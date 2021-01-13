@@ -31,10 +31,10 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.IsLeave).HasColumnName("CZY_URLOP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsSickLeave).HasColumnName("CZY_AB_CHOR").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.WorkingTime).HasColumnName("NRM_CZAS_PRAC");
-            builder.Property(e => e.EntireInternship).HasColumnName("STOG");
-            builder.Property(e => e.ProfessionInternship).HasColumnName("STZW");
-            builder.Property(e => e.ServiceInternship).HasColumnName("STWS");
-            builder.Property(e => e.JubileeInternship).HasColumnName("STJB");
+            builder.Property(e => e.EntireInternship).HasColumnName("STOG").HasConversion(new IntToBooleanConverter());;
+            builder.Property(e => e.ProfessionInternship).HasColumnName("STZW").HasConversion(new IntToBooleanConverter());;
+            builder.Property(e => e.ServiceInternship).HasColumnName("STWS").HasConversion(new IntToBooleanConverter());;
+            builder.Property(e => e.JubileeInternship).HasColumnName("STJB").HasConversion(new IntToBooleanConverter());;
             builder.Property(e => e.DeletedAt).HasColumnName("USUNIETY");
             builder.Property(e => e.CreatedAt).HasColumnName("UTWORZONY");
             builder.Property(e => e.UpdatedAt).HasColumnName("ZAKTUALIZOWANY");
