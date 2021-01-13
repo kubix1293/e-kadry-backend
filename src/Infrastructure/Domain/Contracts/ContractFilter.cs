@@ -40,7 +40,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
         {
             if (!showInactiveContracts)
             {
-                Query = Query.Where(x => x.EmployedEndAt == null);
+                Query = Query.Where(x => x.EmployedEndAt == null || x.EmployedEndAt > DateTime.Now);
             }
         }
 
