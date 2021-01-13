@@ -103,7 +103,7 @@ namespace EKadry.API.Http.Operator
                 return FailedResponse("Nie udało się usunięcie operatora");
             }
             
-            return SuccessResponse("Operator został usunięy");
+            return SuccessResponse("Operator został usunięty");
         }
     }
 }

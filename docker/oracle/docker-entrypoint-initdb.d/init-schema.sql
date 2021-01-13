@@ -316,7 +316,6 @@ CREATE TABLE kadry.umowy
     dtroz          DATE,
     zasad          FLOAT(15) DEFAULT 0            NOT NULL,
     id_stanow      RAW(32)                        NOT NULL,
-    id_typum       RAW(32)                        NOT NULL,
     id_prc         RAW(32)                        NOT NULL,
     nr_tyt_zus     NUMBER(5),
     czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
@@ -357,35 +356,6 @@ COMMENT ON COLUMN kadry.umowy.stjb IS
 ALTER TABLE kadry.umowy
     ADD CONSTRAINT umowy_pk PRIMARY KEY (id);
 /
------- TYPUM
-CREATE TABLE kadry.typum
-(
-    id            RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    nazwa         VARCHAR2(50),
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL,
-    rodz_um       NUMBER
-);
-/
-ALTER TABLE kadry.typum
-    ADD CONSTRAINT typum_pk PRIMARY KEY (id);
-/
-COMMENT ON COLUMN kadry.typum.rodz_um IS
-    'rodzaj umowy, 10 - umowa o prace, 20 - umowa zlec., 30 - umowa o dziel.';
-/
-
 /*
 ------ TYPOBEC
 CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
@@ -699,7 +669,6 @@ CREATE TABLE kadry.umowy_c
     dtroz          DATE,
     zasad          FLOAT(15) DEFAULT 0            NOT NULL,
     id_stanow      RAW(32)                        NOT NULL,
-    id_typum       RAW(32)                        NOT NULL,
     id_prc         RAW(32)                        NOT NULL,
     nr_tyt_zus     NUMBER(5),
     czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
@@ -723,36 +692,6 @@ CREATE TABLE kadry.umowy_c
 ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_pk PRIMARY KEY (c_id);
 /
-
------- TYPUM_C
-CREATE TABLE kadry.typum_c
-(
-    c_id          RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data        DATE      DEFAULT sysdate    NOT NULL,
-    c_oper        RAW(32)                      NOT NULL,
-    id            RAW(32)                      NOT NULL,
-    nazwa         VARCHAR2(50),
-    nr_tyt_zus    NUMBER(5),
-    czy_chor      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ren       NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_emer      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_zdrow     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fp        NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_fgsp      NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_urlop     NUMBER(1) DEFAULT 0          NOT NULL,
-    czy_ab_chor   NUMBER(1) DEFAULT 0          NOT NULL,
-    nrm_czas_prac FLOAT(15),
-    stog          NUMBER(1) DEFAULT 0          NOT NULL,
-    stzw          NUMBER(1) DEFAULT 0          NOT NULL,
-    stws          NUMBER(1) DEFAULT 0          NOT NULL,
-    stjb          NUMBER(1) DEFAULT 0          NOT NULL,
-    rodz_um       NUMBER
-);
-/
-ALTER TABLE kadry.typum_c
-    ADD CONSTRAINT typum_c_pk PRIMARY KEY (c_id);
-/
-
 /*
 ------ TYPOBEC_C
 CREATE SEQUENCE typobec_c_seq INCREMENT BY 1 NOCACHE;
@@ -827,10 +766,6 @@ ALTER TABLE kadry.umowy
     ADD CONSTRAINT umowy_stanow_fk FOREIGN KEY (id_stanow)
         REFERENCES kadry.stanow (id);
 /
-ALTER TABLE kadry.umowy
-    ADD CONSTRAINT umowy_typum_fk FOREIGN KEY (id_typum)
-        REFERENCES kadry.typum (id);
-/
 ALTER TABLE kadry.pracownicy_c
     ADD CONSTRAINT pracownicy_c_prac_fk FOREIGN KEY (id)
         REFERENCES kadry.pracownicy (id);
@@ -878,10 +813,6 @@ ALTER TABLE kadry.stanow_c
 ALTER TABLE kadry.staztab_c
     ADD CONSTRAINT staztab_c_staztab FOREIGN KEY (id)
         REFERENCES kadry.staztab (id);
-/
-ALTER TABLE kadry.typum_c
-    ADD CONSTRAINT typum_c_typum_fk FOREIGN KEY (id)
-        REFERENCES kadry.typum (id);
 /
 ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_umowy_fk FOREIGN KEY (id)

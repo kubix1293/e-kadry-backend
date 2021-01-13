@@ -18,7 +18,7 @@ namespace EKadry.Domain.Contracts
             DateTime? commandDateTo,
             CancellationToken cancellationToken);
         Task<Contract> GetAsync(Guid contractId);
-        // Task AddAsync(Contract worker);
+        Task AddAsync(Contract contract);
         Task<int> DeleteAsync(Guid workerId);
     }
 }

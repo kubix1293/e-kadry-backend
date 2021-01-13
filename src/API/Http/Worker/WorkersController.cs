@@ -147,7 +147,7 @@ namespace EKadry.API.Http.Worker
                 return FailedResponse("Nie udało się usunięcie pracownika");
             }
             
-            return SuccessResponse("Pracownik został usunięy");
+            return SuccessResponse("Pracownik został usunięty");
         }
     }
 }

@@ -3,13 +3,11 @@ using EKadry.Domain.Workers;
 
 namespace EKadry.Domain.Contracts
 {
-    public class Contract
+    public class Contract : BaseEntity
     {
         public Guid Id { get; set; }
         public DateTime EmployedAt { get; set; }
-
         public DateTime? EmployedEndAt { get; set; }
-
         public decimal BaseSalary { get; set; }
         public Guid IdJobPosition { get; set; }
         public JobPosition.JobPosition JobPosition { get; set; }
@@ -42,6 +40,52 @@ namespace EKadry.Domain.Contracts
             return new Contract()
             {
                 Id = Guid.NewGuid(),
+            };
+        }
+
+        public static Contract CreateContract(
+            DateTime employedAt,
+            DateTime? employedEndAt,
+            decimal baseSalary,
+            Guid idJobPosition,
+            Guid idWorker,
+            int identifierZusNumber,
+            bool isSick,
+            bool isAnnuitant,
+            bool isPensioner,
+            bool isHealthy,
+            bool isLf,
+            bool isGebf,
+            bool isLeave,
+            bool isSickLeave,
+            decimal? workingTime,
+            int? entireInternship,
+            int? professionInternship,
+            int? serviceInternship,
+            int? jubileeInternship)
+        {
+            return new Contract()
+            {
+                Id = Guid.NewGuid(),
+                EmployedAt = employedAt,
+                EmployedEndAt = employedEndAt,
+                BaseSalary = baseSalary,
+                IdJobPosition = idJobPosition,
+                IdWorker = idWorker,
+                IdentifierZusNumber = identifierZusNumber,
+                IsSick = isSick,
+                IsAnnuitant = isAnnuitant,
+                IsPensioner = isPensioner,
+                IsHealthy = isHealthy,
+                IsLf = isLf,
+                IsGebf = isGebf,
+                IsLeave = isLeave,
+                IsSickLeave = isSickLeave,
+                WorkingTime = workingTime,
+                EntireInternship = entireInternship ?? 0,
+                ProfessionInternship = professionInternship ?? 0,
+                ServiceInternship = serviceInternship ?? 0,
+                JubileeInternship = jubileeInternship ?? 0,
             };
         }
     }
