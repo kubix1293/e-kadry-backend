@@ -317,6 +317,8 @@ CREATE TABLE kadry.umowy
     id_stanow      RAW(32)                        NOT NULL,
     id_prc         RAW(32)                        NOT NULL,
     nr_tyt_zus     NUMBER(5),
+    etatl          NUMBER(3),
+    etatm          NUMBER(3),
     czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
     czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
     czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
