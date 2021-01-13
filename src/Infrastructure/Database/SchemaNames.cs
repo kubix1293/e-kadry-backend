@@ -8,6 +8,8 @@
         public const string JobPostions = "STANOW";
         public const string Contracts = "UMOWY";
         public const string Pkzp = "PKZP";
+        public const string PkzpPositions = "PKZP_POZ";
+        public const string PkzpSchedule = "PKZP_HRAM";
 
         public static string SchemaWithTable(string schema)
         {

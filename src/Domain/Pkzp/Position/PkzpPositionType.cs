@@ -10,7 +10,7 @@ namespace EKadry.Domain.Pkzp.Position
         Loan = 20,
         [Display(Name = "Wpisowe")]
         EntryFee = 30,
-        [Display(Name = "Wpisowe")]
+        [Display(Name = "Spłata")]
         Repayment = 40,
     }
 }

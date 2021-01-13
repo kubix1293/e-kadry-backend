@@ -1,5 +1,5 @@
-﻿using EKadry.Domain.Operators;
-using EKadry.Infrastructure.Configuration;
+﻿using System;
+using EKadry.Domain.Operators;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,7 +24,7 @@ namespace EKadry.Infrastructure.Domain.Operators
             builder.Property(e => e.CreatedAt).HasColumnName("UTWORZONY");
             builder.Property(e => e.UpdatedAt).HasColumnName("ZAKTUALIZOWANY");
             
-            // builder.HasQueryFilter(f => EF.Property<DateTime>(f, nameof(f.DeletedAt)) == null);
+            builder.HasQueryFilter(f => EF.Property<DateTime>(f, nameof(f.DeletedAt)) == null);
         }
     }
 }

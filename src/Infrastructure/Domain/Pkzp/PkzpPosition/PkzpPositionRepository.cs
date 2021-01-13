@@ -7,11 +7,11 @@ using EKadry.Domain.Pkzp;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace EKadry.Infrastructure.Domain.Pkzp
+namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
 {
-    public class PkzpRepository : RepositoryBase<EKadryContext>, IPkzpRepository
+    public class PkzpPositionRepository : RepositoryBase<EKadryContext>, IPkzpRepository
     {
-        public PkzpRepository(EKadryContext context) : base(context, SchemaNames.Contracts)
+        public PkzpPositionRepository(EKadryContext context) : base(context, SchemaNames.Contracts)
         {
         }
 

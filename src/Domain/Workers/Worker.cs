@@ -28,6 +28,7 @@ namespace EKadry.Domain.Workers
         public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
+        public virtual ICollection<Pkzp.Pkzp> Pkzp { get; set; }
 
         public Worker()
         {
