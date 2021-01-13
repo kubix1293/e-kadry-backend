@@ -187,7 +187,6 @@ CREATE TABLE kadry.pkzp_harm
     id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     okres   VARCHAR2(7)                  NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
@@ -1125,8 +1124,7 @@ END;
 
 ----- BODY
 
-create or replace
-    PACKAGE BODY pkzp_pack AS
+create or replace PACKAGE BODY pkzp_pack AS
     FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
@@ -1157,61 +1155,70 @@ create or replace
         RETURN (lKwota);
     END;
     ----
-    FUNCTION f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         RETURN FLOAT AS
         lSumaWkladow pkzp.ct%TYPE;
-        lZasad       umowy.zasad%TYPE;
-        lRata        FLOAT;
-    BEGIN
-        IF (iIdprc > 0) THEN
-            SELECT SUM(zasad)
-            INTO lZasad
-            FROM umowy
-            WHERE id_prc = iIdprc
-              AND dtzaw <= sysdate
-              AND (dtroz > sysdate OR dtroz IS null)
-              AND czy_pkzp = 1;
-            --
-            FOR i IN (
-                SELECT ct
-                FROM pkzp
+        lZasad umowy.zasad%TYPE;
+        lRata FLOAT;
+        BEGIN
+            IF (iIdprc > 0) THEN
+                SELECT SUM(zasad)
+                INTO lZasad
+                FROM umowy
                 WHERE id_prc = iIdprc
-                  AND rodz = 1)
+                AND dtzaw <= sysdate 
+                AND (dtroz > sysdate OR dtroz IS null)
+                AND czy_pkzp = 1;
+                --
+                FOR i IN (
+                    SELECT ct 
+                    FROM pkzp
+                    WHERE id_prc = iIdprc
+                    AND rodz =  1)
                 LOOP
                     IF (i.ct > 0) THEN
                         IF (iKwota > 0 AND iIlerat > 0) THEN
-                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
-                                lRata := ROUND(iKwota / iIlerat, -1);
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iIlerat,-1);
                             END IF;
                         END IF;
                         IF (iKwota > 0 AND iRata > 0) THEN
-                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
-                                lRata := ROUND(iKwota / iRata, 0);
+                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
+                                  lRata := ROUND(iKwota/iRata,0);
                             END IF;
                         END IF;
                     ELSE
                         lRata := 0;
                     END IF;
                 END LOOP;
-        END IF;
-        RETURN (lRata);
-    END;
-    PROCEDURE pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+            END IF;  
+            RETURN (lRata); 
+        END;
+    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
-        zmien NUMBER;
-    BEGIN
-        IF (iRodz = 10) THEN
-            IF (iKwota > 0 AND iIlerat > 0) THEN
-                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                pkzp_harmo(iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
+            zmien NUMBER;
+        BEGIN
+            IF (iRodz = 10) THEN
+                IF (iKwota > 0 AND iIlerat > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                    pkzp_harmo (iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
+                END IF;
+                IF (iKwota > 0 AND iRata > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                    pkzp_harmo (iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
+                END IF;
+                IF (iRata <= 0 AND iIlerat <= 0) THEN
+                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
+                END IF;
             END IF;
-            IF (iKwota > 0 AND iRata > 0) THEN
-                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                pkzp_harmo(iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
+            IF (iRodz = 1) THEN
+                IF (iKwota > 0) THEN
+                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
+                END IF;
             END IF;
-<<<<<<< HEAD
         END;
     PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
         IS
@@ -1248,78 +1255,27 @@ create or replace
                 END LOOP;
             ELSE
                 RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
-=======
-            IF (iRata <= 0 AND iIlerat <= 0) THEN
-                RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
->>>>>>> d702cd4eaa03a77f374edde95585b83efacd25a5
             END IF;
-        END IF;
-        IF (iRodz = 1) THEN
-            IF (iKwota > 0) THEN
+            COMMIT;
+        END;
+    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
+        IS
+            lOks VARCHAR2(7);
+        BEGIN
+            SELECT to_char(dtod, 'RRRR-MM')
+            INTO lOks 
+            FROM okresy
+            WHERE id = iIdoks;
+            --
+            IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
+                UPDATE pkzp_harm SET zamk = 1 
+                WHERE id_pkzp = iIdpkzppoz 
+                AND okres = lOks;
+            ELSIF (iRodz = 1 AND iKwota >0 AND iZamk = 1) THEN
                 INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);  
+            ELSE
+                RAISE_APPLICATION_ERROR (-20201,'BARK KTÓREGOŚ Z PARAMETRÓW');
             END IF;
-        END IF;
-    END;
-    PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
-        IS
-        lOks   DATE;
-        lBuf   FLOAT;
-        lKwota FLOAT;
-    BEGIN
-        SELECT dtod
-        INTO lOks
-        FROM okresy
-        WHERE id = iIdoks;
-        --
-        lBuf := lRata;
-        --
-        SELECT kwot
-        INTO lKwota
-        FROM pkzp_poz
-        WHERE id = iIdpkzppoz;
-        --
-        IF (iIlerat > 0) THEN
-            FOR i IN 1 .. iIlerat
-                LOOP
-                    IF (lKwota >= lBuf AND i < iIlerat) THEN
-                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
-                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'), iIdoks);
-                        --
-                        lOks := add_months(lOks, 1);
-                        lBuf := lBuf + lRata;
-                    ELSE
-                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres, id_oks)
-                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'), iIdoks);
-                        --
-                        lOks := add_months(lOks, 1);
-                        lBuf := lBuf + lRata;
-                    END IF;
-                END LOOP;
-        ELSE
-            RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
-        END IF;
-        COMMIT;
-    END;
-    PROCEDURE pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
-        IS
-        lOks VARCHAR2(7);
-    BEGIN
-        SELECT to_char(dtod, 'RRRR-MM')
-        INTO lOks
-        FROM okresy
-        WHERE id = iIdoks;
-        --
-        IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
-            UPDATE pkzp_harm
-            SET zamk = 1
-            WHERE id_pkzp = iIdpkzppoz
-              AND okres = lOks;
-        ELSIF (iRodz = 1 AND iKwota > 0 AND iZamk = 1) THEN
-            INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-            VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-        ELSE
-            RAISE_APPLICATION_ERROR(-20201, 'BARK KTÓREGOŚ Z PARAMETRÓW');
-        END IF;
-    END;
+        END;
 END;
