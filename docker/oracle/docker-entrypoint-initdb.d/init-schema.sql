@@ -263,7 +263,7 @@ ALTER TABLE kadry.pracownicy
 CREATE TABLE kadry.stanow
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    nazwa   VARCHAR2(50),
+    nazwa   VARCHAR2(155),
     kod_gus NUMBER(10)
 );
 /
@@ -629,7 +629,7 @@ CREATE TABLE kadry.stanow_c
     c_data  DATE    DEFAULT sysdate    NOT NULL,
     c_oper  RAW(32)                    NOT NULL,
     id      RAW(32)                    NOT NULL,
-    nazwa   VARCHAR2(50),
+    nazwa   VARCHAR2(155),
     kod_gus NUMBER(10)
 );
 /
