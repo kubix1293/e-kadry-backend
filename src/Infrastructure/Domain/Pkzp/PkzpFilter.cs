@@ -14,9 +14,5 @@ namespace EKadry.Infrastructure.Domain.Pkzp
             : base(query, orderBy, orderDirection)
         {
         }
-
-        private void Search(string search)
-        {
-        }
     }
 }

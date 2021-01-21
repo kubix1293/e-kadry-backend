@@ -7,14 +7,14 @@ namespace EKadry.Infrastructure.Domain
     public abstract class RepositoryBase<T> where T : DbContext
     {
         protected readonly T Context;
-        protected string SchemaName;
-        protected string FullSchemaName;
+        private string _schemaName;
+        private string _fullSchemaName;
 
         protected RepositoryBase(T context, string schemaName = null)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            SchemaName = schemaName ?? throw new ArgumentNullException(nameof(schemaName));
-            FullSchemaName = SchemaNames.SchemaWithTable(schemaName) ?? "";
+            _schemaName = schemaName ?? throw new ArgumentNullException(nameof(schemaName));
+            _fullSchemaName = SchemaNames.SchemaWithTable(schemaName) ?? "";
         }
     }
 }

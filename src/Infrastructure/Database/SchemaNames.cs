@@ -10,6 +10,7 @@
         public const string Pkzp = "PKZP";
         public const string PkzpPositions = "PKZP_POZ";
         public const string PkzpSchedule = "PKZP_HRAM";
+        public const string Period = "OKRESY";
 
         public static string SchemaWithTable(string schema)
         {

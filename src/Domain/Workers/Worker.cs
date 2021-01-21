@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EKadry.Domain.Contracts;
+using EKadry.Domain.Pkzp.Position;
 
 namespace EKadry.Domain.Workers
 {
@@ -27,8 +28,8 @@ namespace EKadry.Domain.Workers
         public string Phone { get; set; }
         public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public virtual ICollection<Contract> Contracts { get; set; }
-        public virtual ICollection<Pkzp.Pkzp> Pkzp { get; set; }
+        public virtual IEnumerable<Contract> Contracts { get; set; }
+        public virtual IEnumerable<PkzpPosition> Pkzp { get; set; }
 
         public Worker()
         {
