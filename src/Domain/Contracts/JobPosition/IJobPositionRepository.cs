@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EKadry.Domain.Contracts.JobPosition
 {
     public interface IJobPositionRepository
     {
-        IList<JobPosition> ToList(string commandSearch, int commandPerPage);
-        IList<EnumApi> ToListEnum();
+        Task<IList<JobPosition>> ToListAsync(string commandSearch, int commandPerPage);
     }
 }

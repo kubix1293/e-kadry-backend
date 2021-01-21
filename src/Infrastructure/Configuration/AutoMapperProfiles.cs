@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
+using EKadry.Application.Services.JobPositions.OperatorList;
 using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
@@ -30,6 +31,8 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<Contract, ContractDetailDto>();
             CreateMap<Guid, Contract>();
             
+            CreateMap<JobPosition, JobPositionListDto>();
+            
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();
             CreateMap<Operator, OperatorAuthorizedDto>();
@@ -42,12 +45,6 @@ namespace EKadry.Infrastructure.Configuration
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => EnumHelper<DocumentType>.GetMap(src.DocumentType)))
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => EnumHelper<Gender>.GetMap(src.Gender)));
             CreateMap<Guid, Worker>();
-            
-            // Enums mapping
-
-            CreateMap<JobPosition, EnumApi>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
         }
     }
 }

@@ -1,35 +1,37 @@
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using System.Threading.Tasks;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace EKadry.Infrastructure.Domain.Contracts.JobPosition
 {
     public class JobPositionRepository : RepositoryBase<EKadryContext>, IJobPositionRepository
     {
-        private readonly IMapper _mapper;
-
-        public JobPositionRepository(EKadryContext context, IMapper mapper) : base(context, SchemaNames.JobPostions)
+        public JobPositionRepository(EKadryContext context) : base(context, SchemaNames.JobPostions)
         {
-            _mapper = mapper;
         }
 
-        public IList<EKadry.Domain.Contracts.JobPosition.JobPosition> ToList(string commandSearch = "", int commandPerPage = default)
+        public async Task<IList<EKadry.Domain.Contracts.JobPosition.JobPosition>> ToListAsync(string commandSearch = "", int commandPerPage = 5)
         {
-            var query = Context.JobPosition;
+            var query= Context.JobPosition.AsQueryable();
 
             if (commandSearch != "")
             {
-                query.Where(p => p.Name.ToLower().Replace(" ", "") == commandSearch.ToLower().Replace(" ", ""));
+                query = query.Where(p => p.Name.ToLower().Replace(" ", "").Contains(commandSearch.ToLower().Replace(" ", "")));
+            }
+
+            if (commandPerPage <= 1 || commandPerPage > 30)
+            {
+                query = query.Take(5);
+            }
+            else
+            {
+                query = query.Take(commandPerPage);
             }
             
-            return query.ToList();
-        }
-
-        public IList<EnumApi> ToListEnum()
-        {
-            return _mapper.Map<IList<EKadry.Domain.Contracts.JobPosition.JobPosition>, IList<EnumApi>>(ToList());
+            return await query.ToListAsync();
         }
     }
 }
