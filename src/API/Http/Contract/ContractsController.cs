@@ -6,6 +6,7 @@ using EKadry.Application.Services.Contracts.ContractAdd;
 using EKadry.Application.Services.Contracts.ContractDelete;
 using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
+using EKadry.Application.Services.Operators;
 using EKadry.Domain.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +50,7 @@ namespace EKadry.API.Http.Contract
         /// Create new contract 
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(Domain.Operators.Operator), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(OperatorDto), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] AddContractRequest request)
         {
             var @operator = await _mediator.Send(new ContractAddCommand(

@@ -6,7 +6,7 @@ namespace EKadry.Domain.Pkzp
 {
     public interface IPkzpRepository
     {
-        Task AddAsync(Guid pkzpPositionId, PkzpType pkzpType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0, decimal installmentAmount = 0);
+        Task CreateAsync(Guid pkzpPositionId, PkzpType pkzpType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0, decimal installmentAmount = 0);
         Task PayoffPkzpAsync(Guid pkzpPositionId, decimal amount, PkzpPositionType pkzpPositionType, Guid workerId, Guid periodId, bool closed = false);
     }
 }

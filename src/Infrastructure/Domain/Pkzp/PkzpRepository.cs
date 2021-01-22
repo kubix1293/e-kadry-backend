@@ -14,7 +14,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp
         {
         }
         
-        public async Task AddAsync(Guid pkzpPositionId, PkzpType pkzpType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0, decimal installmentAmount = 0)
+        public async Task CreateAsync(Guid pkzpPositionId, PkzpType pkzpType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0, decimal installmentAmount = 0)
         {
             await Context.Database.ExecuteSqlRawAsync(
                 "BEGIN KADRY.PKZP_PACK.PKZP_INSERT(:PKZP_POSITION_GUID, :TYPE, :PERIOD, :WORKER, :AMOUNT, :INSTALLMENTS_COUNT, :INSTALLMENT_AMOUNT); END;",
