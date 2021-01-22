@@ -7,7 +7,7 @@ namespace EKadry.Domain.Pkzp.Position
     {
         public Guid Id { get; set; }
         public PkzpPositionType PkzpPositionType { get; set; }
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
         public Guid IdPeriod { get; set; }
         public Period.Period Period{ get; set; }
         public Guid IdWorker { get; set; }

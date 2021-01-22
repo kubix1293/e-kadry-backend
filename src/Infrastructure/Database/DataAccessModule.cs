@@ -1,17 +1,15 @@
-﻿using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
+using EKadry.Domain.Pkzp;
 using EKadry.Domain.Workers;
-using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Domain.Contracts;
 using EKadry.Infrastructure.Domain.Contracts.JobPosition;
 using EKadry.Infrastructure.Domain.Operators;
+using EKadry.Infrastructure.Domain.Pkzp;
 using EKadry.Infrastructure.Domain.Workers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Serilog;
 using Serilog.Extensions.Logging;
 using Module = Autofac.Module;
 
@@ -41,6 +39,9 @@ namespace EKadry.Infrastructure.Database
                 .InstancePerLifetimeScope();
             builder.RegisterType<JobPositionRepository>()
                 .As<IJobPositionRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PkzpRepository>()
+                .As<IPkzpRepository>()
                 .InstancePerLifetimeScope();
             
             builder.Register(c =>

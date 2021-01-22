@@ -12,9 +12,9 @@ namespace EKadry.Domain.Pkzp
         public Guid Id { get; set; }
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
-        public float Balance { get; set; }
-        public float Debit { get; set; }
-        public float Credit { get; set; }
+        public decimal Balance { get; set; }
+        public decimal Debit { get; set; }
+        public decimal Credit { get; set; }
         public PkzpType PkzpType { get; set; }
         public Guid IdPkzpPosition { get; set; }
         public PkzpPosition PkzpPosition { get; set; }
