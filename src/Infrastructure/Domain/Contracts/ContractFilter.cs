@@ -64,7 +64,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
         {
             if (hasPkzp != null)
             {
-                Query = Query.Where(x => x.IsGebf);
+                Query = Query.Where(x => x.IsPkzp);
             }
         }
     }
