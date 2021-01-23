@@ -19,20 +19,11 @@ namespace EKadry.Domain.Pkzp
         public PkzpPosition PkzpPosition { get; set; }
         public ICollection<PkzpSchedule> PkzpSchedules { get; set; }
 
-        public static Pkzp Create(
-            PkzpType pkzpType,
-            DateTime dateFrom,
-            DateTime dateTo,
-            Guid workerId,
-            decimal amount,
-            int installmentsCount,
-            decimal installmentAmount)
+        public static Pkzp Create()
         {
             return new Pkzp()
             {
                 Id = Guid.NewGuid(),
-                IdWorker = workerId,
-                PkzpType = EnumHelper<PkzpType>.Parse(pkzpType.ToString()),
             };
         }
     }

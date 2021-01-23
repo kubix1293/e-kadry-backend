@@ -3,11 +3,15 @@ using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
 using EKadry.Domain.Pkzp;
+using EKadry.Domain.Pkzp.Period;
+using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Domain.Contracts;
 using EKadry.Infrastructure.Domain.Contracts.JobPosition;
 using EKadry.Infrastructure.Domain.Operators;
 using EKadry.Infrastructure.Domain.Pkzp;
+using EKadry.Infrastructure.Domain.Pkzp.Period;
+using EKadry.Infrastructure.Domain.Pkzp.PkzpPosition;
 using EKadry.Infrastructure.Domain.Workers;
 using Microsoft.EntityFrameworkCore;
 using Serilog.Extensions.Logging;
@@ -42,6 +46,12 @@ namespace EKadry.Infrastructure.Database
                 .InstancePerLifetimeScope();
             builder.RegisterType<PkzpRepository>()
                 .As<IPkzpRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PkzpPositionRepository>()
+                .As<IPkzpPositionRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PeriodRepository>()
+                .As<IPeriodRepository>()
                 .InstancePerLifetimeScope();
             
             builder.Register(c =>

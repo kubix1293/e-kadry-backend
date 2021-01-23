@@ -22,14 +22,13 @@ namespace EKadry.API.Http.Pkzp
         /// <summary>
         /// Create PKZP for an worker
         /// </summary>
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> List([FromQuery] CreatePkzpRequest request)
+        public async Task<IActionResult> List([FromBody] CreatePkzpRequest request)
         {
             var pkzp = await _mediator.Send(new PkzpCreateCommand(
-                request.PkzpType,
-                request.DateFrom,
-                request.DateTo,
+                request.PkzpPositionType,
+                request.PeriodId,
                 request.WorkerId,
                 request.Amount,
                 request.InstallmentsCount,

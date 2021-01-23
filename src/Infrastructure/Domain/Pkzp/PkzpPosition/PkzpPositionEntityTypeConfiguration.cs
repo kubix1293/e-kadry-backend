@@ -17,17 +17,13 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.PkzpPositionType).HasColumnName("RODZ").HasConversion(new EnumToNumberConverter<PkzpPositionType, int>());
             builder.Property(e => e.Amount).HasColumnName("KWOT");
-            builder.Property(e => e.IdPeriod).HasColumnName("KWOT");
+            builder.Property(e => e.IdPeriod).HasColumnName("ID_OKS");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
             builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ");
 
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.Pkzp)
                 .HasForeignKey(p => p.IdWorker);
-            
-            builder.HasOne(d => d.Period)
-                .WithOne(n => n.PkzpPosition)
-                .HasForeignKey<EKadry.Domain.Pkzp.Period.Period>(p => p.PkzpPosition);
         }
     }
 }

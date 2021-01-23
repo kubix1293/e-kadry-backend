@@ -15,6 +15,10 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.DateFrom).HasColumnName("DTOD");
             builder.Property(e => e.DateTo).HasColumnName("DTDO");
+            
+            builder.HasOne(d => d.PkzpPosition)
+                .WithOne(n => n.Period)
+                .HasForeignKey<EKadry.Domain.Pkzp.Position.PkzpPosition>(p => p.IdPeriod);
         }
     }
 }

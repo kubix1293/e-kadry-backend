@@ -10,7 +10,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp
     {
         public void Configure(EntityTypeBuilder<EKadry.Domain.Pkzp.Pkzp> builder)
         {
-            builder.ToTable(SchemaNames.PkzpSchedule);
+            builder.ToTable(SchemaNames.Pkzp);
             
             builder.HasKey(b => b.Id);
             

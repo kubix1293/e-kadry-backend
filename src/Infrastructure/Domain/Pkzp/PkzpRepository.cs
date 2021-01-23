@@ -14,14 +14,15 @@ namespace EKadry.Infrastructure.Domain.Pkzp
         {
         }
         
-        public async Task CreateAsync(Guid pkzpPositionId, PkzpType pkzpType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0, decimal installmentAmount = 0)
+        public async Task<int> CreateAsync(Guid pkzpPositionId, PkzpPositionType pkzpPositionType, Guid periodId, Guid workerId, decimal amount, int installmentsCount = 0,
+            decimal installmentAmount = 0)
         {
-            await Context.Database.ExecuteSqlRawAsync(
+            return await Context.Database.ExecuteSqlRawAsync(
                 "BEGIN KADRY.PKZP_PACK.PKZP_INSERT(:PKZP_POSITION_GUID, :TYPE, :PERIOD, :WORKER, :AMOUNT, :INSTALLMENTS_COUNT, :INSTALLMENT_AMOUNT); END;",
                 new object[]
                 {
                     new OracleParameter("PKZP_POSITION_GUID", pkzpPositionId.ToByteArray()),
-                    new OracleParameter("TYPE", pkzpType),
+                    new OracleParameter("TYPE", pkzpPositionType),
                     new OracleParameter("PERIOD", periodId.ToByteArray()),
                     new OracleParameter("WORKER", workerId.ToByteArray()),
                     new OracleParameter("AMOUNT", amount),
