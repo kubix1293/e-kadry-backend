@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EKadry.Application.Configuration.Queries;
 
-namespace EKadry.Application.Services.JobPositions.OperatorList
+namespace EKadry.Application.Services.JobPositions.JobPositionList
 {
     public class JobPositionListQuery : IQuery<IList<JobPositionListDto>>
     {

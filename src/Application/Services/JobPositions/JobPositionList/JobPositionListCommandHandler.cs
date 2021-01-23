@@ -5,7 +5,7 @@ using AutoMapper;
 using EKadry.Application.Configuration.Queries;
 using EKadry.Domain.Contracts.JobPosition;
 
-namespace EKadry.Application.Services.JobPositions.OperatorList
+namespace EKadry.Application.Services.JobPositions.JobPositionList
 {
     public class JobPositionListCommandHandler : IQueryHandler<JobPositionListQuery, IList<JobPositionListDto>>
     {

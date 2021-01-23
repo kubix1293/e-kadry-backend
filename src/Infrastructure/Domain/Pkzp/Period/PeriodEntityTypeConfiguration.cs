@@ -15,6 +15,9 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.DateFrom).HasColumnName("DTOD");
             builder.Property(e => e.DateTo).HasColumnName("DTDO");
+            builder.Property(e => e.Days).HasColumnName("DNI_KAL");
+            builder.Property(e => e.WorkingDays).HasColumnName("DNI_ROB");
+            builder.Property(e => e.WorkingHours).HasColumnName("NORMA");
             
             builder.HasOne(d => d.PkzpPosition)
                 .WithOne(n => n.Period)

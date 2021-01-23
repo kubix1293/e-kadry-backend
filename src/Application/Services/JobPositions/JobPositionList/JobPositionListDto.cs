@@ -1,6 +1,6 @@
 using System;
 
-namespace EKadry.Application.Services.JobPositions.OperatorList
+namespace EKadry.Application.Services.JobPositions.JobPositionList
 {
     public class JobPositionListDto 
     {

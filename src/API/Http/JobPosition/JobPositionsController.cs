@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.JobPosition.Request;
-using EKadry.Application.Services.JobPositions.OperatorList;
+using EKadry.Application.Services.JobPositions.JobPositionList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
