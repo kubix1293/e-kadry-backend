@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EKadry.API.Http.Period
 {
     [ApiController]
-    [Route("api/period")]
+    [Route("api/periods")]
     public class PeriodController : ControllerBase
     {
         private readonly IMediator _mediator;
