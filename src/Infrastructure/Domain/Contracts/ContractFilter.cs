@@ -7,21 +7,21 @@ namespace EKadry.Infrastructure.Domain.Contracts
 {
     public sealed class ContractFilter : Filter<Contract>
     {
-        public ContractFilter(
-            IQueryable<Contract> query,
+        public ContractFilter(IQueryable<Contract> query,
             string orderBy = null,
             string orderDirection = null,
             string searchString = null,
             Guid? jobPosition = null,
             bool showInactiveContracts = true,
             DateTime? dateFrom = null,
-            DateTime? dateTo = null
-        ) : base(query, orderBy, orderDirection)
+            DateTime? dateTo = null,
+            bool? hasPkzp = null) : base(query, orderBy, orderDirection)
         {
             Search(searchString);
             JobPosition(jobPosition);
             InactiveContract(showInactiveContracts);
             DateRange(dateFrom, dateTo);
+            HasPkzp(hasPkzp);
         }
 
         private void Search(string search)
@@ -33,6 +33,14 @@ namespace EKadry.Infrastructure.Domain.Contracts
                     s.Worker.LastName.ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", "")) ||
                     (s.Worker.FirstName + s.Worker.LastName).ToLower().Replace(" ", "").Contains(search.ToLower().Replace(" ", ""))
                 );
+            }
+        }
+
+        private void JobPosition(Guid? jobPosition)
+        {
+            if (jobPosition != null)
+            {
+                Query = Query.Where(x => x.IdJobPosition == jobPosition);
             }
         }
 
@@ -52,11 +60,11 @@ namespace EKadry.Infrastructure.Domain.Contracts
             }
         }
 
-        private void JobPosition(Guid? jobPosition)
+        private void HasPkzp(bool? hasPkzp)
         {
-            if (jobPosition != null)
+            if (hasPkzp != null)
             {
-                Query = Query.Where(x => x.IdJobPosition == jobPosition);
+                Query = Query.Where(x => x.IsGebf);
             }
         }
     }

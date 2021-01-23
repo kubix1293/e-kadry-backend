@@ -22,6 +22,7 @@ namespace EKadry.Domain.Contracts
         public bool IsGebf { get; set; }
         public bool IsLeave { get; set; }
         public bool IsSickLeave { get; set; }
+        public bool IsPkzp { get; set; }
         public decimal? WorkingTime { get; set; }
         public bool EntireInternship { get; set; }
         public bool ProfessionInternship { get; set; }
@@ -30,10 +31,6 @@ namespace EKadry.Domain.Contracts
         public DateTime? DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
-        public Contract()
-        {
-        }
 
         public static Contract CreateContract()
         {
@@ -58,6 +55,7 @@ namespace EKadry.Domain.Contracts
             bool isGebf,
             bool isLeave,
             bool isSickLeave,
+            bool isPkzp,
             decimal? workingTime,
             bool entireInternship,
             bool professionInternship,
@@ -81,6 +79,7 @@ namespace EKadry.Domain.Contracts
                 IsGebf = isGebf,
                 IsLeave = isLeave,
                 IsSickLeave = isSickLeave,
+                IsPkzp = isPkzp,
                 WorkingTime = workingTime,
                 EntireInternship = entireInternship,
                 ProfessionInternship = professionInternship,

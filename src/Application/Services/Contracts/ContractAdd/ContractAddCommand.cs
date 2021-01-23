@@ -19,6 +19,7 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
         public bool IsGebf { get; }
         public bool IsLeave { get; }
         public bool IsSickLeave { get; }
+        public bool IsPkzp { get; }
         public decimal? WorkingTime { get; }
         public bool EntireInternship { get; }
         public bool ProfessionInternship { get; }
@@ -40,6 +41,7 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
             bool isGebf,
             bool isLeave,
             bool isSickLeave,
+            bool isPkzp,
             decimal? workingTime,
             bool entireInternship,
             bool professionInternship,
@@ -60,6 +62,7 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
             IsGebf = isGebf;
             IsLeave = isLeave;
             IsSickLeave = isSickLeave;
+            IsPkzp = isPkzp;
             WorkingTime = workingTime;
             EntireInternship = entireInternship;
             ProfessionInternship = professionInternship;

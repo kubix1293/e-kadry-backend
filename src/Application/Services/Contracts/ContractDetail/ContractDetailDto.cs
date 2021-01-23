@@ -22,6 +22,7 @@ namespace EKadry.Application.Services.Contracts.ContractDetail
         public bool IsGebf { get; set; }
         public bool IsLeave { get; set; }
         public bool IsSickLeave { get; set; }
+        public bool IsPkzp { get; set; }
         public decimal? WorkingTime { get; set; }
         public int EntireInternship { get; set; }
         public int ProffesionInternship { get; set; }

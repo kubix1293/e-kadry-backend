@@ -40,7 +40,8 @@ namespace EKadry.API.Http.Contract
                 request.JobPosition,
                 request.ShowInactiveContracts == true,
                 request.DateFrom,
-                request.DateTo
+                request.DateTo,
+                request.HasPkzp
             ));
 
             return Ok(list);
@@ -68,6 +69,7 @@ namespace EKadry.API.Http.Contract
                 request.IsGebf,
                 request.IsLeave,
                 request.IsSickLeave,
+                request.IsPkzp,
                 request.WorkingTime,
                 request.EntireInternship,
                 request.ProfessionInternship,

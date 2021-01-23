@@ -16,6 +16,7 @@ namespace EKadry.Domain.Contracts
             bool commandShowInactiveContracts,
             DateTime? commandDateFrom,
             DateTime? commandDateTo,
+            bool? queryHasPkzp,
             CancellationToken cancellationToken);
         Task<Contract> GetAsync(Guid contractId);
         Task AddAsync(Contract contract);

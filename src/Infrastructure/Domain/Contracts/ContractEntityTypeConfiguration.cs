@@ -30,6 +30,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.IsGebf).HasColumnName("CZY_FGSP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsLeave).HasColumnName("CZY_URLOP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsSickLeave).HasColumnName("CZY_AB_CHOR").HasConversion(new IntToBooleanConverter());
+            builder.Property(e => e.IsPkzp).HasColumnName("CZY_PKZP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.WorkingTime).HasColumnName("NRM_CZAS_PRAC");
             builder.Property(e => e.EntireInternship).HasColumnName("STOG").HasConversion(new IntToBooleanConverter());;
             builder.Property(e => e.ProfessionInternship).HasColumnName("STZW").HasConversion(new IntToBooleanConverter());;

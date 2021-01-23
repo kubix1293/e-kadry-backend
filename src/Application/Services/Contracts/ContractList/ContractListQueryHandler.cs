@@ -30,6 +30,7 @@ namespace EKadry.Application.Services.Contracts.ContractList
                 query.ShowInactiveContracts,
                 query.DateFrom,
                 query.DateTo,
+                query.HasPkzp,
                 cancellationToken).ToListAsync();
             
             return _mapper.Map<PagedList<Contract>, PagedList<ContractListDto>>(contracts);

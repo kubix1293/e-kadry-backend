@@ -18,6 +18,7 @@ namespace EKadry.API.Http.Contract.Request
         public bool IsGebf { get; set; }
         public bool IsLeave { get; set; }
         public bool IsSickLeave { get; set; }
+        public bool IsPkzp { get; set; }
         public decimal? WorkingTime { get; set; }
         public bool EntireInternship { get; set; }
         public bool ProfessionInternship { get; set; }

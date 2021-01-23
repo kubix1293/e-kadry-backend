@@ -8,5 +8,6 @@ namespace EKadry.API.Http.Contract.Request
         public bool? ShowInactiveContracts { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
+        public bool? HasPkzp { get; set; }
     }
 }

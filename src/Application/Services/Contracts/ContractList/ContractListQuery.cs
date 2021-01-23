@@ -10,6 +10,7 @@ namespace EKadry.Application.Services.Contracts.ContractList
         public bool ShowInactiveContracts { get; }
         public DateTime? DateFrom { get; }
         public DateTime? DateTo { get; }
+        public bool? HasPkzp { get; }
         
         public ContractListQuery(
             int page,
@@ -20,13 +21,15 @@ namespace EKadry.Application.Services.Contracts.ContractList
             Guid? jobPosition,
             bool showInactiveContracts,
             DateTime? dateFrom,
-            DateTime? dateTo
+            DateTime? dateTo,
+            bool? hasPkzp
         ) : base(page, perPage, orderDirection, orderBy, search)
         {
             JobPosition = jobPosition;
             ShowInactiveContracts = showInactiveContracts;
             DateFrom = dateFrom;
             DateTo = dateTo;
+            HasPkzp = hasPkzp;
         }
     }
 }

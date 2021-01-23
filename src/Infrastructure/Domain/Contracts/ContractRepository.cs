@@ -24,6 +24,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             bool commandShowInactiveContracts,
             DateTime? commandDateFrom,
             DateTime? commandDateTo,
+            bool? queryHasPkzp,
             CancellationToken cancellationToken)
         {
             var query = new ContractFilter(
@@ -34,7 +35,8 @@ namespace EKadry.Infrastructure.Domain.Contracts
                     commandJobPosition,
                     commandShowInactiveContracts,
                     commandDateFrom,
-                    commandDateTo
+                    commandDateTo,
+                    queryHasPkzp
                 )
                 .GetFilteredQuery()
                 .Include(x => x.Worker)

@@ -31,6 +31,7 @@ namespace EKadry.Application.Services.Contracts.ContractAdd
                 request.IsGebf,
                 request.IsLeave,
                 request.IsSickLeave,
+                request.IsPkzp,
                 request.WorkingTime,
                 request.EntireInternship,
                 request.ProfessionInternship,
