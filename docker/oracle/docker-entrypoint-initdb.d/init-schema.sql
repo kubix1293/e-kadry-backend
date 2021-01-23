@@ -164,7 +164,7 @@ CREATE TABLE kadry.pkzp_poz
     kwot     FLOAT(15) DEFAULT 0          NOT NULL,
     id_oks   RAW(32)                      NOT NULL,
     id_prc   RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32)                      NOT NULL
+    pkzp_poz RAW(32)
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
