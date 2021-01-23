@@ -3,8 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EKadry.Application.Configuration.Queries;
-using EKadry.Application.Services.JobPositions.JobPositionList;
-using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Pkzp.Period;
 
 namespace EKadry.Application.Services.Periods.PeriodList

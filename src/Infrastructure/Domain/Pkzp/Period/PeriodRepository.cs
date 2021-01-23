@@ -26,7 +26,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
 
             query = query.Where(x => 
                 x.DateFrom >= DateTime.Now.AddMonths(-(querySubMonths + 1)) &&
-                x.DateFrom <= DateTime.Now.AddMonths(querySubMonths + queryNextMonths - 1));
+                x.DateFrom <= DateTime.Now.AddMonths(queryNextMonths));
 
             return await query.ToListAsync();
         }
