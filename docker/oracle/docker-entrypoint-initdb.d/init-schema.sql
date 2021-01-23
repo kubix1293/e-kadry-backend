@@ -149,8 +149,8 @@ COMMENT ON COLUMN kadry.pkzp.ct IS
 /
 COMMENT ON COLUMN kadry.pkzp.rodz IS
     'Rodzaj PKZP
-1 - wkłady
-10 - pożyczka';
+10 - wkłady
+20 - pożyczka';
 /
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pk PRIMARY KEY (id);
@@ -169,10 +169,10 @@ CREATE TABLE kadry.pkzp_poz
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
     'Rodzaj PKZP
-1 - wkład
-10 - pożyczka
-20 - wpisowe
-30 - spłata';
+10 - wkład
+20 - pożyczka
+30 - wpisowe
+40 - spłata';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
@@ -981,11 +981,11 @@ DECLARE
         WHERE rodz = 1
           AND id_prc = :NEW.id_prc;
 BEGIN
-    IF (:NEW.rodz = 10) THEN
+    IF (:NEW.rodz = 20) THEN
         INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
         VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
     END IF;
-    IF (:NEW.rodz = 1) THEN
+    IF (:NEW.rodz = 10) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
@@ -1200,7 +1200,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         IS
             zmien NUMBER;
         BEGIN
-            IF (iRodz = 10) THEN
+            IF (iRodz = 20) THEN
                 IF (iKwota > 0 AND iIlerat > 0) THEN
                     INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
                     VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
@@ -1215,7 +1215,7 @@ create or replace PACKAGE BODY pkzp_pack AS
                 RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
                 END IF;
             END IF;
-            IF (iRodz = 1) THEN
+            IF (iRodz = 10) THEN
                 IF (iKwota > 0) THEN
                     INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
                     VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
