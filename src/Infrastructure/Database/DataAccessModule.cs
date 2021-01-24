@@ -3,6 +3,7 @@ using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
 using EKadry.Domain.Pkzp;
+using EKadry.Domain.Pkzp.Parameters;
 using EKadry.Domain.Pkzp.Period;
 using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
@@ -10,6 +11,7 @@ using EKadry.Infrastructure.Domain.Contracts;
 using EKadry.Infrastructure.Domain.Contracts.JobPosition;
 using EKadry.Infrastructure.Domain.Operators;
 using EKadry.Infrastructure.Domain.Pkzp;
+using EKadry.Infrastructure.Domain.Pkzp.Parameters;
 using EKadry.Infrastructure.Domain.Pkzp.Period;
 using EKadry.Infrastructure.Domain.Pkzp.PkzpPosition;
 using EKadry.Infrastructure.Domain.Workers;
@@ -52,6 +54,12 @@ namespace EKadry.Infrastructure.Database
                 .InstancePerLifetimeScope();
             builder.RegisterType<PeriodRepository>()
                 .As<IPeriodRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PkzpParametersRepository>()
+                .As<IPkzpParametersRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<PkzpRepository>()
+                .As<IPkzpRepository>()
                 .InstancePerLifetimeScope();
             
             builder.Register(c =>

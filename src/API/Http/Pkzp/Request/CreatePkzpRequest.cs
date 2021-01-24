@@ -9,7 +9,7 @@ namespace EKadry.API.Http.Pkzp.Request
         public Guid PeriodId { get; set; }
         public Guid WorkerId { get; set; }
         public decimal Amount { get; set; }
-        public int InstallmentsCount { get; set; }
-        public decimal InstallmentAmount { get; set; }
+        public int? InstallmentsCount { get; set; }
+        public decimal? InstallmentAmount { get; set; }
     }
 }

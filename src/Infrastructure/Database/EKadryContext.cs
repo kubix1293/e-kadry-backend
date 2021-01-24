@@ -6,7 +6,10 @@ using EKadry.Domain;
 using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
+using EKadry.Domain.Pkzp;
+using EKadry.Domain.Pkzp.Parameters;
 using EKadry.Domain.Pkzp.Period;
+using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +22,9 @@ namespace EKadry.Infrastructure.Database
         public virtual DbSet<Contract> Contract { get; set; }
         public virtual DbSet<JobPosition> JobPosition { get; set; }
         public virtual DbSet<Period> Period { get; set; }
+        public virtual DbSet<PkzpParameters> PkzpParameters { get; set; }
+        public virtual DbSet<PkzpPosition> PkzpPositions { get; set; }
+        public virtual DbSet<Pkzp> Pkzp { get; set; }
 
         public EKadryContext(DbContextOptions options) : base(options)
         {
