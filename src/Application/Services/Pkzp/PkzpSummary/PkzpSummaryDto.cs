@@ -9,5 +9,6 @@ namespace EKadry.Application.Services.Pkzp.PkzpSummary
         public decimal Balance { get; set; }
         public decimal Debit { get; set; }
         public decimal Credit { get; set; }
+        public EnumApi PkzpType { get; set; }
     }
 }

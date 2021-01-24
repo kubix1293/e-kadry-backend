@@ -37,7 +37,9 @@ namespace EKadry.Infrastructure.Configuration
             
             CreateMap<JobPosition, JobPositionListDto>();
             CreateMap<Period, PeriodListDto>();
-            CreateMap<Pkzp, PkzpSummaryDto>();
+            
+            CreateMap<Pkzp, PkzpSummaryDto>()
+                .ForMember(dest => dest.PkzpType, opt => opt.MapFrom(src => EnumHelper<PkzpType>.GetMap(src.PkzpType)));
             
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();

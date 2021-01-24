@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EKadry.Domain.Pkzp;
 using EKadry.Domain.Pkzp.Position;
@@ -46,11 +48,12 @@ namespace EKadry.Infrastructure.Domain.Pkzp
                 });
         }
         
-        public async Task<EKadry.Domain.Pkzp.Pkzp> GetByWorkerAsync(Guid workerId)
+        public async Task<List<EKadry.Domain.Pkzp.Pkzp>> GetByWorkerAsync(Guid workerId)
         {
             return await Context.Pkzp
+                .Where(x => x.IdWorker == workerId)
                 .Include(x => x.Worker)
-                .FirstAsync(x => x.IdWorker == workerId);
+                .ToListAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Pkzp.Request;
@@ -26,7 +27,7 @@ namespace EKadry.API.Http.Pkzp
         /// Get PKZP summary for worker
         /// </summary>
         [HttpGet("{workerId}")]
-        [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(List<PkzpSummaryDto>), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromRoute] Guid workerId)
         {
             var pkzpSummary = await _mediator.Send(new PkzpSummaryQuery(workerId));
