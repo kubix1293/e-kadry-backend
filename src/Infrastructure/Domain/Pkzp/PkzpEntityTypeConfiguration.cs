@@ -21,6 +21,14 @@ namespace EKadry.Infrastructure.Domain.Pkzp
             builder.Property(e => e.Credit).HasColumnName("CT");
             builder.Property(e => e.PkzpType).HasColumnName("RODZ").HasConversion(new EnumToNumberConverter<PkzpType, int>());
             builder.Property(e => e.IdPkzpPosition).HasColumnName("PKZP_POZ");
+            
+            builder.HasOne(d => d.Worker)
+                .WithMany(n => n.Pkzp)
+                .HasForeignKey(p => p.IdWorker);
+            
+            builder.HasOne(d => d.PkzpPosition)
+                .WithMany(n => n.Pkzp)
+                .HasForeignKey(p => p.IdPkzpPosition);
         }
     }
 }

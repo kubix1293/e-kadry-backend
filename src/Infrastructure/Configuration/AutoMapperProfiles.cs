@@ -7,6 +7,7 @@ using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Periods.PeriodList;
+using EKadry.Application.Services.Pkzp.PkzpSummary;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Application.Services.Workers.WorkerSearch;
 using EKadry.Domain;
@@ -14,6 +15,7 @@ using EKadry.Domain.Contracts;
 using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Operators;
 using EKadry.Domain.Pagination;
+using EKadry.Domain.Pkzp;
 using EKadry.Domain.Pkzp.Period;
 using EKadry.Domain.Workers;
 using WorkerDetailDto = EKadry.Application.Services.Workers.WorkerDetail.WorkerDetailDto;
@@ -35,6 +37,7 @@ namespace EKadry.Infrastructure.Configuration
             
             CreateMap<JobPosition, JobPositionListDto>();
             CreateMap<Period, PeriodListDto>();
+            CreateMap<Pkzp, PkzpSummaryDto>();
             
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();

@@ -1,9 +1,11 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Pkzp.Request;
 using EKadry.Application.Services.Pkzp;
 using EKadry.Application.Services.Pkzp.PkzpCreate;
 using EKadry.Application.Services.Pkzp.PkzpParameters;
+using EKadry.Application.Services.Pkzp.PkzpSummary;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +20,18 @@ namespace EKadry.API.Http.Pkzp
         public PkzpController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+        
+        /// <summary>
+        /// Get PKZP summary for worker
+        /// </summary>
+        [HttpGet("{workerId}")]
+        [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> Get([FromRoute] Guid workerId)
+        {
+            var pkzpSummary = await _mediator.Send(new PkzpSummaryQuery(workerId));
+            
+            return Ok(pkzpSummary);
         }
 
         /// <summary>

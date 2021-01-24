@@ -22,7 +22,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
             builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ");
 
             builder.HasOne(d => d.Worker)
-                .WithMany(n => n.Pkzp)
+                .WithMany(n => n.PkzpPositions)
                 .HasForeignKey(p => p.IdWorker);
         }
     }

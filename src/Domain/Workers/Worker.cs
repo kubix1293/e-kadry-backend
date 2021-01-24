@@ -29,7 +29,8 @@ namespace EKadry.Domain.Workers
         public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
         public virtual IEnumerable<Contract> Contracts { get; set; }
-        public virtual IEnumerable<PkzpPosition> Pkzp { get; set; }
+        public virtual IEnumerable<PkzpPosition> PkzpPositions { get; set; }
+        public virtual IEnumerable<Pkzp.Pkzp> Pkzp { get; set; }
 
         public Worker()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using EKadry.Domain.Workers;
 
 namespace EKadry.Domain.Pkzp.Position
@@ -14,6 +15,7 @@ namespace EKadry.Domain.Pkzp.Position
         public Worker Worker { get; set; }
         public Guid IdAncestorPkzpPosition { get; set; }
         public PkzpPosition AncestorPkzpPosition { get; set; }
+        public IEnumerable<Pkzp> Pkzp { get; set; }
 
         public static PkzpPosition Create()
         {
