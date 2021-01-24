@@ -1,107 +1,15 @@
 ------------------------------------------------------------------- Tworzenie schematu i nadawanie uprawnień
 
 ------------------------------------------------------------------- TABELS
-/*
------- ABSENCJE
-CREATE SEQUENCE absencje_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.absencje
-(
-    id         INTEGER   DEFAULT absencje_seq.NEXTVAL NOT NULL,
-    dtod       DATE                                   NOT NULL,
-    dtdo       DATE                                   NOT NULL,
-    id_typobec INTEGER                                NOT NULL,
-    id_prc     INTEGER                                NOT NULL,
-    id_ump     INTEGER                                NOT NULL,
-    zada       NUMBER(1) DEFAULT 0                    NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.absencje.dtod IS
-    'data od';
-/
-COMMENT ON COLUMN kadry.absencje.dtdo IS
-    'data do';
-/
-COMMENT ON COLUMN kadry.absencje.id_typobec IS
-    'typ obecności absencja';
-/
-COMMENT ON COLUMN kadry.absencje.id_prc IS
-    'id pracownika';
-/
-COMMENT ON COLUMN kadry.absencje.id_ump IS
-    'id umowy';
-/
-COMMENT ON COLUMN kadry.absencje.zada IS
-    'czy urlop na żądanie. aktywuje  się tylko gdy urlop wypoczynkowy. domyślne N';
-/
-ALTER TABLE kadry.absencje
-    ADD CONSTRAINT absencje_pk PRIMARY KEY (id);
-/
-*/
-------  ADRESY
-CREATE TABLE kadry.adresy
-(
-    id       RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    misc     VARCHAR2(50)               NOT NULL,
-    gmina    VARCHAR2(50)               NOT NULL,
-    powiat   VARCHAR2(50)               NOT NULL,
-    wojew    VARCHAR2(50)               NOT NULL,
-    teryt    NUMBER(8)                  NOT NULL,
-    kod_pocz VARCHAR2(6)                NOT NULL
-);
-/
-ALTER TABLE kadry.adresy
-    ADD CONSTRAINT adresy_pk PRIMARY KEY (id);
-/
-ALTER TABLE kadry.adresy
-    ADD CONSTRAINT adresy_teryt_un UNIQUE (teryt);
-/
-/*
-
------- HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
-CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.hps
-(
-    id     INTEGER   DEFAULT hps_seq.NEXTVAL NOT NULL,
-    dtod   DATE                              NOT NULL,
-    dtdo   DATE,
-    stog   NUMBER(1) DEFAULT 0               NOT NULL,
-    stzw   NUMBER(1) DEFAULT 0               NOT NULL,
-    stws   NUMBER(1) DEFAULT 0               NOT NULL,
-    stjb   NUMBER(1) DEFAULT 0               NOT NULL,
-    id_prc INTEGER                           NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.hps.stog IS
-    'staż ogółem';
-/
-COMMENT ON COLUMN kadry.hps.stzw IS
-    'staż w zawodzie';
-/
-COMMENT ON COLUMN kadry.hps.stws IS
-    'staż do wysługi';
-/
-COMMENT ON COLUMN kadry.hps.stjb IS
-    'staż do jubileuszu';
-/
-COMMENT ON COLUMN kadry.hps.id_prc IS
-    'id pracownika';
-/
-ALTER TABLE kadry.hps
-    ADD CONSTRAINT hps_pk PRIMARY KEY (id);
-/
-*/
-
 ------ OKRESY
 CREATE TABLE kadry.okresy
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
     dtod    DATE                       NOT NULL,
-    dtdo    DATE                       NOT NULL,
-    dni_kal NUMBER(4)                  NOT NULL,
-    dni_rob NUMBER(4)                  NOT NULL,
-    norma   FLOAT(15)                  NOT NULL
+    dtdo    DATE                       NOT NULL
+    --dni_kal NUMBER(4)                  NOT NULL,
+    --dni_rob NUMBER(4)                  NOT NULL,
+    --norma   FLOAT(15)                  NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.okresy.dtod IS
@@ -110,6 +18,7 @@ COMMENT ON COLUMN kadry.okresy.dtod IS
 COMMENT ON COLUMN kadry.okresy.dtdo IS
     'ostatni dzień miesiąca';
 /
+/*
 COMMENT ON COLUMN kadry.okresy.dni_kal IS
     'dni kalendarzowe';
 /
@@ -119,6 +28,7 @@ COMMENT ON COLUMN kadry.okresy.dni_rob IS
 COMMENT ON COLUMN kadry.okresy.norma IS
     'normatywny czas pracy';
 /
+*/
 ALTER TABLE kadry.okresy
     ADD CONSTRAINT okresy_pk PRIMARY KEY (id);
 /
@@ -164,7 +74,7 @@ CREATE TABLE kadry.pkzp_poz
     kwot     FLOAT(15) DEFAULT 0          NOT NULL,
     id_oks   RAW(32)                      NOT NULL,
     id_prc   RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32)
+    pkzp_poz RAW(32)                      NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -259,54 +169,20 @@ ALTER TABLE kadry.pracownicy
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_pesel_un UNIQUE (pesel);
 /
+
 ------ STANOW (STANOWISKA)
 CREATE TABLE kadry.stanow
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    nazwa   VARCHAR2(155),
+    nazwa   VARCHAR2(50),
     kod_gus NUMBER(10)
 );
 /
 ALTER TABLE kadry.stanow
     ADD CONSTRAINT stanow_pk PRIMARY KEY (id);
 /
------- STAZTAB (TABELA STAŻÓW)
-CREATE TABLE kadry.staztab
-(
-    id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    stog    FLOAT(15) DEFAULT 0          NOT NULL,
-    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
-    stws    FLOAT(15) DEFAULT 0          NOT NULL,
-    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.staztab.stog IS
-    'staż ogółem - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stwz IS
-    'staż w zawodzie - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stws IS
-    'staż do wysługi - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stjb IS
-    'staż do jubileuszu - suma';
-/
-COMMENT ON COLUMN kadry.staztab.id_prc IS
-    'id pracownika';
-/
-COMMENT ON COLUMN kadry.staztab.url_prz IS
-    'urlop przysługujący';
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_pk PRIMARY KEY (id);
-/
+
+
 ------ UMOWY
 CREATE TABLE kadry.umowy
 (
@@ -317,8 +193,8 @@ CREATE TABLE kadry.umowy
     id_stanow      RAW(32)                        NOT NULL,
     id_prc         RAW(32)                        NOT NULL,
     nr_tyt_zus     NUMBER(5),
-    etatl          NUMBER(3),
-    etatm          NUMBER(3),
+    etatl          NUMBER(3),   
+    etatm          NUMBER(3),   
     czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
     czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
     czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
@@ -357,7 +233,45 @@ COMMENT ON COLUMN kadry.umowy.stjb IS
 ALTER TABLE kadry.umowy
     ADD CONSTRAINT umowy_pk PRIMARY KEY (id);
 /
+
+------ OPER (OPERATOR)
+CREATE SEQUENCE oper_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.oper
+(
+    id             RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    imie           VARCHAR2(20)                   NOT NULL,
+    nazwisko       VARCHAR2(35)                   NOT NULL,
+    login          VARCHAR2(50)                   NOT NULL,
+    passw          VARCHAR2(40)                   NOT NULL,
+    aktw           NUMBER(1) DEFAULT 1            NOT NULL,
+    usuniety       DATE,
+    utworzony      DATE      DEFAULT current_date NOT NULL,
+    zaktualizowany DATE      DEFAULT current_date NOT NULL
+);
+/
+ALTER TABLE kadry.oper
+    ADD CONSTRAINT oper_pk PRIMARY KEY (id);
+/
+
 /*
+------ URZEDY (URZEDY)
+CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.urzedy
+(
+    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    woje    VARCHAR2(20)               NOT NULL,
+    typ     VARCHAR2(35)               NOT NULL,
+    kod     VARCHAR2(70)               NOT NULL,
+    adres   VARCHAR2(70)               NOT NULL,
+    kodisus VARCHAR2(40)               NOT NULL
+);
+/
+ALTER TABLE kadry.urzedy
+    ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
+/
+
 ------ TYPOBEC
 CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
 /
@@ -390,44 +304,133 @@ COMMENT ON COLUMN kadry.typobec.rodz_lim IS
 COMMENT ON COLUMN kadry.typobec.lim IS
     'Ile dni limitu';
 /
+
+------ STAZTAB (TABELA STAŻÓW)
+CREATE TABLE kadry.staztab
+(
+    id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    stog    FLOAT(15) DEFAULT 0          NOT NULL,
+    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
+    stws    FLOAT(15) DEFAULT 0          NOT NULL,
+    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
+    id_prc  RAW(32)                      NOT NULL,
+    id_oks  RAW(32)                      NOT NULL,
+    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
+);
+/
+COMMENT ON COLUMN kadry.staztab.stog IS
+    'staż ogółem - suma';
+/
+COMMENT ON COLUMN kadry.staztab.stwz IS
+    'staż w zawodzie - suma';
+/
+COMMENT ON COLUMN kadry.staztab.stws IS
+    'staż do wysługi - suma';
+/
+COMMENT ON COLUMN kadry.staztab.stjb IS
+    'staż do jubileuszu - suma';
+/
+COMMENT ON COLUMN kadry.staztab.id_prc IS
+    'id pracownika';
+/
+COMMENT ON COLUMN kadry.staztab.url_prz IS
+    'urlop przysługujący';
+/
+ALTER TABLE kadry.staztab
+    ADD CONSTRAINT staztab_pk PRIMARY KEY (id);
+/
+
+------ ABSENCJE
+CREATE SEQUENCE absencje_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.absencje
+(
+    id         INTEGER   DEFAULT absencje_seq.NEXTVAL NOT NULL,
+    dtod       DATE                                   NOT NULL,
+    dtdo       DATE                                   NOT NULL,
+    id_typobec INTEGER                                NOT NULL,
+    id_prc     INTEGER                                NOT NULL,
+    id_ump     INTEGER                                NOT NULL,
+    zada       NUMBER(1) DEFAULT 0                    NOT NULL
+);
+/
+COMMENT ON COLUMN kadry.absencje.dtod IS
+    'data od';
+/
+COMMENT ON COLUMN kadry.absencje.dtdo IS
+    'data do';
+/
+COMMENT ON COLUMN kadry.absencje.id_typobec IS
+    'typ obecności absencja';
+/
+COMMENT ON COLUMN kadry.absencje.id_prc IS
+    'id pracownika';
+/
+COMMENT ON COLUMN kadry.absencje.id_ump IS
+    'id umowy';
+/
+COMMENT ON COLUMN kadry.absencje.zada IS
+    'czy urlop na żądanie. aktywuje  się tylko gdy urlop wypoczynkowy. domyślne N';
+/
+ALTER TABLE kadry.absencje
+    ADD CONSTRAINT absencje_pk PRIMARY KEY (id);
+/
+------  ADRESY
+CREATE TABLE kadry.adresy
+(
+    id       RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    misc     VARCHAR2(50)               NOT NULL,
+    gmina    VARCHAR2(50)               NOT NULL,
+    powiat   VARCHAR2(50)               NOT NULL,
+    wojew    VARCHAR2(50)               NOT NULL,
+    teryt    NUMBER(8)                  NOT NULL,
+    kod_pocz VARCHAR2(6)                NOT NULL
+);
+/
+ALTER TABLE kadry.adresy
+    ADD CONSTRAINT adresy_pk PRIMARY KEY (id);
+/
+ALTER TABLE kadry.adresy
+    ADD CONSTRAINT adresy_teryt_un UNIQUE (teryt);
+/
+
+------ HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
+CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.hps
+(
+    id     INTEGER   DEFAULT hps_seq.NEXTVAL NOT NULL,
+    dtod   DATE                              NOT NULL,
+    dtdo   DATE,
+    stog   NUMBER(1) DEFAULT 0               NOT NULL,
+    stzw   NUMBER(1) DEFAULT 0               NOT NULL,
+    stws   NUMBER(1) DEFAULT 0               NOT NULL,
+    stjb   NUMBER(1) DEFAULT 0               NOT NULL,
+    id_prc INTEGER                           NOT NULL
+);
+/
+COMMENT ON COLUMN kadry.hps.stog IS
+    'staż ogółem';
+/
+COMMENT ON COLUMN kadry.hps.stzw IS
+    'staż w zawodzie';
+/
+COMMENT ON COLUMN kadry.hps.stws IS
+    'staż do wysługi';
+/
+COMMENT ON COLUMN kadry.hps.stjb IS
+    'staż do jubileuszu';
+/
+COMMENT ON COLUMN kadry.hps.id_prc IS
+    'id pracownika';
+/
+ALTER TABLE kadry.hps
+    ADD CONSTRAINT hps_pk PRIMARY KEY (id);
+/
 */
-
------- OPER (OPERATOR)
-CREATE SEQUENCE oper_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.oper
-(
-    id             RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
-    imie           VARCHAR2(20)                   NOT NULL,
-    nazwisko       VARCHAR2(35)                   NOT NULL,
-    login          VARCHAR2(50)                   NOT NULL,
-    passw          VARCHAR2(40)                   NOT NULL,
-    aktw           NUMBER(1) DEFAULT 1            NOT NULL,
-    usuniety       DATE,
-    utworzony      DATE      DEFAULT current_date NOT NULL,
-    zaktualizowany DATE      DEFAULT current_date NOT NULL
-);
-/
-ALTER TABLE kadry.oper
-    ADD CONSTRAINT oper_pk PRIMARY KEY (id);
-/
-
------- URZEDY (URZEDY)
-CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.urzedy
-(
-    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    woje    VARCHAR2(20)               NOT NULL,
-    typ     VARCHAR2(35)               NOT NULL,
-    kod     VARCHAR2(70)               NOT NULL,
-    adres   VARCHAR2(70)               NOT NULL,
-    kodisus VARCHAR2(40)               NOT NULL
-);
-/
-ALTER TABLE kadry.urzedy
-    ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
-
 -------------------------------------------------------------------  CIENIE
 ------ PRACONICY_C
 CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
@@ -462,72 +465,6 @@ CREATE TABLE kadry.pracownicy_c
 ALTER TABLE kadry.pracownicy_c
     ADD CONSTRAINT pracownicy_c_pk PRIMARY KEY (c_id);
 /
-
-/*
------- ABSENCJE_C
-CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.absencje_c
-(
-    c_id       INTEGER DEFAULT absencje_c_seq.NEXTVAL NOT NULL,
-    c_data     DATE    DEFAULT sysdate                NOT NULL,
-    c_oper     INTEGER                                NOT NULL,
-    id         INTEGER                                NOT NULL,
-    dtod       DATE                                   NOT NULL,
-    dtdo       DATE                                   NOT NULL,
-    id_typobec INTEGER                                NOT NULL,
-    id_prc     INTEGER                                NOT NULL,
-    id_ump     INTEGER                                NOT NULL,
-    zada       CHAR(1) DEFAULT 'N'                    NOT NULL
-);
-/
-ALTER TABLE kadry.absencje_c
-    ADD CONSTRAINT absencje_c_pk PRIMARY KEY (c_id);
-/
-*/
-
-------  ADRESY_C
-CREATE TABLE kadry.adresy_c
-(
-    c_id     RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    c_data   DATE                       NOT NULL,
-    c_oper   RAW(32)                    NOT NULL,
-    id       RAW(32)                    NOT NULL,
-    misc     VARCHAR2(50)               NOT NULL,
-    gmina    VARCHAR2(50)               NOT NULL,
-    powiat   VARCHAR2(50)               NOT NULL,
-    wojew    VARCHAR2(50)               NOT NULL,
-    teryt    NUMBER(8)                  NOT NULL,
-    kod_pocz VARCHAR2(6)                NOT NULL
-);
-/
-ALTER TABLE kadry.adresy_c
-    ADD CONSTRAINT adresy_c_pk PRIMARY KEY (c_id);
-/
-
-/*
------- HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
-CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.hps_c
-(
-    c_id   INTEGER   DEFAULT hps_c_seq.NEXTVAL NOT NULL,
-    c_data DATE                                NOT NULL,
-    c_oper INTEGER                             NOT NULL,
-    id     INTEGER                             NOT NULL,
-    dtod   DATE                                NOT NULL,
-    dtdo   DATE,
-    stog   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stzw   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stws   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stjb   NUMBER(1) DEFAULT 0                 NOT NULL,
-    id_prc INTEGER                             NOT NULL
-);
-/
-ALTER TABLE kadry.hps_c
-    ADD CONSTRAINT hps_c_pk PRIMARY KEY (c_id);
-/
-*/
 
 ------ OKRESY_C
 CREATE TABLE kadry.okresy_c
@@ -614,7 +551,6 @@ CREATE TABLE kadry.pkzp_harm_c
     id      RAW(32)                      NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
-    okres   DATE                         NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
@@ -629,7 +565,7 @@ CREATE TABLE kadry.stanow_c
     c_data  DATE    DEFAULT sysdate    NOT NULL,
     c_oper  RAW(32)                    NOT NULL,
     id      RAW(32)                    NOT NULL,
-    nazwa   VARCHAR2(155),
+    nazwa   VARCHAR2(50),
     kod_gus NUMBER(10)
 );
 /
@@ -637,28 +573,6 @@ ALTER TABLE kadry.stanow_c
     ADD CONSTRAINT stanow_c_pk PRIMARY KEY (id);
 /
 
------- STAZTAB_C (TABELA STAZOW)
-CREATE TABLE kadry.staztab_c
-(
-    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data  DATE      DEFAULT sysdate    NOT NULL,
-    c_oper  RAW(32)                      NOT NULL,
-    id      RAW(32)                      NOT NULL,
-    stog    FLOAT(15) DEFAULT 0          NOT NULL,
-    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
-    stws    FLOAT(15) DEFAULT 0          NOT NULL,
-    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
-);
-/
-ALTER TABLE kadry.staztab_c
-    ADD CONSTRAINT staztab_c_pk PRIMARY KEY (c_id);
-/
 ------ UMOWY_C
 CREATE TABLE kadry.umowy_c
 (
@@ -693,7 +607,93 @@ CREATE TABLE kadry.umowy_c
 ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_pk PRIMARY KEY (c_id);
 /
+
 /*
+------ ABSENCJE_C
+CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.absencje_c
+(
+    c_id       INTEGER DEFAULT absencje_c_seq.NEXTVAL NOT NULL,
+    c_data     DATE    DEFAULT sysdate                NOT NULL,
+    c_oper     INTEGER                                NOT NULL,
+    id         INTEGER                                NOT NULL,
+    dtod       DATE                                   NOT NULL,
+    dtdo       DATE                                   NOT NULL,
+    id_typobec INTEGER                                NOT NULL,
+    id_prc     INTEGER                                NOT NULL,
+    id_ump     INTEGER                                NOT NULL,
+    zada       CHAR(1) DEFAULT 'N'                    NOT NULL
+);
+/
+ALTER TABLE kadry.absencje_c
+    ADD CONSTRAINT absencje_c_pk PRIMARY KEY (c_id);
+/
+
+------  ADRESY_C
+CREATE TABLE kadry.adresy_c
+(
+    c_id     RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    c_data   DATE                       NOT NULL,
+    c_oper   RAW(32)                    NOT NULL,
+    id       RAW(32)                    NOT NULL,
+    misc     VARCHAR2(50)               NOT NULL,
+    gmina    VARCHAR2(50)               NOT NULL,
+    powiat   VARCHAR2(50)               NOT NULL,
+    wojew    VARCHAR2(50)               NOT NULL,
+    teryt    NUMBER(8)                  NOT NULL,
+    kod_pocz VARCHAR2(6)                NOT NULL
+);
+/
+ALTER TABLE kadry.adresy_c
+    ADD CONSTRAINT adresy_c_pk PRIMARY KEY (c_id);
+/
+
+------ HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
+CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
+/
+CREATE TABLE kadry.hps_c
+(
+    c_id   INTEGER   DEFAULT hps_c_seq.NEXTVAL NOT NULL,
+    c_data DATE                                NOT NULL,
+    c_oper INTEGER                             NOT NULL,
+    id     INTEGER                             NOT NULL,
+    dtod   DATE                                NOT NULL,
+    dtdo   DATE,
+    stog   NUMBER(1) DEFAULT 0                 NOT NULL,
+    stzw   NUMBER(1) DEFAULT 0                 NOT NULL,
+    stws   NUMBER(1) DEFAULT 0                 NOT NULL,
+    stjb   NUMBER(1) DEFAULT 0                 NOT NULL,
+    id_prc INTEGER                             NOT NULL
+);
+/
+ALTER TABLE kadry.hps_c
+    ADD CONSTRAINT hps_c_pk PRIMARY KEY (c_id);
+/
+
+------ STAZTAB_C (TABELA STAZOW)
+CREATE TABLE kadry.staztab_c
+(
+    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    c_data  DATE      DEFAULT sysdate    NOT NULL,
+    c_oper  RAW(32)                      NOT NULL,
+    id      RAW(32)                      NOT NULL,
+    stog    FLOAT(15) DEFAULT 0          NOT NULL,
+    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
+    stws    FLOAT(15) DEFAULT 0          NOT NULL,
+    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
+    id_prc  RAW(32)                      NOT NULL,
+    id_oks  RAW(32)                      NOT NULL,
+    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
+    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
+);
+/
+ALTER TABLE kadry.staztab_c
+    ADD CONSTRAINT staztab_c_pk PRIMARY KEY (c_id);
+/
+
 ------ TYPOBEC_C
 CREATE SEQUENCE typobec_c_seq INCREMENT BY 1 NOCACHE;
 /
@@ -717,7 +717,95 @@ ALTER TABLE kadry.typobec_c
 */
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------  CONSTRAINTS
+ALTER TABLE kadry.pkzp_harm
+    ADD CONSTRAINT pkzpharm_pkzppoz_fk FOREIGN KEY (id_pkzp)
+        REFERENCES kadry.pkzp_poz (id);
+/
+ALTER TABLE kadry.pkzp
+    ADD CONSTRAINT pkzp_pracownicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);
+/
+ALTER TABLE kadry.pkzp_poz
+    ADD CONSTRAINT pkzppoz_pracwnicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);
+/
+ALTER TABLE kadry.pkzp_poz
+    ADD CONSTRAINT pkzppoz_okresy_fk FOREIGN KEY (id_oks)
+        REFERENCES kadry.okresy (id);
+/
+ALTER TABLE kadry.pkzp
+    ADD CONSTRAINT pkzp_pkzppoz_fk FOREIGN KEY (pkzp_poz)
+        REFERENCES kadry.pkzp_poz (id);
+/
+ALTER TABLE kadry.pracownicy
+    ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY (id_oper)
+        REFERENCES kadry.oper (id);
+/
+ALTER TABLE kadry.umowy
+    ADD CONSTRAINT umowy_pracownicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);
+/
+ALTER TABLE kadry.umowy
+    ADD CONSTRAINT umowy_stanow_fk FOREIGN KEY (id_stanow)
+        REFERENCES kadry.stanow (id);
+/
+ALTER TABLE kadry.pracownicy_c
+    ADD CONSTRAINT pracownicy_c_prac_fk FOREIGN KEY (id)
+        REFERENCES kadry.pracownicy (id);
+/
+ALTER TABLE kadry.okresy_c
+    ADD CONSTRAINT okresy_c_okresy_fk FOREIGN KEY (id)
+        REFERENCES kadry.okresy (id);
+/
+ALTER TABLE kadry.oper_c
+    ADD CONSTRAINT oper_c_oper_fk FOREIGN KEY (id)
+        REFERENCES kadry.oper (id);
+/
+ALTER TABLE kadry.pkzp_c
+    ADD CONSTRAINT pkzp_c_pkzp_fk FOREIGN KEY (id)
+        REFERENCES kadry.pkzp (id);
+/
+ALTER TABLE kadry.pkzp_harm_c
+    ADD CONSTRAINT pkzpharm_c_pkzpharm_fk FOREIGN KEY (id)
+        REFERENCES kadry.pkzp_harm (id);
+/
+ALTER TABLE kadry.pkzp_poz_c
+    ADD CONSTRAINT pkzp_poz_c_pkzp_poz_fk FOREIGN KEY (id)
+        REFERENCES kadry.pkzp_poz (id);
+/
+ALTER TABLE kadry.stanow_c
+    ADD CONSTRAINT stanow_c_stanow_fk FOREIGN KEY (id)
+        REFERENCES kadry.stanow (id);
+/
+ALTER TABLE kadry.umowy_c
+    ADD CONSTRAINT umowy_c_umowy_fk FOREIGN KEY (id)
+        REFERENCES kadry.umowy (id);
+/
 /*
+ALTER TABLE kadry.typobec_c
+    ADD CONSTRAINT typobec_c_typobec_fk FOREIGN KEY (id)
+        REFERENCES kadry.typobec (id);
+/
+ALTER TABLE kadry.absencje_c
+    ADD CONSTRAINT absencje_c_absencje_fk FOREIGN KEY (id)
+        REFERENCES kadry.absencje (id);
+/
+ALTER TABLE kadry.adresy_c
+    ADD CONSTRAINT adresy_c_adresy_fk FOREIGN KEY (id)
+        REFERENCES kadry.adresy (id);
+/
+ALTER TABLE kadry.hps_c
+    ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY (id)
+        REFERENCES kadry.hps (id);
+/
+ALTER TABLE kadry.staztab
+    ADD CONSTRAINT staztab_okresy_fk FOREIGN KEY (id_oks)
+        REFERENCES kadry.okresy (id);
+/
+ALTER TABLE kadry.staztab
+    ADD CONSTRAINT staztab_pracownicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);
+/
 ALTER TABLE kadry.absencje
     ADD CONSTRAINT absencje_pracownicy_fk FOREIGN KEY (id_prc)
         REFERENCES kadry.pracownicy (id);
@@ -734,91 +822,11 @@ ALTER TABLE kadry.hps
     ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY (id_prc)
         REFERENCES kadry.pracownicy (id);
 /
-*/
-ALTER TABLE kadry.pkzp
-    ADD CONSTRAINT pkzp_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.pkzp_poz
-    ADD CONSTRAINT pkzppoz_pracwnicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.pkzp
-    ADD CONSTRAINT pkzp_pkzppoz_fk FOREIGN KEY (pkzp_poz)
-        REFERENCES kadry.pkzp_poz (id);
-/
-ALTER TABLE kadry.pracownicy
-    ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY (id_oper)
-        REFERENCES kadry.oper (id);
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_okresy_fk FOREIGN KEY (id_oks)
-        REFERENCES kadry.okresy (id);
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.umowy
-    ADD CONSTRAINT umowy_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.umowy
-    ADD CONSTRAINT umowy_stanow_fk FOREIGN KEY (id_stanow)
-        REFERENCES kadry.stanow (id);
-/
-ALTER TABLE kadry.pracownicy_c
-    ADD CONSTRAINT pracownicy_c_prac_fk FOREIGN KEY (id)
-        REFERENCES kadry.pracownicy (id);
-/
-/*
-ALTER TABLE kadry.typobec_c
-    ADD CONSTRAINT typobec_c_typobec_fk FOREIGN KEY (id)
-        REFERENCES kadry.typobec (id);
-/
-ALTER TABLE kadry.absencje_c
-    ADD CONSTRAINT absencje_c_absencje_fk FOREIGN KEY (id)
-        REFERENCES kadry.absencje (id);
-/
-*/
-ALTER TABLE kadry.adresy_c
-    ADD CONSTRAINT adresy_c_adresy_fk FOREIGN KEY (id)
-        REFERENCES kadry.adresy (id);
-/
-/*
-ALTER TABLE kadry.hps_c
-    ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY (id)
-        REFERENCES kadry.hps (id);
-/
-*/
-ALTER TABLE kadry.okresy_c
-    ADD CONSTRAINT okresy_c_okresy_fk FOREIGN KEY (id)
-        REFERENCES kadry.okresy (id);
-/
-ALTER TABLE kadry.oper_c
-    ADD CONSTRAINT oper_c_oper_fk FOREIGN KEY (id)
-        REFERENCES kadry.oper (id);
-/
-ALTER TABLE kadry.pkzp_c
-    ADD CONSTRAINT pkzp_c_pkzp_fk FOREIGN KEY (id)
-        REFERENCES kadry.pkzp (id);
-/
-ALTER TABLE kadry.pkzp_poz_c
-    ADD CONSTRAINT pkzp_poz_c_pkzp_poz_fk FOREIGN KEY (id)
-        REFERENCES kadry.pkzp_poz (id);
-/
-ALTER TABLE kadry.stanow_c
-    ADD CONSTRAINT stanow_c_stanow_fk FOREIGN KEY (id)
-        REFERENCES kadry.stanow (id);
-/
 ALTER TABLE kadry.staztab_c
     ADD CONSTRAINT staztab_c_staztab FOREIGN KEY (id)
         REFERENCES kadry.staztab (id);
 /
-ALTER TABLE kadry.umowy_c
-    ADD CONSTRAINT umowy_c_umowy_fk FOREIGN KEY (id)
-        REFERENCES kadry.umowy (id);
-/
+*/
 -------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- VIEWS
 --------------------------- PKZP_SPLATY
@@ -853,6 +861,28 @@ EXCEPTION
         raise_application_error(-20002, SQLERRM);
 END;
 /
+
+--------------------------- OKRESY_OKRESYC_AUD
+create or replace
+    TRIGGER okresy_okresyc_aud
+    AFTER UPDATE OR DELETE
+    ON okresy
+    FOR EACH ROW
+DECLARE
+    t_rec RAW(32);
+BEGIN
+    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
+        :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
+        t_rec := SYS_GUID();
+        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
+/
+
 /*
 --------------------------- ABSE_ABSEC_AUD
 create or replace NONEDITIONABLE TRIGGER abse_absec_aud
@@ -917,26 +947,6 @@ EXCEPTION
 END;
 /
 */
---------------------------- OKRESY_OKRESYC_AUD
-create or replace
-    TRIGGER okresy_okresyc_aud
-    AFTER UPDATE OR DELETE
-    ON okresy
-    FOR EACH ROW
-DECLARE
-    t_rec RAW(32);
-BEGIN
-    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
-        :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
-        t_rec := SYS_GUID();
-        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
-    END IF;
-EXCEPTION
-    WHEN OTHERS THEN
-        raise_application_error(-20002, SQLERRM);
-END;
-/
 
 --------------------------- PKZP_BI
 
@@ -981,11 +991,11 @@ DECLARE
         WHERE rodz = 1
           AND id_prc = :NEW.id_prc;
 BEGIN
-    IF (:NEW.rodz = 20) THEN
+    IF (:NEW.rodz = 10) THEN
         INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
         VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
     END IF;
-    IF (:NEW.rodz = 10) THEN
+    IF (:NEW.rodz = 1) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
@@ -1200,7 +1210,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         IS
             zmien NUMBER;
         BEGIN
-            IF (iRodz = 20) THEN
+            IF (iRodz = 10) THEN
                 IF (iKwota > 0 AND iIlerat > 0) THEN
                     INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
                     VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
@@ -1215,7 +1225,7 @@ create or replace PACKAGE BODY pkzp_pack AS
                 RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
                 END IF;
             END IF;
-            IF (iRodz = 10) THEN
+            IF (iRodz = 1) THEN
                 IF (iKwota > 0) THEN
                     INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
                     VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
