@@ -97,14 +97,9 @@ namespace EKadry.API.Http.Contract
         /// </summary>
         [HttpDelete("{contractId}")]
         [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Delete([FromRoute] Guid contractId)
         {
-            if (await _mediator.Send(new ContractDeleteCommand(contractId)) == 0)
-            {
-                return FailedResponse("Nie udało się usunięcie umowy");
-            }
-            
+            await _mediator.Send(new ContractDeleteCommand(contractId));
             return SuccessResponse("Pracownik został umowa");
         }
     }

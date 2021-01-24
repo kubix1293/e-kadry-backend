@@ -139,14 +139,9 @@ namespace EKadry.API.Http.Worker
         /// </summary>
         [HttpDelete("{workerId}")]
         [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Delete([FromRoute] Guid workerId)
         {
-            if (await _mediator.Send(new WorkerDeleteCommand(workerId)) == 0)
-            {
-                return FailedResponse("Nie udało się usunięcie pracownika");
-            }
-            
+            await _mediator.Send(new WorkerDeleteCommand(workerId));
             return SuccessResponse("Pracownik został usunięty");
         }
     }
