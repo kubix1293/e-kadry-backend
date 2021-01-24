@@ -18,15 +18,15 @@ namespace EKadry.Application.Services.Pkzp.PkzpCreate
             Guid periodId,
             Guid workerId,
             decimal amount,
-            int installmentsCount,
-            decimal installmentAmount)
+            int? installmentsCount,
+            decimal? installmentAmount)
         {
             PkzpPositionType = pkzpPositionType;
             PeriodId = periodId;
             WorkerId = workerId;
             Amount = amount;
-            InstallmentsCount = installmentsCount;
-            InstallmentAmount = installmentAmount;
+            InstallmentsCount = installmentsCount ?? 0;
+            InstallmentAmount = installmentAmount ?? 0;
         }
     }
 }

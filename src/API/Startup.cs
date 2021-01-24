@@ -1,10 +1,9 @@
 using System;
-using System.Net;
 using EKadry.API.Configuration;
 using EKadry.Application.Configuration;
 using EKadry.Infrastructure;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +18,13 @@ namespace EKadry.API
 {
     public class Startup
     {
+        private readonly IHostEnvironment _env;
         private readonly IConfiguration _configuration;
         private static ILogger _logger;
 
         public Startup(IHostEnvironment env)
         {
+            _env = env;
             _logger = ConfigureLogger();
             _configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -40,13 +41,12 @@ namespace EKadry.API
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 });
             
+            services.ConfigureProblemDetails(_env.IsProduction());
             services.AddSwaggerDocumentation();
-
-            // services.Configure<ForwardedHeadersOptions>(options => { options.KnownProxies.Add(IPAddress.Parse("0.0.0.0")); });
 
             services.AddHttpContextAccessor();
             services.JwtServiceConfigure(_configuration.GetSection("AppSettings").GetSection("JWT"));
-
+            
             var serviceProvider = services.BuildServiceProvider();
 
             IExecutionContextAccessor executionContextAccessor = new ExecutionContextAccessor(serviceProvider.GetService<IHttpContextAccessor>());
@@ -58,31 +58,10 @@ namespace EKadry.API
                 _logger
             );
         }
-
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler(x =>
-                {
-                    x.Run(async context =>
-                    {
-                        context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-
-                        var error = context.Features.Get<IExceptionHandlerFeature>();
-
-                        if (error != null)
-                        {
-                            await context.Response.WriteAsync(error.Error.Message);
-                        }
-                    });
-                });
-            }
-            
+            app.UseProblemDetails();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

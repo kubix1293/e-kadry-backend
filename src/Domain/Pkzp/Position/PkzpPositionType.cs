@@ -4,7 +4,7 @@ namespace EKadry.Domain.Pkzp.Position
 {
     public enum PkzpPositionType 
     {
-        [Display(Name = "Wkład piniężny")]
+        [Display(Name = "Wkład pieniężny")]
         Contribution = 10,
         [Display(Name = "Pożyczka pieniężna")]
         Loan = 20,

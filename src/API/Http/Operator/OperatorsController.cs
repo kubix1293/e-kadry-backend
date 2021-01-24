@@ -95,14 +95,9 @@ namespace EKadry.API.Http.Operator
         /// </summary>
         [HttpDelete("{operatorId}")]
         [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(FailedResponse), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Delete([FromRoute] Guid operatorId)
         {
-            if (await _mediator.Send(new OperatorDeleteCommand(operatorId)) == 0)
-            {
-                return FailedResponse("Nie udało się usunięcie operatora");
-            }
-            
+            await _mediator.Send(new OperatorDeleteCommand(operatorId));
             return SuccessResponse("Operator został usunięty");
         }
     }

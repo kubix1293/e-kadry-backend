@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EKadry.API.Http.Pkzp.Request;
 using EKadry.Application.Services.Pkzp;
 using EKadry.Application.Services.Pkzp.PkzpCreate;
+using EKadry.Application.Services.Pkzp.PkzpParameters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,18 @@ namespace EKadry.API.Http.Pkzp
             ));
             
             return Created(pkzp.Id, pkzp);
+        }
+
+        /// <summary>
+        /// Get PKZP parameters 
+        /// </summary>
+        [HttpGet("parameters")]
+        [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.OK)] 
+        public async Task<IActionResult> PkzpParam()
+        {
+            var pkzp = await _mediator.Send(new PkzpParametersQuery());
+            
+            return Ok(pkzp); 
         }
     }
 }

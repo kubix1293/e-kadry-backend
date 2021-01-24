@@ -1,15 +1,13 @@
-------------------------------------------------------------------- Tworzenie schematu i nadawanie uprawnień
-
 ------------------------------------------------------------------- TABELS
 ------ OKRESY
 CREATE TABLE kadry.okresy
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
     dtod    DATE                       NOT NULL,
-    dtdo    DATE                       NOT NULL
-    --dni_kal NUMBER(4)                  NOT NULL,
-    --dni_rob NUMBER(4)                  NOT NULL,
-    --norma   FLOAT(15)                  NOT NULL
+    dtdo    DATE                       NOT NULL,
+    dni_kal NUMBER(4)                  NOT NULL,
+    dni_rob NUMBER(4)                  NOT NULL,
+    norma   FLOAT(15)                  NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.okresy.dtod IS
@@ -18,7 +16,6 @@ COMMENT ON COLUMN kadry.okresy.dtod IS
 COMMENT ON COLUMN kadry.okresy.dtdo IS
     'ostatni dzień miesiąca';
 /
-/*
 COMMENT ON COLUMN kadry.okresy.dni_kal IS
     'dni kalendarzowe';
 /
@@ -28,7 +25,6 @@ COMMENT ON COLUMN kadry.okresy.dni_rob IS
 COMMENT ON COLUMN kadry.okresy.norma IS
     'normatywny czas pracy';
 /
-*/
 ALTER TABLE kadry.okresy
     ADD CONSTRAINT okresy_pk PRIMARY KEY (id);
 /
@@ -74,7 +70,7 @@ CREATE TABLE kadry.pkzp_poz
     kwot     FLOAT(15) DEFAULT 0          NOT NULL,
     id_oks   RAW(32)                      NOT NULL,
     id_prc   RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32)                      NOT NULL
+    pkzp_poz RAW(32)
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -169,20 +165,17 @@ ALTER TABLE kadry.pracownicy
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_pesel_un UNIQUE (pesel);
 /
-
 ------ STANOW (STANOWISKA)
 CREATE TABLE kadry.stanow
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    nazwa   VARCHAR2(50),
+    nazwa   VARCHAR2(155),
     kod_gus NUMBER(10)
 );
 /
 ALTER TABLE kadry.stanow
     ADD CONSTRAINT stanow_pk PRIMARY KEY (id);
 /
-
-
 ------ UMOWY
 CREATE TABLE kadry.umowy
 (
@@ -193,8 +186,8 @@ CREATE TABLE kadry.umowy
     id_stanow      RAW(32)                        NOT NULL,
     id_prc         RAW(32)                        NOT NULL,
     nr_tyt_zus     NUMBER(5),
-    etatl          NUMBER(3),   
-    etatm          NUMBER(3),   
+    etatl          NUMBER(3),
+    etatm          NUMBER(3),
     czy_chor       NUMBER(1) DEFAULT 0            NOT NULL,
     czy_ren        NUMBER(1) DEFAULT 0            NOT NULL,
     czy_emer       NUMBER(1) DEFAULT 0            NOT NULL,
@@ -254,183 +247,6 @@ ALTER TABLE kadry.oper
     ADD CONSTRAINT oper_pk PRIMARY KEY (id);
 /
 
-/*
------- URZEDY (URZEDY)
-CREATE SEQUENCE urzedy_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.urzedy
-(
-    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    woje    VARCHAR2(20)               NOT NULL,
-    typ     VARCHAR2(35)               NOT NULL,
-    kod     VARCHAR2(70)               NOT NULL,
-    adres   VARCHAR2(70)               NOT NULL,
-    kodisus VARCHAR2(40)               NOT NULL
-);
-/
-ALTER TABLE kadry.urzedy
-    ADD CONSTRAINT urzedy_pk PRIMARY KEY (id);
-/
-
------- TYPOBEC
-CREATE SEQUENCE typobec_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.typobec
-(
-    id       INTEGER DEFAULT typobec_seq.NEXTVAL NOT NULL,
-    nazwa    VARCHAR2(50),
-    cdot     VARCHAR2(5),
-    kod_zus  VARCHAR2(3),
-    czy_lim  NUMBER(1),
-    rodz_lim CHAR(1),
-    lim      NUMBER(10, 4)
-);
-/
-ALTER TABLE kadry.typobec
-    ADD CONSTRAINT typobec_pk PRIMARY KEY (id);
-/
-COMMENT ON COLUMN kadry.typobec.cdot IS
-    'Czego dotyczy obecnosc (CHR - choroba, UWP - Urlop wypoczynkowy, GPR - godziny pracy itd.)';
-/
-COMMENT ON COLUMN kadry.typobec.kod_zus IS
-    'KOD zwolnienia wedug ZUS (dla chorobowych)';
-/
-COMMENT ON COLUMN kadry.typobec.CZY_lim IS
-    'Czy obejmuje limit 0 - nie - 1 - tak';
-/
-COMMENT ON COLUMN kadry.typobec.rodz_lim IS
-    'Rodzaj imitu: r - roczny, i - indywidualny';
-/
-COMMENT ON COLUMN kadry.typobec.lim IS
-    'Ile dni limitu';
-/
-
------- STAZTAB (TABELA STAŻÓW)
-CREATE TABLE kadry.staztab
-(
-    id      RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    stog    FLOAT(15) DEFAULT 0          NOT NULL,
-    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
-    stws    FLOAT(15) DEFAULT 0          NOT NULL,
-    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.staztab.stog IS
-    'staż ogółem - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stwz IS
-    'staż w zawodzie - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stws IS
-    'staż do wysługi - suma';
-/
-COMMENT ON COLUMN kadry.staztab.stjb IS
-    'staż do jubileuszu - suma';
-/
-COMMENT ON COLUMN kadry.staztab.id_prc IS
-    'id pracownika';
-/
-COMMENT ON COLUMN kadry.staztab.url_prz IS
-    'urlop przysługujący';
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_pk PRIMARY KEY (id);
-/
-
------- ABSENCJE
-CREATE SEQUENCE absencje_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.absencje
-(
-    id         INTEGER   DEFAULT absencje_seq.NEXTVAL NOT NULL,
-    dtod       DATE                                   NOT NULL,
-    dtdo       DATE                                   NOT NULL,
-    id_typobec INTEGER                                NOT NULL,
-    id_prc     INTEGER                                NOT NULL,
-    id_ump     INTEGER                                NOT NULL,
-    zada       NUMBER(1) DEFAULT 0                    NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.absencje.dtod IS
-    'data od';
-/
-COMMENT ON COLUMN kadry.absencje.dtdo IS
-    'data do';
-/
-COMMENT ON COLUMN kadry.absencje.id_typobec IS
-    'typ obecności absencja';
-/
-COMMENT ON COLUMN kadry.absencje.id_prc IS
-    'id pracownika';
-/
-COMMENT ON COLUMN kadry.absencje.id_ump IS
-    'id umowy';
-/
-COMMENT ON COLUMN kadry.absencje.zada IS
-    'czy urlop na żądanie. aktywuje  się tylko gdy urlop wypoczynkowy. domyślne N';
-/
-ALTER TABLE kadry.absencje
-    ADD CONSTRAINT absencje_pk PRIMARY KEY (id);
-/
-------  ADRESY
-CREATE TABLE kadry.adresy
-(
-    id       RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    misc     VARCHAR2(50)               NOT NULL,
-    gmina    VARCHAR2(50)               NOT NULL,
-    powiat   VARCHAR2(50)               NOT NULL,
-    wojew    VARCHAR2(50)               NOT NULL,
-    teryt    NUMBER(8)                  NOT NULL,
-    kod_pocz VARCHAR2(6)                NOT NULL
-);
-/
-ALTER TABLE kadry.adresy
-    ADD CONSTRAINT adresy_pk PRIMARY KEY (id);
-/
-ALTER TABLE kadry.adresy
-    ADD CONSTRAINT adresy_teryt_un UNIQUE (teryt);
-/
-
------- HPS (HISTORIA POPRZEDNICH ZATRUDNIEŃ)
-CREATE SEQUENCE hps_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.hps
-(
-    id     INTEGER   DEFAULT hps_seq.NEXTVAL NOT NULL,
-    dtod   DATE                              NOT NULL,
-    dtdo   DATE,
-    stog   NUMBER(1) DEFAULT 0               NOT NULL,
-    stzw   NUMBER(1) DEFAULT 0               NOT NULL,
-    stws   NUMBER(1) DEFAULT 0               NOT NULL,
-    stjb   NUMBER(1) DEFAULT 0               NOT NULL,
-    id_prc INTEGER                           NOT NULL
-);
-/
-COMMENT ON COLUMN kadry.hps.stog IS
-    'staż ogółem';
-/
-COMMENT ON COLUMN kadry.hps.stzw IS
-    'staż w zawodzie';
-/
-COMMENT ON COLUMN kadry.hps.stws IS
-    'staż do wysługi';
-/
-COMMENT ON COLUMN kadry.hps.stjb IS
-    'staż do jubileuszu';
-/
-COMMENT ON COLUMN kadry.hps.id_prc IS
-    'id pracownika';
-/
-ALTER TABLE kadry.hps
-    ADD CONSTRAINT hps_pk PRIMARY KEY (id);
-/
-*/
 -------------------------------------------------------------------  CIENIE
 ------ PRACONICY_C
 CREATE SEQUENCE pracownicy_c_seq INCREMENT BY 1 NOCACHE;
@@ -551,6 +367,7 @@ CREATE TABLE kadry.pkzp_harm_c
     id      RAW(32)                      NOT NULL,
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
+    okres   DATE                         NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
@@ -565,7 +382,7 @@ CREATE TABLE kadry.stanow_c
     c_data  DATE    DEFAULT sysdate    NOT NULL,
     c_oper  RAW(32)                    NOT NULL,
     id      RAW(32)                    NOT NULL,
-    nazwa   VARCHAR2(50),
+    nazwa   VARCHAR2(155),
     kod_gus NUMBER(10)
 );
 /
@@ -607,114 +424,6 @@ CREATE TABLE kadry.umowy_c
 ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_pk PRIMARY KEY (c_id);
 /
-
-/*
------- ABSENCJE_C
-CREATE SEQUENCE absencje_c_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.absencje_c
-(
-    c_id       INTEGER DEFAULT absencje_c_seq.NEXTVAL NOT NULL,
-    c_data     DATE    DEFAULT sysdate                NOT NULL,
-    c_oper     INTEGER                                NOT NULL,
-    id         INTEGER                                NOT NULL,
-    dtod       DATE                                   NOT NULL,
-    dtdo       DATE                                   NOT NULL,
-    id_typobec INTEGER                                NOT NULL,
-    id_prc     INTEGER                                NOT NULL,
-    id_ump     INTEGER                                NOT NULL,
-    zada       CHAR(1) DEFAULT 'N'                    NOT NULL
-);
-/
-ALTER TABLE kadry.absencje_c
-    ADD CONSTRAINT absencje_c_pk PRIMARY KEY (c_id);
-/
-
-------  ADRESY_C
-CREATE TABLE kadry.adresy_c
-(
-    c_id     RAW(32) DEFAULT SYS_GUID() NOT NULL,
-    c_data   DATE                       NOT NULL,
-    c_oper   RAW(32)                    NOT NULL,
-    id       RAW(32)                    NOT NULL,
-    misc     VARCHAR2(50)               NOT NULL,
-    gmina    VARCHAR2(50)               NOT NULL,
-    powiat   VARCHAR2(50)               NOT NULL,
-    wojew    VARCHAR2(50)               NOT NULL,
-    teryt    NUMBER(8)                  NOT NULL,
-    kod_pocz VARCHAR2(6)                NOT NULL
-);
-/
-ALTER TABLE kadry.adresy_c
-    ADD CONSTRAINT adresy_c_pk PRIMARY KEY (c_id);
-/
-
------- HPS_C (HISTORIA POPRZEDNICH ZATRUDNIEN)
-CREATE SEQUENCE hps_c_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.hps_c
-(
-    c_id   INTEGER   DEFAULT hps_c_seq.NEXTVAL NOT NULL,
-    c_data DATE                                NOT NULL,
-    c_oper INTEGER                             NOT NULL,
-    id     INTEGER                             NOT NULL,
-    dtod   DATE                                NOT NULL,
-    dtdo   DATE,
-    stog   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stzw   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stws   NUMBER(1) DEFAULT 0                 NOT NULL,
-    stjb   NUMBER(1) DEFAULT 0                 NOT NULL,
-    id_prc INTEGER                             NOT NULL
-);
-/
-ALTER TABLE kadry.hps_c
-    ADD CONSTRAINT hps_c_pk PRIMARY KEY (c_id);
-/
-
------- STAZTAB_C (TABELA STAZOW)
-CREATE TABLE kadry.staztab_c
-(
-    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data  DATE      DEFAULT sysdate    NOT NULL,
-    c_oper  RAW(32)                      NOT NULL,
-    id      RAW(32)                      NOT NULL,
-    stog    FLOAT(15) DEFAULT 0          NOT NULL,
-    stwz    FLOAT(15) DEFAULT 0          NOT NULL,
-    stws    FLOAT(15) DEFAULT 0          NOT NULL,
-    stjb    FLOAT(15) DEFAULT 0          NOT NULL,
-    id_prc  RAW(32)                      NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    url_prz FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_wyk FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_zal FLOAT(4)  DEFAULT 0          NOT NULL,
-    url_sum FLOAT(4)  DEFAULT 0          NOT NULL
-);
-/
-ALTER TABLE kadry.staztab_c
-    ADD CONSTRAINT staztab_c_pk PRIMARY KEY (c_id);
-/
-
------- TYPOBEC_C
-CREATE SEQUENCE typobec_c_seq INCREMENT BY 1 NOCACHE;
-/
-CREATE TABLE kadry.typobec_c
-(
-    c_id     INTEGER DEFAULT typobec_c_seq.NEXTVAL NOT NULL,
-    c_data   DATE    DEFAULT sysdate               NOT NULL,
-    c_oper   INTEGER                               NOT NULL,
-    id       INTEGER                               NOT NULL,
-    nazwa    VARCHAR2(50),
-    cdot     VARCHAR2(5),
-    kod_zus  VARCHAR2(3),
-    czy_lim  NUMBER(1),
-    rodz_lim CHAR(1),
-    lim      NUMBER(10, 4)
-);
-/
-ALTER TABLE kadry.typobec_c
-    ADD CONSTRAINT typobec_c_pk PRIMARY KEY (id);
-/
-*/
 -------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------  CONSTRAINTS
 ALTER TABLE kadry.pkzp_harm
@@ -781,52 +490,6 @@ ALTER TABLE kadry.umowy_c
     ADD CONSTRAINT umowy_c_umowy_fk FOREIGN KEY (id)
         REFERENCES kadry.umowy (id);
 /
-/*
-ALTER TABLE kadry.typobec_c
-    ADD CONSTRAINT typobec_c_typobec_fk FOREIGN KEY (id)
-        REFERENCES kadry.typobec (id);
-/
-ALTER TABLE kadry.absencje_c
-    ADD CONSTRAINT absencje_c_absencje_fk FOREIGN KEY (id)
-        REFERENCES kadry.absencje (id);
-/
-ALTER TABLE kadry.adresy_c
-    ADD CONSTRAINT adresy_c_adresy_fk FOREIGN KEY (id)
-        REFERENCES kadry.adresy (id);
-/
-ALTER TABLE kadry.hps_c
-    ADD CONSTRAINT hps_c_hps_fk FOREIGN KEY (id)
-        REFERENCES kadry.hps (id);
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_okresy_fk FOREIGN KEY (id_oks)
-        REFERENCES kadry.okresy (id);
-/
-ALTER TABLE kadry.staztab
-    ADD CONSTRAINT staztab_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.absencje
-    ADD CONSTRAINT absencje_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.absencje
-    ADD CONSTRAINT absencje_umowy_fk FOREIGN KEY (id_ump)
-        REFERENCES kadry.umowy (id);
-/
-ALTER TABLE kadry.absencje
-    ADD CONSTRAINT absencje_typobec_fk FOREIGN KEY (id_typobec)
-        REFERENCES kadry.typobec (id);
-/
-ALTER TABLE kadry.hps
-    ADD CONSTRAINT hps_pracownicy_fk FOREIGN KEY (id_prc)
-        REFERENCES kadry.pracownicy (id);
-/
-ALTER TABLE kadry.staztab_c
-    ADD CONSTRAINT staztab_c_staztab FOREIGN KEY (id)
-        REFERENCES kadry.staztab (id);
-/
-*/
 -------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- VIEWS
 --------------------------- PKZP_SPLATY
@@ -850,6 +513,7 @@ DECLARE
 BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or
+<<<<<<< HEAD
         :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok or 
         :NEW.kod_pocz <> :OLD.kod_pocz or :NEW.miasto <> :OLD.miasto or :NEW.kraj <> :OLD.kraj) THEN
             t_rec := SYS_GUID();
@@ -887,71 +551,6 @@ EXCEPTION
 END;
 /
 
-/*
---------------------------- ABSE_ABSEC_AUD
-create or replace NONEDITIONABLE TRIGGER abse_absec_aud
-    AFTER UPDATE OR DELETE
-    ON absencje
-    FOR EACH ROW
-DECLARE
-    t_rec INTEGER;
-BEGIN
-    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.id_typobec <> :OLD.id_typobec or
-        :NEW.id_prc <> :OLD.id_prc or :NEW.id_ump <> :OLD.id_ump or :NEW.zada <> :OLD.zada) THEN
-        t_rec := absencje_c_seq.NEXTVAL;
-        INSERT INTO absencje_c (c_id, c_data, c_oper, id, dtod, dtdo, id_typobec, id_prc, id_ump, zada)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.id_typobec,
-                :OLD.id_prc, :OLD.id_ump, :OLD.zada);
-    END IF;
-EXCEPTION
-    WHEN OTHERS THEN
-        raise_application_error(-20002, SQLERRM);
-END;
-/
-*/
---------------------------- ADRESY_ADRESYC_AUD
--- create or replace NONEDITIONABLE TRIGGER adresy_adresyc_aud
---     AFTER UPDATE OR DELETE
---     ON adresy
---     FOR EACH ROW
--- DECLARE
---     t_rec INTEGER;
--- BEGIN
---     IF (:NEW.misc <> :OLD.misc or :NEW.gmina <> :OLD.gmina or :NEW.powiat <> :OLD.powiat or
---         :NEW.wojew <> :OLD.wojew or :NEW.teryt <> :OLD.teryt or :NEW.kod_pocz <> :OLD.kod_pocz) THEN
---         t_rec := adresy_c_seq.NEXTVAL;
---         INSERT INTO adresy_c (c_id, c_data, c_oper, id, misc, gmina, powiat, wojew, teryt, kod_pocz)
---         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.misc, :OLD.gmina, :OLD.powiat,
---                 :OLD.wojew, :OLD.teryt, :OLD.kod_pocz);
---     END IF;
--- EXCEPTION
---     WHEN OTHERS THEN
---         raise_application_error(-20002, SQLERRM);
--- END;
-/*
---------------------------- HPS_HPSC_AUD
-create or replace NONEDITIONABLE TRIGGER hps_hpsc_aud
-    AFTER UPDATE OR DELETE
-    ON hps
-    FOR EACH ROW
-DECLARE
-    t_rec INTEGER;
-BEGIN
-    IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.stog <> :OLD.stog or
-        :NEW.stzw <> :OLD.stzw or :NEW.stws <> :OLD.stws or :NEW.stjb <> :OLD.stjb or
-        :NEW.id_prc <> :OLD.id_prc) THEN
-        t_rec := hps_c_seq.NEXTVAL;
-        INSERT INTO hps_c (c_id, c_data, c_oper, id, dtod, dtdo, stog, stzw, stws, stjb, id_prc)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), 1, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.stog,
-                :OLD.stzw, :OLD.stws, :OLD.stjb, :OLD.id_prc);
-    END IF;
-EXCEPTION
-    WHEN OTHERS THEN
-        raise_application_error(-20002, SQLERRM);
-END;
-/
-*/
-
 --------------------------- PKZP_BI
 
 create or replace TRIGGER pkzp_bi
@@ -963,10 +562,10 @@ DECLARE
     CURSOR c_id IS
         SELECT id_prc
         FROM pkzp
-        WHERE rodz = 1
+        WHERE rodz = 10
           AND id_prc = :NEW.id_prc;
 BEGIN
-    IF (:NEW.rodz = 1) THEN
+    IF (:NEW.rodz = 10) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
@@ -992,14 +591,14 @@ DECLARE
     CURSOR c_id IS
         SELECT id_prc
         FROM pkzp
-        WHERE rodz = 1
+        WHERE rodz = 10
           AND id_prc = :NEW.id_prc;
 BEGIN
-    IF (:NEW.rodz = 10) THEN
+    IF (:NEW.rodz = 20) THEN
         INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
         VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
     END IF;
-    IF (:NEW.rodz = 1) THEN
+    IF (:NEW.rodz = 10) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
@@ -1008,7 +607,7 @@ BEGIN
             SET ct    = ct + :NEW.kwot,
                 saldo = saldo + :NEW.kwot
             WHERE id_prc = :NEW.id_prc
-              AND rodz = 1;
+              AND rodz = 10;
         ELSE
             INSERT INTO pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
             VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
@@ -1042,7 +641,7 @@ BEGIN
         WHERE id = :NEW.id_pkzp;
         --
         INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
-        VALUES (:NEW.kwot, 30, lOks, lIdprc, :NEW.id_pkzp);
+        VALUES (:NEW.kwot, 40, lOks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
 
@@ -1171,127 +770,130 @@ create or replace PACKAGE BODY pkzp_pack AS
         RETURN (lKwota);
     END;
     ----
-    FUNCTION f_pkzp_pozyczka (iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+    FUNCTION f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         RETURN FLOAT AS
         lSumaWkladow pkzp.ct%TYPE;
-        lZasad umowy.zasad%TYPE;
-        lRata FLOAT;
-        BEGIN
-            IF (iIdprc > 0) THEN
-                SELECT SUM(zasad)
-                INTO lZasad
-                FROM umowy
+        lZasad       umowy.zasad%TYPE;
+        lRata        FLOAT;
+    BEGIN
+        IF (iIdprc > 0) THEN
+            SELECT SUM(zasad)
+            INTO lZasad
+            FROM umowy
+            WHERE id_prc = iIdprc
+              AND dtzaw <= sysdate
+              AND (dtroz > sysdate OR dtroz IS null)
+              AND czy_pkzp = 1;
+            --
+            FOR i IN (
+                SELECT ct
+                FROM pkzp
                 WHERE id_prc = iIdprc
-                AND dtzaw <= sysdate 
-                AND (dtroz > sysdate OR dtroz IS null)
-                AND czy_pkzp = 1;
-                --
-                FOR i IN (
-                    SELECT ct 
-                    FROM pkzp
-                    WHERE id_prc = iIdprc
-                    AND rodz =  1)
+                  AND rodz = 10)
                 LOOP
                     IF (i.ct > 0) THEN
                         IF (iKwota > 0 AND iIlerat > 0) THEN
-                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                                  lRata := ROUND(iKwota/iIlerat,-1);
+                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                                lRata := ROUND(iKwota / iIlerat, -1);
                             END IF;
                         END IF;
                         IF (iKwota > 0 AND iRata > 0) THEN
-                            IF (iKwota <= 3*lZasad OR iKwota <= 3*lSumaWkladow) THEN
-                                  lRata := ROUND(iKwota/iRata,0);
+                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                                lRata := ROUND(iKwota / iRata, 0);
                             END IF;
                         END IF;
                     ELSE
                         lRata := 0;
                     END IF;
                 END LOOP;
-            END IF;  
-            RETURN (lRata); 
-        END;
-    PROCEDURE pkzp_insert (iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+        END IF;
+        RETURN (lRata);
+    END;
+    PROCEDURE pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
-            zmien NUMBER;
-        BEGIN
-            IF (iRodz = 10) THEN
-                IF (iKwota > 0 AND iIlerat > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                    pkzp_harmo (iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
-                END IF;
-                IF (iKwota > 0 AND iRata > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
-                    pkzp_harmo (iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
-                END IF;
-                IF (iRata <= 0 AND iIlerat <= 0) THEN
-                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');    
-                END IF;
-            END IF;
-            IF (iRodz = 1) THEN
-                IF (iKwota > 0) THEN
-                    INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                    VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);    
-                END IF;
-            END IF;
-        END;
-    PROCEDURE pkzp_harmo (iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)   
-        IS
-            lOks DATE;
-            lBuf FLOAT;
-            lKwota FLOAT;
-        BEGIN 
-            SELECT dtod INTO lOks 
-            FROM okresy 
-            WHERE id = iIdoks;
-            --
-            lBuf := lRata;
-            --
-            SELECT kwot
-            INTO lKwota
-            FROM pkzp_poz
-            WHERE id = iIdpkzppoz;
-            --
-            IF (iIlerat > 0) THEN
-                FOR i IN 1 .. iIlerat LOOP
-                  IF (lKwota >= lBuf AND i < iIlerat) THEN
-                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
-                    --
-                    lOks := add_months(lOks, 1);
-                    lBuf := lBuf + lRata;
-                  ELSE 
-                    INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                    VALUES (lRata+(lKwota-lBuf), iIdpkzppoz, to_char(to_date(lOks,'rrrr-mm-dd'),'rrrr-mm'));
-                    --
-                    lOks := add_months(lOks, 1);
-                    lBuf := lBuf + lRata;
-                  END IF;
-                END LOOP;
-            ELSE
-                RAISE_APPLICATION_ERROR (-20201,'BRAK WKŁADÓW');
-            END IF;
-            COMMIT;
-        END;
-    PROCEDURE pkzp_splaty (iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
-        IS
-            lOks VARCHAR2(7);
-        BEGIN
-            SELECT to_char(dtod, 'RRRR-MM')
-            INTO lOks 
-            FROM okresy
-            WHERE id = iIdoks;
-            --
-            IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
-                UPDATE pkzp_harm SET zamk = 1 
-                WHERE id_pkzp = iIdpkzppoz 
-                AND okres = lOks;
-            ELSIF (iRodz = 1 AND iKwota >0 AND iZamk = 1) THEN
+        zmien NUMBER;
+    BEGIN
+        IF (iRodz = 20) THEN
+            IF (iKwota > 0 AND iIlerat > 0) THEN
                 INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
-                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);  
-            ELSE
-                RAISE_APPLICATION_ERROR (-20201,'BARK KTÓREGOŚ Z PARAMETRÓW');
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                pkzp_harmo(iIdpkzppoz, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIlerat, iIdoks);
             END IF;
-        END;
+            IF (iKwota > 0 AND iRata > 0) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+                pkzp_harmo(iIdpkzppoz, iRata, f_pkzp_pozyczka(iIdprc, iKwota, iIlerat, iRata), iIdoks);
+            END IF;
+            IF (iRata <= 0 AND iIlerat <= 0) THEN
+                RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+            END IF;
+        END IF;
+        IF (iRodz = 10) THEN
+            IF (iKwota > 0) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+            END IF;
+        END IF;
+    END;
+    PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
+        IS
+        lOks   DATE;
+        lBuf   FLOAT;
+        lKwota FLOAT;
+    BEGIN
+        SELECT dtod
+        INTO lOks
+        FROM okresy
+        WHERE id = iIdoks;
+        --
+        lBuf := lRata;
+        --
+        SELECT kwot
+        INTO lKwota
+        FROM pkzp_poz
+        WHERE id = iIdpkzppoz;
+        --
+        IF (iIlerat > 0) THEN
+            FOR i IN 1 .. iIlerat
+                LOOP
+                    IF (lKwota >= lBuf AND i < iIlerat) THEN
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'));
+                        --
+                        lOks := add_months(lOks, 1);
+                        lBuf := lBuf + lRata;
+                    ELSE
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
+                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'));
+                        --
+                        lOks := add_months(lOks, 1);
+                        lBuf := lBuf + lRata;
+                    END IF;
+                END LOOP;
+        ELSE
+            RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+        END IF;
+        COMMIT;
+    END;
+    PROCEDURE pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
+        IS
+        lOks VARCHAR2(7);
+    BEGIN
+        SELECT to_char(dtod, 'RRRR-MM')
+        INTO lOks
+        FROM okresy
+        WHERE id = iIdoks;
+        --
+        IF (iRodz = 30 AND iKwota > 0 AND iZamk = 1) THEN
+            UPDATE pkzp_harm
+            SET zamk = 1
+            WHERE id_pkzp = iIdpkzppoz
+              AND okres = lOks;
+        ELSIF (iRodz = 10 AND iKwota > 0 AND iZamk = 1) THEN
+            INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+            VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+        ELSE
+            RAISE_APPLICATION_ERROR(-20201, 'BARK KTÓREGOŚ Z PARAMETRÓW');
+        END IF;
+    END;
 END;
