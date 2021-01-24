@@ -850,11 +850,14 @@ DECLARE
 BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or
-        :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok or :NEW.kod_pocz <> :OLD.kod_pocz or :NEW.miasto <> :OLD.miasto or :NEW.kraj <> :OLD.kraj) THEN
-        t_rec := SYS_GUID();
-        INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ULICA, NR_DOM, NR_LOK, KOD_POCZ, MIASTO, KRAJ)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL, :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ULICA,
-                :OLD.NR_DOM, :OLD.NR_LOK, :OLD.kod_pocz, :OLD.miasto, :OLD.kraj);
+        :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok or 
+        :NEW.kod_pocz <> :OLD.kod_pocz or :NEW.miasto <> :OLD.miasto or :NEW.kraj <> :OLD.kraj) THEN
+            t_rec := SYS_GUID();
+            INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ULICA, 
+            NR_DOM, NR_LOK, KOD_POCZ, MIASTO, KRAJ)
+            VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL, 
+            :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ULICA,
+            :OLD.NR_DOM, :OLD.NR_LOK, :OLD.kod_pocz, :OLD.miasto, :OLD.kraj);
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
@@ -875,7 +878,8 @@ BEGIN
         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
         t_rec := SYS_GUID();
         INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
-        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, 
+        :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
