@@ -698,9 +698,7 @@ END;
 
 ----- PACKAGE
     create or replace NONEDITIONABLE PACKAGE oper_security AS
-    FUNCTION get_hash(login IN VARCHAR2,
-                      passw IN VARCHAR2)
-        RETURN VARCHAR2;
+    FUNCTION get_hash(login IN VARCHAR2, passw IN VARCHAR2) RETURN VARCHAR2;
     PROCEDURE add_oper(id IN RAW, login IN VARCHAR2, passw IN VARCHAR2, imie IN VARCHAR2, nazwisko IN VARCHAR2);
 END;
 
@@ -713,7 +711,7 @@ END;
     BEGIN
         RETURN DBMS_CRYPTO.HASH(UTL_RAW.CAST_TO_RAW(UPPER(login) || l_salt || UPPER(passw)), DBMS_CRYPTO.HASH_SH1);
     END;
-    PROCEDURE kadry.add_oper(id IN RAW, login IN VARCHAR2, passw IN VARCHAR2, imie IN VARCHAR2, nazwisko IN VARCHAR2) AS
+    PROCEDURE add_oper(id IN RAW, login IN VARCHAR2, passw IN VARCHAR2, imie IN VARCHAR2, nazwisko IN VARCHAR2) AS
     BEGIN
         INSERT INTO oper (id, imie, nazwisko, login, passw)
         VALUES (id, imie, nazwisko, UPPER(login), get_hash(login, passw));
@@ -739,7 +737,7 @@ END;
 ----- BODY
 
 create or replace PACKAGE BODY pkzp_pack AS
-    FUNCTION kadry.f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
+    FUNCTION f_pkzp_sklad(iForma VARCHAR2, iSklad NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
     BEGIN
@@ -754,7 +752,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         RETURN (lKwota);
     END;
     ----
-    FUNCTION kadry.f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)
+    FUNCTION f_pkzp_wpis(iForma VARCHAR2, iWpis NUMBER, iIdumowy RAW)
         RETURN NUMBER AS
         lKwota FLOAT;
     BEGIN
@@ -769,7 +767,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         RETURN (lKwota);
     END;
     ----
-    FUNCTION kadry.f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+    FUNCTION f_pkzp_pozyczka(iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         RETURN FLOAT AS
         lSumaWkladow pkzp.ct%TYPE;
         lZasad       umowy.zasad%TYPE;
@@ -808,7 +806,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         END IF;
         RETURN (lRata);
     END;
-    PROCEDURE kadry.pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
+    PROCEDURE pkzp_insert(iIdpkzppoz RAW, iRodz NUMBER, iIdoks RAW, iIdprc RAW, iKwota FLOAT DEFAULT 0, iIlerat NUMBER DEFAULT 0, iRata FLOAT DEFAULT 0)
         IS
         zmien NUMBER;
     BEGIN
@@ -834,7 +832,7 @@ create or replace PACKAGE BODY pkzp_pack AS
             END IF;
         END IF;
     END;
-    PROCEDURE kadry.pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
+    PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
         IS
         lOks   DATE;
         lBuf   FLOAT;
@@ -874,7 +872,7 @@ create or replace PACKAGE BODY pkzp_pack AS
         END IF;
         COMMIT;
     END;
-    PROCEDURE kadry.pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
+    PROCEDURE pkzp_splaty(iIdpkzppoz RAW, iKwota FLOAT, iRodz NUMBER, iIdprc RAW, iIdoks RAW, iZamk NUMBER DEFAULT 0)
         IS
         lOks VARCHAR2(7);
     BEGIN
