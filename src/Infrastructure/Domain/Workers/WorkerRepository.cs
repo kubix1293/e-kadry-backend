@@ -17,18 +17,22 @@ namespace EKadry.Infrastructure.Domain.Workers
         }
 
         public IPagination<Worker> ToListPaginated(
-            int commandPage,
-            int commandPerPage,
-            string commandOrderDirection,
-            string commandOrderBy,
-            string commandSearch,
+            int page,
+            int perPage,
+            string orderDirection,
+            string orderBy,
+            string search,
+            bool showInactiveContracts,
+            bool? hasPkzp,
+            Guid? jobPosition,
             CancellationToken cancellationToken)
         {
-            var query = new WorkerFilter(Context.Worker, commandOrderBy, commandOrderDirection, commandSearch)
-                .GetFilteredQuery()
-                .Include(x => x.Contracts);
+            var query
+                = new WorkerFilter(Context.Worker, orderBy, orderDirection, search, showInactiveContracts, hasPkzp, jobPosition)
+                    .GetFilteredQuery()
+                    .Include(x => x.Contracts);
 
-            return new Pagination<Worker>(query, commandPage, commandPerPage);
+            return new Pagination<Worker>(query, page, perPage);
         }
 
         public async Task<Worker> GetAsync(Guid workerId)
@@ -36,7 +40,7 @@ namespace EKadry.Infrastructure.Domain.Workers
             var worker = await Context.Worker
                 .Include(x => x.Contracts)
                 .FirstOrDefaultAsync(x => x.Id == workerId);
-            
+
             return worker;
         }
 
@@ -44,10 +48,10 @@ namespace EKadry.Infrastructure.Domain.Workers
         {
             var worker = Context.Worker
                 .Where(s => s.FirstName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
-                         s.LastName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
-                         (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")))
+                            s.LastName.ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")) ||
+                            (s.FirstName + s.LastName).ToLower().Replace(" ", "").Contains(searchKey.ToLower().Replace(" ", "")))
                 .Take(limit);
-            
+
             return await worker.ToListAsync();
         }
 
@@ -56,7 +60,7 @@ namespace EKadry.Infrastructure.Domain.Workers
             await Context.Worker.AddAsync(worker);
             await Context.SaveChangesAsync();
         }
-        
+
         public async Task UpdateAsync(Worker worker)
         {
             Context.Worker.Attach(worker);

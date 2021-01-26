@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using EKadry.Domain.Pkzp.Schedule;
 using EKadry.Domain.Workers;
 
 namespace EKadry.Domain.Pkzp.Position
@@ -12,8 +14,10 @@ namespace EKadry.Domain.Pkzp.Position
         public Period.Period Period { get; set; }
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
-        public Guid IdAncestorPkzpPosition { get; set; }
+        public Guid? IdAncestorPkzpPosition { get; set; }
         public PkzpPosition AncestorPkzpPosition { get; set; }
+        public IEnumerable<Pkzp> Pkzp { get; set; }
+        public IEnumerable<PkzpSchedule> PkzpSchedules { get; set; }
 
         public static PkzpPosition Create()
         {

@@ -8,11 +8,14 @@ namespace EKadry.Domain.Workers
 {
     public interface IWorkerRepository
     {
-        IPagination<Worker> ToListPaginated(int commandPage,
-            int commandPerPage,
-            string commandOrderDirection,
-            string commandOrderBy,
-            string commandSearch,
+        IPagination<Worker> ToListPaginated(int page,
+            int perPage,
+            string orderDirection,
+            string orderBy,
+            string search,
+            bool showInactiveContracts,
+            bool? hasPkzp,
+            Guid? jobPosition,
             CancellationToken cancellationToken);
         Task<Worker> GetAsync(Guid workerId);
         Task<List<Worker>> Search(string searchKey, int limit);

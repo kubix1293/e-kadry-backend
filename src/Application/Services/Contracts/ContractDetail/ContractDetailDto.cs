@@ -1,4 +1,5 @@
 using System;
+using EKadry.Domain.Contracts.JobPosition;
 using EKadry.Domain.Workers;
 
 namespace EKadry.Application.Services.Contracts.ContractDetail
@@ -10,7 +11,7 @@ namespace EKadry.Application.Services.Contracts.ContractDetail
         public DateTime? EmployedEndAt { get; set; }
         public decimal BaseSalary { get; set; }
         public Guid IdJobPosition { get; set; }
-        public Worker JobPosition { get; set; }
+        public JobPosition JobPosition { get; set; }
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
         public int IdentifierZusNumber { get; set; }

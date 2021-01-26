@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EKadry.Domain.Pkzp;
 using EKadry.Domain.Pkzp.Position;
@@ -31,9 +33,9 @@ namespace EKadry.Infrastructure.Domain.Pkzp
                 });
         }
         
-        public async Task PayoffPkzpAsync(Guid pkzpPositionId, decimal amount, PkzpPositionType pkzpPositionType, Guid workerId, Guid periodId, bool closed = false)
+        public async Task<int> PayoffPkzpAsync(Guid pkzpPositionId, decimal amount, PkzpPositionType pkzpPositionType, Guid workerId, Guid periodId, bool closed = false)
         {
-            await Context.Database.ExecuteSqlRawAsync(
+            return await Context.Database.ExecuteSqlRawAsync(
                 "BEGIN KADRY.PKZP_PACK.PKZP_SPLATY(:PKZP_POSITION_GUID, :AMOUNT, :TYPE, :WORKER, :PERIOD, :CLOSED, :INSTALLMENT_AMOUNT); END;",
                 new object[]
                 {
@@ -44,6 +46,16 @@ namespace EKadry.Infrastructure.Domain.Pkzp
                     new OracleParameter("WORKER", workerId.ToByteArray()),
                     new OracleParameter("CLOSED", closed),
                 });
+        }
+        
+        public async Task<List<EKadry.Domain.Pkzp.Pkzp>> GetByWorkerAsync(Guid workerId)
+        {
+            return await Context.Pkzp
+                .Where(x => x.IdWorker == workerId)
+                .Include(x => x.Worker)
+                .Include(x => x.PkzpPosition)
+                .ThenInclude(x => x.PkzpSchedules)
+                .ToListAsync();
         }
     }
 }

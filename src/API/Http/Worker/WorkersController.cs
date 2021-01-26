@@ -10,7 +10,6 @@ using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Application.Services.Workers.WorkerSearch;
 using EKadry.Application.Services.Workers.WorkerUpdate;
 using EKadry.Domain.Pagination;
-using EKadry.Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,12 +20,10 @@ namespace EKadry.API.Http.Worker
     public class WorkersController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly EKadryContext _context;
 
-        public WorkersController(IMediator mediator, EKadryContext context)
+        public WorkersController(IMediator mediator)
         {
             _mediator = mediator;
-            _context = context;
         }
         
         /// <summary>
@@ -34,14 +31,17 @@ namespace EKadry.API.Http.Worker
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(PagedList<WorkerListDto>), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> List([FromQuery] ListRequest request)
+        public async Task<IActionResult> List([FromQuery] WorkerListRequest request)
         {
             var list = await _mediator.Send(new WorkerListQuery(
                 request.Page,
                 request.PerPage,
                 request.OrderDirection,
                 request.OrderBy,
-                request.Search
+                request.Search,
+                request.ShowInactiveContracts ?? false,
+                request.HasPkzp,
+                request.JobPosition
             ));
         
             return Ok(list);

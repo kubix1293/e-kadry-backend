@@ -48,7 +48,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
         {
             if (!showInactiveContracts)
             {
-                Query = Query.Where(x => x.EmployedEndAt == null || x.EmployedEndAt > DateTime.Now);
+                Query = Query.Where(c => c.EmployedAt <= DateTime.Now && (c.EmployedEndAt <= DateTime.Now || c.EmployedEndAt == null));
             }
         }
 

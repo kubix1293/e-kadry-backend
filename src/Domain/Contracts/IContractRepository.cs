@@ -18,8 +18,10 @@ namespace EKadry.Domain.Contracts
             DateTime? commandDateTo,
             bool? queryHasPkzp,
             CancellationToken cancellationToken);
+
         Task<Contract> GetAsync(Guid contractId);
         Task AddAsync(Contract contract);
         Task<int> DeleteAsync(Guid workerId);
+        Task UpdateAsync(Contract contract);
     }
 }

@@ -496,28 +496,27 @@ ALTER TABLE kadry.umowy_c
 
 CREATE VIEW pkzp_splaty AS
 SELECT p.id as id_prc, p.imie, p.nazwisko, ph.kwot, pk.id as id_pkzppoz, ph.zamk
-FROM pracownicy p
-         JOIN pkzp_poz pk ON p.id = pk.id_prc
-         JOIN pkzp_harm ph ON pk.id = ph.id_pkzp;
+FROM kadry.pracownicy p
+         JOIN kadry.pkzp_poz pk ON p.id = pk.id_prc
+         JOIN kadry.pkzp_harm ph ON pk.id = ph.id_pkzp;
 
 -------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- TRIGGERY
 --------------------------- PRAC_PRACC_AUD
 create or replace
-    TRIGGER prac_pracc_aud
+    TRIGGER kadry.prac_pracc_aud
     AFTER UPDATE OR DELETE
-    ON pracownicy
+    ON kadry.pracownicy
     FOR EACH ROW
 DECLARE
     t_rec RAW(32);
 BEGIN
     IF (:NEW.imie <> :OLD.imie or :NEW.nazwisko <> :OLD.nazwisko or :NEW.pesel <> :OLD.pesel or
         :NEW.dok_typ <> :OLD.dok_typ or :NEW.nr_dok <> :OLD.nr_dok or
-<<<<<<< HEAD
         :NEW.ulica <> :OLD.ulica or :NEW.nr_dom <> :OLD.nr_dom or :NEW.nr_lok <> :OLD.nr_lok or 
         :NEW.kod_pocz <> :OLD.kod_pocz or :NEW.miasto <> :OLD.miasto or :NEW.kraj <> :OLD.kraj) THEN
             t_rec := SYS_GUID();
-            INSERT INTO pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ULICA, 
+            INSERT INTO kadry.pracownicy_c (C_ID, C_DATA, C_OPER, ID, IMIE, NAZWISKO, PESEL, DOK_TYP, NR_DOK, ULICA, 
             NR_DOM, NR_LOK, KOD_POCZ, MIASTO, KRAJ)
             VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.imie, :OLD.NAZWISKO, :OLD.PESEL, 
             :OLD.DOK_TYP, :OLD.NR_DOK, :OLD.ULICA,
@@ -531,9 +530,9 @@ END;
 
 --------------------------- OKRESY_OKRESYC_AUD
 create or replace
-    TRIGGER okresy_okresyc_aud
+    TRIGGER kadry.okresy_okresyc_aud
     AFTER UPDATE OR DELETE
-    ON okresy
+    ON kadry.okresy
     FOR EACH ROW
 DECLARE
     t_rec RAW(32);
@@ -541,7 +540,7 @@ BEGIN
     IF (:NEW.dtod <> :OLD.dtod or :NEW.dtdo <> :OLD.dtdo or :NEW.dni_kal <> :OLD.dni_kal or
         :NEW.dni_rob <> :OLD.dni_rob or :NEW.norma <> :OLD.norma) THEN
         t_rec := SYS_GUID();
-        INSERT INTO okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
+        INSERT INTO kadry.okresy_c (c_id, c_data, c_oper, id, dtod, dtdo, dni_kal, dni_rob, norma)
         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.dtod, :OLD.dtdo, 
         :OLD.dni_kal, :OLD.dni_rob, :OLD.norma);
     END IF;
@@ -555,7 +554,7 @@ END;
 
 create or replace TRIGGER pkzp_bi
     BEFORE INSERT
-    ON pkzp
+    ON kadry.pkzp
     FOR EACH ROW
 DECLARE
     rec RAW(32);
@@ -582,20 +581,20 @@ END;
 --------------------------- PKZPPOZ_PKZP_AI
 
 create or replace
-    TRIGGER pkzppoz_pkzp_ai
+    TRIGGER kadry.pkzppoz_pkzp_ai
     AFTER INSERT
-    ON pkzp_poz
+    ON kadry.pkzp_poz
     FOR EACH ROW
 DECLARE
     rec RAW(32);
     CURSOR c_id IS
         SELECT id_prc
-        FROM pkzp
+        FROM kadry.pkzp
         WHERE rodz = 10
           AND id_prc = :NEW.id_prc;
 BEGIN
     IF (:NEW.rodz = 20) THEN
-        INSERT INTO pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
+        INSERT INTO kadry.pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
         VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
     END IF;
     IF (:NEW.rodz = 10) THEN
@@ -603,13 +602,13 @@ BEGIN
         FETCH c_id INTO rec;
         CLOSE c_id;
         IF (rec IS NOT NULL) THEN
-            UPDATE pkzp
+            UPDATE kadry.pkzp
             SET ct    = ct + :NEW.kwot,
                 saldo = saldo + :NEW.kwot
             WHERE id_prc = :NEW.id_prc
               AND rodz = 10;
         ELSE
-            INSERT INTO pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
+            INSERT INTO kadry.pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
             VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
         END IF;
     END IF;
@@ -621,9 +620,9 @@ END;
 
 --------------------------- PKZPSPLATY_PKZPPOZ_AU
 create or replace
-    TRIGGER pkzpharm_pkzppoz_au
+    TRIGGER kadry.pkzpharm_pkzppoz_au
     AFTER UPDATE
-    ON pkzp_harm
+    ON kadry.pkzp_harm
     FOR EACH ROW
 DECLARE
     lOks   RAW(32);
@@ -632,15 +631,15 @@ BEGIN
     IF (:NEW.zamk = 1) THEN
         SELECT id
         INTO lOks
-        FROM okresy
+        FROM kadry.okresy
         WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
         --
         SELECT id_prc
         INTO lIdprc
-        FROM pkzp_poz
+        FROM kadry.pkzp_poz
         WHERE id = :NEW.id_pkzp;
         --
-        INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
+        INSERT INTO kadry.pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
         VALUES (:NEW.kwot, 40, lOks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
@@ -699,15 +698,13 @@ END;
 
 ----- PACKAGE
     create or replace NONEDITIONABLE PACKAGE oper_security AS
-    FUNCTION get_hash(login IN VARCHAR2,
-                      passw IN VARCHAR2)
-        RETURN VARCHAR2;
+    FUNCTION get_hash(login IN VARCHAR2, passw IN VARCHAR2) RETURN VARCHAR2;
     PROCEDURE add_oper(id IN RAW, login IN VARCHAR2, passw IN VARCHAR2, imie IN VARCHAR2, nazwisko IN VARCHAR2);
 END;
 
 ----- BODY
     create or replace NONEDITIONABLE PACKAGE BODY oper_security AS
-    FUNCTION get_hash(login IN VARCHAR2,
+    FUNCTION kadry.get_hash(login IN VARCHAR2,
                       passw IN VARCHAR2)
         RETURN VARCHAR2 AS
         l_salt VARCHAR2(30) := 'SD34!';

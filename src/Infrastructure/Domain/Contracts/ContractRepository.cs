@@ -50,6 +50,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             var contract = await Context.Contract
                 .Where(x => x.Id == contractId)
                 .Include(x => x.Worker)
+                .Include(x => x.JobPosition)
                 .FirstOrDefaultAsync();
 
             return contract;
@@ -66,6 +67,12 @@ namespace EKadry.Infrastructure.Domain.Contracts
             var worker = new Contract {Id = workerId};
             Context.Entry(worker).State = EntityState.Deleted;
             return await Context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Contract contract)
+        {
+            Context.Contract.Attach(contract);
+            await Context.SaveChangesAsync(); 
         }
     }
 }
