@@ -775,6 +775,10 @@ create or replace PACKAGE BODY pkzp_pack AS
         lSumaWkladow pkzp.ct%TYPE;
         lZasad       umowy.zasad%TYPE;
         lRata        FLOAT;
+        lCt          FLOAT;
+        CURSOR c_pkzp IS
+          SELECT ct
+          FROM pkzp WHERE id_prc = iIdprc;
     BEGIN
         IF (iIdprc > 0) THEN
             SELECT SUM(zasad)
@@ -785,27 +789,25 @@ create or replace PACKAGE BODY pkzp_pack AS
               AND (dtroz > sysdate OR dtroz IS null)
               AND czy_pkzp = 1;
             --
-            FOR i IN (
-                SELECT ct
-                FROM pkzp
-                WHERE id_prc = iIdprc
-                  AND rodz = 10)
-                LOOP
-                    IF (i.ct > 0) THEN
-                        IF (iKwota > 0 AND iIlerat > 0) THEN
-                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
-                                lRata := ROUND(iKwota / iIlerat, -1);
-                            END IF;
-                        END IF;
-                        IF (iKwota > 0 AND iRata > 0) THEN
-                            IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
-                                lRata := ROUND(iKwota / iRata, 0);
-                            END IF;
-                        END IF;
+            OPEN c_pkzp;
+            FETCH c_pkzp INTO lCt;
+            CLOSE c_pkzp;
+            IF (lCt > 0) THEN
+                IF (iKwota > 0 AND iIlerat > 0) THEN
+                    IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                        lRata := ROUND(iKwota / iIlerat, -1);
                     ELSE
-                        lRata := 0;
+                        RAISE_APPLICATION_ERROR(-20201, 'WYSOKOSC POŻYCZKI JEST ZA DUŻA W ODNIESNIU DO ZAROBKÓW LUB WKŁADÓW');    
                     END IF;
-                END LOOP;
+                END IF;
+                IF (iKwota > 0 AND iRata > 0) THEN
+                    IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
+                        lRata := ROUND(iKwota / iRata, 0);
+                    END IF;
+                END IF;
+            ELSE
+                RAISE_APPLICATION_ERROR(-20201, 'BRAK WKŁADÓW');
+            END IF;
         END IF;
         RETURN (lRata);
     END;
