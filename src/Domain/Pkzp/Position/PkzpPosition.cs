@@ -13,7 +13,7 @@ namespace EKadry.Domain.Pkzp.Position
         public Period.Period Period { get; set; }
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
-        public Guid IdAncestorPkzpPosition { get; set; }
+        public Guid? IdAncestorPkzpPosition { get; set; }
         public PkzpPosition AncestorPkzpPosition { get; set; }
         public IEnumerable<Pkzp> Pkzp { get; set; }
 

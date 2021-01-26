@@ -19,11 +19,16 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
             builder.Property(e => e.Amount).HasColumnName("KWOT");
             builder.Property(e => e.IdPeriod).HasColumnName("ID_OKS");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
-            builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ");
+            builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ").IsRequired(false);
 
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.PkzpPositions)
                 .HasForeignKey(p => p.IdWorker);
+            
+            builder.HasOne(d => d.AncestorPkzpPosition)
+                .WithOne()
+                .HasForeignKey<EKadry.Domain.Pkzp.Position.PkzpPosition>(x => x.IdAncestorPkzpPosition)
+                .IsRequired(false);
         }
     }
 }
