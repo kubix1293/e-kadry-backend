@@ -6,7 +6,7 @@ using EKadry.Application.Services.Contracts.ContractAdd;
 using EKadry.Application.Services.Contracts.ContractDelete;
 using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
-using EKadry.Application.Services.Operators;
+using EKadry.Application.Services.Contracts.ContractUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -51,10 +51,10 @@ namespace EKadry.API.Http.Contract
         /// Create new contract 
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(OperatorDto), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Domain.Contracts.Contract), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] AddContractRequest request)
         {
-            var @operator = await _mediator.Send(new ContractAddCommand(
+            var contract = await _mediator.Send(new ContractAddCommand(
                 request.EmployedAt,
                 request.EmployedEndAt,
                 request.BaseSalary,
@@ -77,7 +77,40 @@ namespace EKadry.API.Http.Contract
                 request.JubileeInternship
             ));
 
-            return Created(@operator.Id, @operator);
+            return Created(contract.Id, contract);
+        }
+        
+        /// <summary>
+        /// Update contract 
+        /// </summary>
+        [HttpPut("{contractId}")]
+        [ProducesResponseType(typeof(SuccessResponse), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> Update([FromRoute] Guid contractId, [FromBody] AddContractRequest request)
+        {
+            var @operator = await _mediator.Send(new ContractUpdateCommand(
+                contractId,
+                request.EmployedAt,
+                request.EmployedEndAt,
+                request.BaseSalary,
+                request.IdJobPosition,
+                request.IdentifierZusNumber,
+                request.IsSick,
+                request.IsAnnuitant,
+                request.IsPensioner,
+                request.IsHealthy,
+                request.IsLf,
+                request.IsGebf,
+                request.IsLeave,
+                request.IsSickLeave,
+                request.IsPkzp,
+                request.WorkingTime,
+                request.EntireInternship,
+                request.ProfessionInternship,
+                request.ServiceInternship,
+                request.JubileeInternship
+            ));
+
+            return SuccessResponse("Umowa została zaktualizowana");
         }
 
         /// <summary>

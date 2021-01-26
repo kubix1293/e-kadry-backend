@@ -87,5 +87,47 @@ namespace EKadry.Domain.Contracts
                 JubileeInternship = jubileeInternship,
             };
         }
+
+        public void Update(
+            DateTime employedAt,
+            DateTime? employedEndAt,
+            decimal baseSalary,
+            Guid idJobPosition,
+            int identifierZusNumber,
+            bool isSick,
+            bool isAnnuitant,
+            bool isPensioner,
+            bool isHealthy,
+            bool isLf,
+            bool isGebf,
+            bool isLeave,
+            bool isSickLeave,
+            bool isPkzp,
+            decimal? workingTime,
+            bool entireInternship,
+            bool professionInternship,
+            bool serviceInternship,
+            bool jubileeInternship)
+        {
+            EmployedAt = employedAt;
+            EmployedEndAt = employedEndAt;
+            BaseSalary = baseSalary;
+            IdJobPosition = idJobPosition;
+            IdentifierZusNumber = identifierZusNumber;
+            IsSick = isSick;
+            IsAnnuitant = isAnnuitant;
+            IsPensioner = isPensioner;
+            IsHealthy = isHealthy;
+            IsLf = isLf;
+            IsGebf = isGebf;
+            IsLeave = isLeave;
+            IsSickLeave = isSickLeave;
+            IsPkzp = isPkzp;
+            WorkingTime = workingTime;
+            EntireInternship = entireInternship;
+            ProfessionInternship = professionInternship;
+            ServiceInternship = serviceInternship;
+            JubileeInternship = jubileeInternship;
+        }
     }
 }
