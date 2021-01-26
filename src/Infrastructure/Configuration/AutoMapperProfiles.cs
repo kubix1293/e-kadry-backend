@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AutoMapper;
 using EKadry.Application.Services.Contracts.ContractDetail;
 using EKadry.Application.Services.Contracts.ContractList;
@@ -36,21 +37,26 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<Contract, ContractListDto>();
             CreateMap<Contract, ContractDetailDto>();
             CreateMap<Guid, Contract>();
-            
+
             CreateMap<JobPosition, JobPositionListDto>();
             CreateMap<Period, PeriodListDto>();
-            
+
             CreateMap<Pkzp, PkzpSummaryDto>()
-                .ForMember(dest => dest.PkzpType, opt => opt.MapFrom(src => EnumHelper<PkzpType>.GetMap(src.PkzpType)));
+                .ForMember(dest => dest.PkzpType, opt => opt.MapFrom(src => EnumHelper<PkzpType>.GetMap(src.PkzpType)))
+                .ForMember(dest => dest.Repayment, opt
+                    => opt.MapFrom(src
+                        => src.PkzpPosition.PkzpSchedules
+                            .Where(x => x.IsClosed)
+                            .Sum(x => x.Price)));
             CreateMap<PkzpPosition, PkzpPositionListDto>()
                 .ForMember(dest => dest.PkzpPositionType, opt => opt.MapFrom(src => EnumHelper<PkzpPositionType>.GetMap(src.PkzpPositionType)));
-            
+
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();
             CreateMap<Operator, OperatorAuthorizedDto>();
             CreateMap<Worker, ContractWorkerDetailDto>();
             CreateMap<Guid, Operator>();
-            
+
             CreateMap<Worker, WorkerListDto>();
             CreateMap<Worker, WorkerSearchDto>();
             CreateMap<Worker, WorkerDetailDto>()

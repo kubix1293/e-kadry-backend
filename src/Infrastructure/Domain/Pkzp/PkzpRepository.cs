@@ -53,6 +53,8 @@ namespace EKadry.Infrastructure.Domain.Pkzp
             return await Context.Pkzp
                 .Where(x => x.IdWorker == workerId)
                 .Include(x => x.Worker)
+                .Include(x => x.PkzpPosition)
+                .ThenInclude(x => x.PkzpSchedules)
                 .ToListAsync();
         }
     }

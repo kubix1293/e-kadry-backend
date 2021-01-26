@@ -14,14 +14,14 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpSchedule
             builder.HasKey(b => b.Id);
             
             builder.Property(e => e.Id).HasColumnName("ID");
-            builder.Property(e => e.Price).HasColumnName("KWOTA");
+            builder.Property(e => e.Price).HasColumnName("KWOT");
             builder.Property(e => e.Period).HasColumnName("OKRES");
-            builder.Property(e => e.IdPkzp).HasColumnName("ID_PKZP");
+            builder.Property(e => e.IdPkzpPosition).HasColumnName("ID_PKZP");
             builder.Property(e => e.IsClosed).HasColumnName("ZAMK").HasConversion(new IntToBooleanConverter());
             
-            builder.HasOne(d => d.Pkzp)
+            builder.HasOne(d => d.PkzpPosition)
                 .WithMany(n => n.PkzpSchedules)
-                .HasForeignKey(p => p.IdPkzp);
+                .HasForeignKey(p => p.IdPkzpPosition);
         }
     }
 }
