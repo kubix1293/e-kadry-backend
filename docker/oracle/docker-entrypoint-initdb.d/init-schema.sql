@@ -612,6 +612,14 @@ BEGIN
             VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
         END IF;
     END IF;
+    IF (:NEW.rodz = 40) THEN
+        UPDATE kadry.pkzp 
+        SET ct = :NEW.kwot,
+            saldo = saldo + :NEW.kwot
+        WHERE id_prc = :NEW.id_prc
+        AND rodz = 20
+        AND pkzp_poz = :NEW.pkzp_poz; 
+    END IF;
 EXCEPTION
     WHEN OTHERS THEN
         raise_application_error(-20002, SQLERRM);
