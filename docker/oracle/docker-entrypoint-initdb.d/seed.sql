@@ -210,10 +210,10 @@ VALUES (to_date('2021-01-03', 'yyyy-mm-dd'), to_date('2021-06-03', 'yyyy-mm-dd')
 /
 
 --------------------------------------------------------------
----------------- PARAMETRY PKZP
+---------------- PARAMETRY PKZP_PARAM
 
-INSERT INTO pkzp_param (forma, ile_rat, sklad, wklad) VALUES (0, 12, 3, 1);
-/
+INSERT INTO pkzp_param (forma, ile_rat, kwot_max, sklad_max, sklad_min, wklad_min, wpis)
+VALUES (1, 12, 0, 0, 0, 0, 0);
 
 --------------------------------------------------------------
 ---------------- OPERATORZY

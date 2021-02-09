@@ -38,7 +38,8 @@ CREATE TABLE kadry.pkzp
     dt       FLOAT(15) DEFAULT 0,
     ct       FLOAT(15) DEFAULT 0,
     rodz     NUMBER                       NOT NULL,
-    pkzp_poz RAW(32)
+    pkzp_poz RAW(32),
+    zamk     NUMBER
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -112,23 +113,50 @@ ALTER TABLE kadry.pkzp_harm
     ADD CONSTRAINT pkzp_harm_pk PRIMARY KEY (id);
 /
 
+CREATE TABLE kadry.pkzp_sklad
+(
+    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    id_prc  RAW(32)                    NOT NULL,
+    sklad   FLOAT(10)                  NOT NULL,
+    dakt    DATE    DEFAULT sysdate    NOT NULL
+);
+/
+COMMENT ON COLUMN kadry.pkzp_sklad.sklad IS
+    'Kwota miesięcznej składki';
+/
+COMMENT ON COLUMN kadry.pkzp_sklad.dakt IS
+    'Data aktualizacji';
+/
+
 ------ PKZP_PARAM
 CREATE TABLE kadry.pkzp_param
 (
-    forma   NUMBER(1) DEFAULT 0  NOT NULL,
-    ile_rat NUMBER(2) DEFAULT 12 NOT NULL,
-    wklad   FLOAT(10) DEFAULT 0  NOT NULL,
-    sklad   FLOAT(10) DEFAULT 0  NOT NULL
+    forma       NUMBER(1) DEFAULT 1  NOT NULL,
+    ile_rat     NUMBER(2) DEFAULT 12 NOT NULL,
+    wpis        FLOAT(10) DEFAULT 0  NOT NULL,
+    sklad_min   FLOAT(10) DEFAULT 0  NOT NULL,
+    sklad_max   FLOAT(10) DEFAULT 0  NOT NULL,
+    kwot_max    FLOAT(10) DEFAULT 0  NOT NULL,
+    wklad_min   FLOAT(10) DEFAULT 0  NOT NULL   
 );
 /
 COMMENT ON COLUMN kadry.pkzp_param.forma IS
     'Forma składek  0 - %,  1 - zł';
 /
-COMMENT ON COLUMN kadry.pkzp_param.wklad IS
-    'wartość wkładu początkowego';
+COMMENT ON COLUMN kadry.pkzp_param.wpis IS
+    'wartość wpisowego początkowego';
 /
-COMMENT ON COLUMN kadry.pkzp_param.sklad IS
-    'wartość składki PKZP';
+COMMENT ON COLUMN kadry.pkzp_param.sklad_min IS
+    'wartość minimalna składki PKZP';
+/
+COMMENT ON COLUMN kadry.pkzp_param.sklad_max IS
+    'wartość maksymalna składki PKZP';
+/
+COMMENT ON COLUMN kadry.pkzp_param.kwot_max IS
+    'maksymalna wysokość udzielanej pożyczki';
+/
+COMMENT ON COLUMN kadry.pkzp_param.wklad_min IS
+    'minimalna wysokość wkładów od których można wziąć pożyczkę';        
 /
 
 ------ PRACOWNICY
@@ -375,6 +403,18 @@ ALTER TABLE kadry.pkzp_harm_c
     ADD CONSTRAINT pkzp_harm_c_pk PRIMARY KEY (c_id);
 /
 
+------  PKZP_SKLAD_C
+CREATE TABLE kadry.pkzp_sklad_c
+(
+    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
+    c_data  DATE      DEFAULT sysdate    NOT NULL,
+    c_oper  RAW(32)                      NOT NULL,
+    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    id_prc  RAW(32)                    NOT NULL,
+    sklad   FLOAT(10)                  NOT NULL,
+    dakt    DATE    DEFAULT sysdate    NOT NULL
+);
+
 ------ STANOW_C (STANOWISKA)
 CREATE TABLE kadry.stanow_c
 (
@@ -478,6 +518,10 @@ ALTER TABLE kadry.pkzp_harm_c
     ADD CONSTRAINT pkzpharm_c_pkzpharm_fk FOREIGN KEY (id)
         REFERENCES kadry.pkzp_harm (id);
 /
+ALTER TABLE kadry.pkzp_sklad_c
+    ADD CONSTRAINT pkzpsklad_c_pkzpsklad_fk FOREIGN KEY (id)
+        REFERENCES kadry.pkzp_sklad (id);
+/
 ALTER TABLE kadry.pkzp_poz_c
     ADD CONSTRAINT pkzp_poz_c_pkzp_poz_fk FOREIGN KEY (id)
         REFERENCES kadry.pkzp_poz (id);
@@ -550,6 +594,27 @@ EXCEPTION
 END;
 /
 
+--------------------------- PKZPSKLAD_PKZPSKLADC_AUD
+create or replace
+    TRIGGER kadry.pkzpsklad_pkzpskladc_aud
+    AFTER UPDATE OR DELETE
+    ON kadry.pkzp_sklad
+    FOR EACH ROW
+DECLARE
+    t_rec RAW(32);
+BEGIN
+    IF (:NEW.id_prc <> :OLD.id_prc or :NEW.sklad <> :OLD.sklad ) THEN
+        t_rec := SYS_GUID();
+        INSERT INTO kadry.pkzp_sklad (c_id, c_data, c_oper, id, id_prc, sklad, dakt)
+        VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.id_prc, :OLD.sklad, 
+        :OLD.dakt);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
+/
+
 --------------------------- PKZP_BI
 
 create or replace TRIGGER pkzp_bi
@@ -581,21 +646,22 @@ END;
 --------------------------- PKZPPOZ_PKZP_AI
 
 create or replace
-    TRIGGER kadry.pkzppoz_pkzp_ai
+TRIGGER kadry.pkzppoz_pkzp_ai
     AFTER INSERT
     ON kadry.pkzp_poz
     FOR EACH ROW
 DECLARE
     rec RAW(32);
+    lZamk NUMBER;
     CURSOR c_id IS
         SELECT id_prc
         FROM kadry.pkzp
         WHERE rodz = 10
-          AND id_prc = :NEW.id_prc;
+        AND id_prc = :NEW.id_prc;
 BEGIN
     IF (:NEW.rodz = 20) THEN
-        INSERT INTO kadry.pkzp (id_prc, dt, saldo, rodz, pkzp_poz)
-        VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id);
+        INSERT INTO kadry.pkzp (id_prc, dt, saldo, rodz, pkzp_poz, zamk)
+        VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id, 0);
     END IF;
     IF (:NEW.rodz = 10) THEN
         OPEN c_id;
@@ -612,37 +678,53 @@ BEGIN
             VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
         END IF;
     END IF;
+    IF (:NEW.rodz = 40) THEN
+        UPDATE kadry.pkzp 
+        SET ct = ct + :NEW.kwot,
+            saldo = saldo + :NEW.kwot
+        WHERE id_prc = :NEW.id_prc
+        AND rodz = 20
+        AND pkzp_poz = :NEW.pkzp_poz;
+    END IF;
 EXCEPTION
     WHEN OTHERS THEN
         raise_application_error(-20002, SQLERRM);
 END;
 
 
---------------------------- PKZPSPLATY_PKZPPOZ_AU
+--------------------------- PKZPHARM_PKZPPOZ_AU
 create or replace
-    TRIGGER kadry.pkzpharm_pkzppoz_au
+TRIGGER kadry.pkzpharm_pkzppoz_au
     AFTER UPDATE
     ON kadry.pkzp_harm
     FOR EACH ROW
 DECLARE
     lOks   RAW(32);
     lIdprc RAW(32);
+    CURSOR c_prc IS
+      SELECT id_prc
+      FROM pkzp
+      WHERE pkzp_poz = :NEW.id_pkzp
+      AND rodz = 20;
+    CURSOR c_oks IS
+      SELECT id
+      FROM okresy
+      WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
 BEGIN
     IF (:NEW.zamk = 1) THEN
-        SELECT id
-        INTO lOks
-        FROM kadry.okresy
-        WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
+        OPEN c_oks;
+        FETCH c_oks INTO lOks;
+        CLOSE c_oks;
         --
-        SELECT id_prc
-        INTO lIdprc
-        FROM kadry.pkzp_poz
-        WHERE id = :NEW.id_pkzp;
+        OPEN c_prc;
+        FETCH c_prc INTO lIdprc;
+        CLOSE c_prc;
         --
-        INSERT INTO kadry.pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
+        INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
         VALUES (:NEW.kwot, 40, lOks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
+
 
 
 -------------------------------------------------------------------------------------------------------------------
