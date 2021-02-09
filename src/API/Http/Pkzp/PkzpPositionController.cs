@@ -37,5 +37,20 @@ namespace EKadry.API.Http.Pkzp
 
             return Ok(pkzpPositions);
         }
+        
+        /// <summary>
+        /// Download PKZP positions from selected period 
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(FileResult), (int) HttpStatusCode.OK)] 
+        public async Task<IActionResult> PkzpParam([FromQuery] DownloadListPkzpPositionRequest request)
+        {
+            var pkzp = await _mediator.Send(new PkzpFileQuery(
+                request.Types,
+                request.DateFrom,
+                request.DateTo));
+            
+            return Ok(pkzp); 
+        }
     }
 }
