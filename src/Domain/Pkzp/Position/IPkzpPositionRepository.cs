@@ -1,11 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
+using EKadry.Domain.Pagination;
 
 namespace EKadry.Domain.Pkzp.Position
 {
     public interface IPkzpPositionRepository
     {
-        Task<List<PkzpPosition>> ToListAsync(Guid workerId);
+        IPagination<PkzpPosition> ToListPaginated(int commandPage,
+            int commandPerPage,
+            string commandOrderDirection,
+            string commandOrderBy,
+            string commandSearch,
+            Guid workerId,
+            CancellationToken cancellationToken);
     }
 }

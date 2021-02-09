@@ -1,14 +1,21 @@
 using System;
-using System.Collections.Generic;
-using EKadry.Application.Configuration.Queries;
+using EKadry.Application.Configuration.Queries.Common;
+using EKadry.Domain.Pagination;
 
 namespace EKadry.Application.Services.Pkzp.PkzpPositionList
 {
-    public class PkzpPositionListQuery : IQuery<List<PkzpPositionListDto>>
+    public class PkzpPositionListQuery : ListQuery<PagedList<PkzpPositionListDto>>
     {
         public Guid WorkerId { get; set; }
 
-        public PkzpPositionListQuery(Guid workerId)
+        public PkzpPositionListQuery(
+            int page,
+            int perPage,
+            string orderDirection,
+            string orderBy,
+            string search,
+            Guid workerId
+        ) : base(page, perPage, orderDirection, orderBy, search)
         {
             WorkerId = workerId;
         }

@@ -27,6 +27,11 @@ namespace EKadry.API.Http.Pkzp
         public async Task<IActionResult> Get([FromQuery] ListPkzpPositionRequest request)
         {
             var pkzpPositions = await _mediator.Send(new PkzpPositionListQuery(
+                request.Page,
+                request.PerPage,
+                request.OrderDirection,
+                request.OrderBy,
+                request.Search,
                 request.WorkerId
             ));
 
