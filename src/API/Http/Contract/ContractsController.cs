@@ -9,10 +9,12 @@ using EKadry.Application.Services.Contracts.ContractList;
 using EKadry.Application.Services.Contracts.ContractUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Contract
 {
+    [Authorize]
     [ApiController]
     [Route("api/contracts")]
     public class ContractsController : ControllerBase

@@ -5,10 +5,12 @@ using EKadry.Domain;
 using EKadry.Domain.Pkzp;
 using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http
 {
+    [Authorize]
     [ApiController]
     [Route("api/enums")]
     public class EnumsController : ControllerBase

@@ -11,10 +11,12 @@ using EKadry.Application.Services.Workers.WorkerSearch;
 using EKadry.Application.Services.Workers.WorkerUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Worker
 {
+    [Authorize]
     [ApiController]
     [Route("api/workers")]
     public class WorkersController : ControllerBase
