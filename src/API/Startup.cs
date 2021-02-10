@@ -40,7 +40,8 @@ namespace EKadry.API
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 });
-            
+
+            services.CorsConfigure();
             services.ConfigureProblemDetails(_env.IsProduction());
             services.AddSwaggerDocumentation();
 
@@ -68,8 +69,8 @@ namespace EKadry.API
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseCors(env.EnvironmentName);
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
