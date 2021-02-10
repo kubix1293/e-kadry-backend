@@ -1,21 +1,17 @@
-using System;
-using EKadry.Infrastructure.Domain.Operators.Auth;
-using Microsoft.Extensions.Configuration;
+using EKadry.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EKadry.API.Configuration
 {
     public static class AuthenticationConfiguration
     {
-        internal static void JwtServiceConfigure(this IServiceCollection services, IConfiguration configuration)
+        internal static void AuthenticationConfigure(this IServiceCollection services, string token)
         {
-            // Console.WriteLine(configuration["ExpireMinutes"]);
-            // services.AddSingleton<IAuthContainerModel>();
-        }
-
-        public static void JwtServiceConfigure(this IServiceCollection services, string configuration)
-        {
-            throw new System.NotImplementedException();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = JwtService.GetTokenValidationParameters(token);
+            });
         }
     }
 }

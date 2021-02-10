@@ -45,7 +45,7 @@ namespace EKadry.API
             services.AddSwaggerDocumentation();
 
             services.AddHttpContextAccessor();
-            services.JwtServiceConfigure(_configuration.GetSection("AppSettings").GetSection("JWT"));
+            services.AuthenticationConfigure(_configuration.GetSection("AppSettings").GetSection("JWT").GetValue<string>("SecretKey"));
             
             var serviceProvider = services.BuildServiceProvider();
 
@@ -53,7 +53,9 @@ namespace EKadry.API
 
             return ApplicationStartup.Initialize(
                 services,
-                _configuration["ConnectionString"],
+                _configuration.GetValue<string>("ConnectionString"),
+                _configuration.GetSection("AppSettings").GetSection("JWT").GetValue<string>("SecretKey"),
+                _configuration.GetSection("AppSettings").GetSection("JWT").GetValue<int>("ExpireMinutes"),
                 executionContextAccessor,
                 _logger
             );
@@ -68,7 +70,9 @@ namespace EKadry.API
             });
             
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

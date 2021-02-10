@@ -5,6 +5,7 @@ using Autofac.Extras.CommonServiceLocator;
 using AutoMapper;
 using CommonServiceLocator;
 using EKadry.Application.Configuration;
+using EKadry.Infrastructure.Auth;
 using EKadry.Infrastructure.Configuration;
 using EKadry.Infrastructure.Database;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ namespace EKadry.Infrastructure
         public static IServiceProvider Initialize(
             IServiceCollection services,
             string connectionString,
+            string secretKey,
+            int tokenExpire,
             IExecutionContextAccessor executionContextAccessor,
             ILogger logger
         )
@@ -28,6 +31,8 @@ namespace EKadry.Infrastructure
             return ConfigureCompositorRoot(
                 services,
                 connectionString,
+                secretKey,
+                tokenExpire,
                 executionContextAccessor,
                 moduleLogger
             );
@@ -36,6 +41,8 @@ namespace EKadry.Infrastructure
         private static IServiceProvider ConfigureCompositorRoot(
             IServiceCollection services,
             string connectionString,
+            string secretKey,
+            int tokenExpire,
             IExecutionContextAccessor executionContextAccessor,
             ILogger logger)
         {
@@ -46,6 +53,7 @@ namespace EKadry.Infrastructure
             containerBuilder.RegisterModule(new LoggingModule(logger.ForContext("Module", "Application")));
             containerBuilder.RegisterModule(new DataAccessModule(connectionString, new SerilogLoggerFactory(logger)));
             containerBuilder.RegisterModule(new MediatorModule());
+            containerBuilder.RegisterModule(new AuthModule(secretKey, tokenExpire));
 
             containerBuilder.RegisterInstance(executionContextAccessor);
 

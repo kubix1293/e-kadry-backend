@@ -2,7 +2,7 @@ using EKadry.Application.Configuration.Queries;
 
 namespace EKadry.Application.Services.Operators.OperatorAuthentication
 {
-    public class OperatorAuthenticationQuery: IQuery<OperatorAuthorizedDto>
+    public class OperatorAuthenticationQuery: IQuery<AuthorizedDto>
     {
         public string Login { get; }
         public string Password { get; }
