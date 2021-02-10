@@ -129,6 +129,9 @@ COMMENT ON COLUMN kadry.pkzp_sklad.sklad IS
 COMMENT ON COLUMN kadry.pkzp_sklad.dakt IS
     'Data aktualizacji';
 /
+ALTER TABLE kadry.pkzp_sklad
+    ADD CONSTRAINT pkzp_sklad_pk PRIMARY KEY (id);
+/
 
 ------ PKZP_PARAM
 CREATE TABLE kadry.pkzp_param
@@ -411,11 +414,15 @@ CREATE TABLE kadry.pkzp_sklad_c
     c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
     c_data  DATE      DEFAULT sysdate    NOT NULL,
     c_oper  RAW(32)                      NOT NULL,
-    id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
+    id      RAW(32)                     NOT NULL,
     id_prc  RAW(32)                    NOT NULL,
     sklad   FLOAT(10)                  NOT NULL,
     dakt    DATE    DEFAULT sysdate    NOT NULL
 );
+/
+ALTER TABLE kadry.pkzp_sklad_c
+    ADD CONSTRAINT pkzp_sklad_c_pk PRIMARY KEY (id);
+/
 
 ------ STANOW_C (STANOWISKA)
 CREATE TABLE kadry.stanow_c
