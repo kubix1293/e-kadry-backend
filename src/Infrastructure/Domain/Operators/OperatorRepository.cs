@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,8 +52,22 @@ namespace EKadry.Infrastructure.Domain.Operators
         
         public async Task UpdateAsync(Operator @operator)
         {
-            Context.Operator.Attach(@operator);
-            await Context.SaveChangesAsync();
+            var query = "UPDATE KADRY.OPER SET LOGIN = :LOGIN, IMIE = :FIRST_NAME, NAZWISKO = :LAST_NAME, AKTW = :ACTIVE WHERE LOGIN = :LOGIN";
+            var parameters = new List<OracleParameter>
+            {
+                new OracleParameter("LOGIN", @operator.Login),
+                new OracleParameter("FIRST_NAME", @operator.FirstName),
+                new OracleParameter("LAST_NAME", @operator.LastName),
+                new OracleParameter("ACTIVE", @operator.Active ? 1 : 0),
+            };
+            
+            if (@operator.Password != null)
+            {
+                query = "UPDATE KADRY.OPER SET LOGIN = :LOGIN, IMIE = :FIRST_NAME, NAZWISKO = :LAST_NAME, AKTW = :ACTIVE, PASSW = KADRY.OPER_SECURITY.GET_HASH(:LOGIN, :PASSWORD) WHERE LOGIN = :LOGIN";
+                parameters.Add(new OracleParameter("PASSWORD", @operator.Password));
+            }
+            
+            await Context.Database.ExecuteSqlRawAsync(query, parameters);
         }
 
         public async Task<Operator> Authenticate(string login, string password)
