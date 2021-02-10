@@ -38,8 +38,7 @@ CREATE TABLE kadry.pkzp
     dt       FLOAT(15) DEFAULT 0,
     ct       FLOAT(15) DEFAULT 0,
     rodz     NUMBER                       NOT NULL,
-    pkzp_poz RAW(32),
-    zamk     NUMBER
+    pkzp_poz RAW(32)
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -71,7 +70,8 @@ CREATE TABLE kadry.pkzp_poz
     kwot     FLOAT(15) DEFAULT 0          NOT NULL,
     id_oks   RAW(32)                      NOT NULL,
     id_prc   RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32)
+    pkzp_poz RAW(32),
+    zamk     NUMBER(1) DEFAULT 0
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -79,7 +79,8 @@ COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
 10 - wkład
 20 - pożyczka
 30 - wpisowe
-40 - spłata';
+40 - spłata
+50 - saldo poczatkowe';
 /
 COMMENT ON COLUMN kadry.pkzp_poz.kwot IS
     'Kwota spłaty lub wkładu ';
@@ -113,6 +114,7 @@ ALTER TABLE kadry.pkzp_harm
     ADD CONSTRAINT pkzp_harm_pk PRIMARY KEY (id);
 /
 
+------ PKZP_SKLAD
 CREATE TABLE kadry.pkzp_sklad
 (
     id      RAW(32) DEFAULT SYS_GUID() NOT NULL,
@@ -486,6 +488,10 @@ ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pkzppoz_fk FOREIGN KEY (pkzp_poz)
         REFERENCES kadry.pkzp_poz (id);
 /
+ALTER TABLE kadry.pkzp_sklad
+    ADD CONSTRAINT pkzpsklad_pracownicy_fk FOREIGN KEY (id_prc)
+        REFERENCES kadry.pracownicy (id);        
+/
 ALTER TABLE kadry.pracownicy
     ADD CONSTRAINT pracownicy_oper_fk FOREIGN KEY (id_oper)
         REFERENCES kadry.oper (id);
@@ -642,6 +648,29 @@ EXCEPTION
         raise_application_error(-20002, SQLERRM);
 END;
 
+--------------------------- PKZPSKLAD_BI
+
+create or replace
+TRIGGER pkzpsklad_bi
+    BEFORE INSERT
+    ON kadry.pkzp_sklad
+    FOR EACH ROW
+DECLARE
+    CURSOR c_prc IS
+        SELECT id
+        FROM pkzp_sklad
+        WHERE id_prc = :NEW.id_prc;    
+    lTrue RAW(32);
+BEGIN
+    OPEN c_prc;
+    FETCH c_prc INTO lTrue;
+    CLOSE c_prc;
+    IF ( lTrue IS NOT NULL) THEN
+        raise_application_error(-20002, 'PRACOWNIK MA JUZ WPIS DOTYCZACY SKLADKI');
+    ELSE
+        NULL;
+    END IF;
+END;
 
 --------------------------- PKZPPOZ_PKZP_AI
 
@@ -663,7 +692,7 @@ BEGIN
         INSERT INTO kadry.pkzp (id_prc, dt, saldo, rodz, pkzp_poz, zamk)
         VALUES (:NEW.id_prc, :NEW.kwot, 0 - :NEW.kwot, :NEW.rodz, :NEW.id, 0);
     END IF;
-    IF (:NEW.rodz = 10) THEN
+    IF (:NEW.rodz = 10 or :NEW.rodz = 50) THEN
         OPEN c_id;
         FETCH c_id INTO rec;
         CLOSE c_id;
@@ -675,34 +704,33 @@ BEGIN
               AND rodz = 10;
         ELSE
             INSERT INTO kadry.pkzp (id_prc, ct, saldo, rodz, pkzp_poz)
-            VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, :NEW.rodz, :NEW.id);
+            VALUES (:NEW.id_prc, :NEW.kwot, :NEW.kwot, 10, :NEW.id);
         END IF;
     END IF;
     IF (:NEW.rodz = 40) THEN
-        UPDATE kadry.pkzp 
-        SET ct = ct + :NEW.kwot,
-            saldo = saldo + :NEW.kwot
-        WHERE id_prc = :NEW.id_prc
-        AND rodz = 20
-        AND pkzp_poz = :NEW.pkzp_poz;
+            UPDATE kadry.pkzp 
+            SET ct = ct + :NEW.kwot,
+                saldo = saldo + :NEW.kwot
+            WHERE id_prc = :NEW.id_prc
+            AND rodz = 20
+            AND pkzp_poz = :NEW.pkzp_poz;
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
         raise_application_error(-20002, SQLERRM);
 END;
 
-
 --------------------------- PKZPHARM_PKZPPOZ_AU
-create or replace
-TRIGGER kadry.pkzpharm_pkzppoz_au
+create or replace TRIGGER kadry.pkzpharm_pkzppoz_au
     AFTER UPDATE
     ON kadry.pkzp_harm
     FOR EACH ROW
 DECLARE
     lOks   RAW(32);
     lIdprc RAW(32);
+    lZamk NUMBER;
     CURSOR c_prc IS
-      SELECT id_prc
+      SELECT id_prc, saldo
       FROM pkzp
       WHERE pkzp_poz = :NEW.id_pkzp
       AND rodz = 20;
@@ -717,15 +745,20 @@ BEGIN
         CLOSE c_oks;
         --
         OPEN c_prc;
-        FETCH c_prc INTO lIdprc;
+        FETCH c_prc INTO lIdprc, lZamk;
         CLOSE c_prc;
+        --
+        IF (lZamk + :NEW.kwot >= 0) THEN
+          UPDATE pkzp SET zamk = 1
+          WHERE pkzp_poz = :NEW.id_pkzp;
+        ELSE
+          NULL;
+        END IF;
         --
         INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
         VALUES (:NEW.kwot, 40, lOks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
-
-
 
 -------------------------------------------------------------------------------------------------------------------
 
