@@ -830,7 +830,7 @@ END;
 
 ----- BODY
     create or replace NONEDITIONABLE PACKAGE BODY oper_security AS
-    FUNCTION kadry.get_hash(login IN VARCHAR2,
+    FUNCTION get_hash(login IN VARCHAR2,
                       passw IN VARCHAR2)
         RETURN VARCHAR2 AS
         l_salt VARCHAR2(30) := 'SD34!';
