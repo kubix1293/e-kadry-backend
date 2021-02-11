@@ -13,6 +13,7 @@ namespace EKadry.Domain.Pkzp
         public decimal Debit { get; set; }
         public decimal Credit { get; set; }
         public PkzpType PkzpType { get; set; }
+        public bool Closed { get; set; }
         public Guid IdPkzpPosition { get; set; }
         public PkzpPosition PkzpPosition { get; set; }
     }
