@@ -38,7 +38,8 @@ CREATE TABLE kadry.pkzp
     dt       FLOAT(15) DEFAULT 0,
     ct       FLOAT(15) DEFAULT 0,
     rodz     NUMBER                       NOT NULL,
-    pkzp_poz RAW(32)
+    pkzp_poz RAW(32),
+    zamk     NUMBER(1)
 );
 /
 COMMENT ON COLUMN kadry.pkzp.id_prc IS
@@ -57,6 +58,9 @@ COMMENT ON COLUMN kadry.pkzp.rodz IS
     'Rodzaj PKZP
 10 - wkłady
 20 - pożyczka';
+/
+COMMENT ON COLUMN kadry.pkzp.zamk IS
+    'czy zamknięta pożyczka';
 /
 ALTER TABLE kadry.pkzp
     ADD CONSTRAINT pkzp_pk PRIMARY KEY (id);
@@ -611,7 +615,7 @@ DECLARE
 BEGIN
     IF (:NEW.id_prc <> :OLD.id_prc or :NEW.sklad <> :OLD.sklad ) THEN
         t_rec := SYS_GUID();
-        INSERT INTO kadry.pkzp_sklad (c_id, c_data, c_oper, id, id_prc, sklad, dakt)
+        INSERT INTO kadry.pkzp_sklad_c (c_id, c_data, c_oper, id, id_prc, sklad, dakt)
         VALUES (t_rec, to_date(sysdate, 'yyyy-mm-dd HH24:MI:SS'), t_rec, :OLD.id, :OLD.id_prc, :OLD.sklad, 
         :OLD.dakt);
     END IF;
