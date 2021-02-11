@@ -959,6 +959,12 @@ create or replace PACKAGE BODY pkzp_pack AS
                 VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
             END IF;
         END IF;
+        IF (iRodz = 50) THEN
+            IF (iKwota > 0) THEN
+                INSERT INTO pkzp_poz(id, rodz, kwot, id_oks, id_prc)
+                VALUES (iIdpkzppoz, iRodz, iKwota, iIdoks, iIdprc);
+            END IF;
+        END IF;
     END;
     PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
         IS
