@@ -4,8 +4,11 @@ namespace EKadry.Domain.Pkzp.Parameters
     {
         public int Form { get; set; }
         public int InstallmentsCount { get; set; }
-        public int Contribution { get; set; }
-        public int Composition { get; set; }
+        public decimal Entry { get; set; }
+        public decimal MinComposition { get; set; }
+        public decimal MaxComposition { get; set; }
+        public decimal MaxAmount { get; set; }
+        public decimal MinContribution { get; set; }
 
         public PkzpParameters()
         {

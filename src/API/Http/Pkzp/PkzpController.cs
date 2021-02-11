@@ -8,10 +8,12 @@ using EKadry.Application.Services.Pkzp.PkzpCreate;
 using EKadry.Application.Services.Pkzp.PkzpParameters;
 using EKadry.Application.Services.Pkzp.PkzpSummary;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Pkzp
 {
+    [Authorize]
     [ApiController]
     [Route("api/pkzp")]
     public class PkzpController : ControllerBase

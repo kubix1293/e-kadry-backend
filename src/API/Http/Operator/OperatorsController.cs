@@ -9,10 +9,12 @@ using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Operators.OperatorUpdate;
 using EKadry.Domain.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Operator
 {
+    [Authorize]
     [ApiController]
     [Route("api/operators")]
     public class OperatorsController : ControllerBase

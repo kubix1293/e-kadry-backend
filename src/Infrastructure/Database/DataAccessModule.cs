@@ -66,7 +66,6 @@ namespace EKadry.Infrastructure.Database
                     new EKadryContext(
                         new DbContextOptionsBuilder<EKadryContext>()
                             .UseLoggerFactory(_logger)
-                            .EnableSensitiveDataLogging()
                             .UseOracle(_databaseConnectionString)
                             .Options
                     )

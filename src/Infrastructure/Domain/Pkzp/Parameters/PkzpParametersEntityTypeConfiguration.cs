@@ -15,8 +15,11 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Parameters
             
             builder.Property(e => e.Form).HasColumnName("FORMA");
             builder.Property(e => e.InstallmentsCount).HasColumnName("ILE_RAT");
-            builder.Property(e => e.Contribution).HasColumnName("WKLAD");
-            builder.Property(e => e.Composition).HasColumnName("SKLAD");
+            builder.Property(e => e.Entry).HasColumnName("WPIS");
+            builder.Property(e => e.MinComposition).HasColumnName("SKLAD_MIN");
+            builder.Property(e => e.MaxComposition).HasColumnName("SKLAD_MAX");
+            builder.Property(e => e.MaxAmount).HasColumnName("KWOT_MAX");
+            builder.Property(e => e.MinContribution).HasColumnName("WKLAD_MIN");
         }
     }
 }

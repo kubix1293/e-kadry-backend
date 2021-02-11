@@ -218,7 +218,7 @@ VALUES (1, 12, 0, 0, 0, 0, 0);
 --------------------------------------------------------------
 ---------------- OPERATORZY
 
-BEGIN KADRY.OPER_SECURITY.ADD_OPER (GUID_TO_RAW('f177692b-b44f-4a38-bb34-c2d3dfa5790f'), 'm.matysek', 'secret', 'Michał', 'Matysek'); END;
+BEGIN OPER_SECURITY.ADD_OPER (GUID_TO_RAW('f177692b-b44f-4a38-bb34-c2d3dfa5790f'), 'm.matysek', 'secret', 'Michał', 'Matysek'); END;
 /
-BEGIN KADRY.OPER_SECURITY.ADD_OPER (GUID_TO_RAW('4c3d2a3b-ff96-4172-a288-97d2fa872f24'), 'j.nowacki', 'secret', 'Jakub', 'Nowacki'); END;
+BEGIN OPER_SECURITY.ADD_OPER (GUID_TO_RAW('4c3d2a3b-ff96-4172-a288-97d2fa872f24'), 'j.nowacki', 'secret', 'Jakub', 'Nowacki'); END;
 /

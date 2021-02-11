@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using EKadry.API.Http.Period.Request;
 using EKadry.Application.Services.Periods.PeriodList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Period
 {
+    [Authorize]
     [ApiController]
     [Route("api/periods")]
     public class PeriodController : ControllerBase

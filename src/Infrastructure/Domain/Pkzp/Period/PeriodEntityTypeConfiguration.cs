@@ -8,7 +8,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
     {
         public void Configure(EntityTypeBuilder<EKadry.Domain.Pkzp.Period.Period> builder)
         {
-            builder.ToTable(SchemaNames.Period);
+            builder.ToTable(SchemaNames.Periods);
             
             builder.HasKey(b => b.Id);
             

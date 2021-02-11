@@ -1,5 +1,4 @@
 using System;
-using EKadry.Domain.Operators;
 
 namespace EKadry.Application.Services.Operators.OperatorAuthentication
 {
@@ -7,7 +6,6 @@ namespace EKadry.Application.Services.Operators.OperatorAuthentication
     {
         public string Token;
         public string TokenType;
-        public string ExpiresAt;
         public OperatorAuthorizedDto Operator;
     }
     

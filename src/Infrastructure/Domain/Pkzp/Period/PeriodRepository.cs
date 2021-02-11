@@ -10,7 +10,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
 {
     public class PeriodRepository : RepositoryBase<EKadryContext>, IPeriodRepository
     {
-        public PeriodRepository(EKadryContext context) : base(context, SchemaNames.Period)
+        public PeriodRepository(EKadryContext context) : base(context, SchemaNames.Periods)
         {
         }
 

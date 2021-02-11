@@ -8,7 +8,7 @@ namespace EKadry.Infrastructure.Domain.Contracts.JobPosition
     {
         public void Configure(EntityTypeBuilder<EKadry.Domain.Contracts.JobPosition.JobPosition> builder)
         {
-            builder.ToTable(SchemaNames.JobPostions);
+            builder.ToTable(SchemaNames.JobPositions);
 
             builder.HasKey(b => b.Id);
 

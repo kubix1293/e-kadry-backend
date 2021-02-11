@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using EKadry.API.Http.Pkzp.Request;
 using EKadry.Application.Services.Pkzp.PkzpPositionList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKadry.API.Http.Pkzp
 {
+    [Authorize]
     [ApiController]
     [Route("api/pkzp-positions")]
     public class PkzpPositionController : ControllerBase

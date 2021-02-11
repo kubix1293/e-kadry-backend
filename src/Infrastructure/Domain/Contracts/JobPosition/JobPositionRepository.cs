@@ -9,7 +9,7 @@ namespace EKadry.Infrastructure.Domain.Contracts.JobPosition
 {
     public class JobPositionRepository : RepositoryBase<EKadryContext>, IJobPositionRepository
     {
-        public JobPositionRepository(EKadryContext context) : base(context, SchemaNames.JobPostions)
+        public JobPositionRepository(EKadryContext context) : base(context, SchemaNames.JobPositions)
         {
         }
 
