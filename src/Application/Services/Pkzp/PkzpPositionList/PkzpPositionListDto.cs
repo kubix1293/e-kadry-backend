@@ -10,6 +10,6 @@ namespace EKadry.Application.Services.Pkzp.PkzpPositionList
         public decimal Amount { get; set; }
         public Period Period{ get; set; }
         public Guid IdWorker { get; set; }
-        public Guid IdAncestorPkzpPosition { get; set; }
+        public Guid? IdAncestorPkzpPosition { get; set; }
     }
 }
