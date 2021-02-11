@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EKadry.Domain.Contracts;
+using EKadry.Domain.Pkzp.Contributions;
 using EKadry.Domain.Pkzp.Position;
 
 namespace EKadry.Domain.Workers
@@ -29,8 +30,9 @@ namespace EKadry.Domain.Workers
         public Guid? OperatorId { get; set; }
         public DateTime? DeletedAt { get; set; }
         public virtual IEnumerable<Contract> Contracts { get; set; }
-        public virtual IEnumerable<PkzpPosition> PkzpPositions { get; set; }
         public virtual IEnumerable<Pkzp.Pkzp> Pkzp { get; set; }
+        public virtual IEnumerable<PkzpPosition> PkzpPositions { get; set; }
+        public virtual IEnumerable<PkzpContribution> PkzpContributions { get; set; }
 
         public Worker()
         {
