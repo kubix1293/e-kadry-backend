@@ -15,6 +15,7 @@ namespace EKadry.Domain.Pkzp.Position
         public Guid IdWorker { get; set; }
         public Worker Worker { get; set; }
         public Guid? IdAncestorPkzpPosition { get; set; }
+        public DateTime CreatedAt { get; set; }
         public PkzpPosition AncestorPkzpPosition { get; set; }
         public IEnumerable<Pkzp> Pkzp { get; set; }
         public IEnumerable<PkzpSchedule> PkzpSchedules { get; set; }

@@ -11,5 +11,6 @@ namespace EKadry.Application.Services.Pkzp.PkzpPositionList
         public Period Period{ get; set; }
         public Guid IdWorker { get; set; }
         public Guid? IdAncestorPkzpPosition { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

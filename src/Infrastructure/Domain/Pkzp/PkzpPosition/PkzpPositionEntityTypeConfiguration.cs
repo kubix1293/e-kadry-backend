@@ -20,6 +20,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
             builder.Property(e => e.IdPeriod).HasColumnName("ID_OKS");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
             builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ").IsRequired(false);
+            builder.Property(e => e.CreatedAt).HasColumnName("UTWORZONY");
 
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.PkzpPositions)
