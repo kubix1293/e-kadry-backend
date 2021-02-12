@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using EKadry.Domain.Pagination;
 using EKadry.Domain.Pkzp.Position;
@@ -27,6 +28,17 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
                 .Include(x => x.Period);
 
             return new Pagination<EKadry.Domain.Pkzp.Position.PkzpPosition>(query, commandPage, commandPerPage);
+        }
+
+        public IPagination<EKadry.Domain.Pkzp.Position.PkzpPosition> ToAccountingPaginated(int page, int perPage, string orderDirection, string orderBy, string search, Guid periodId, CancellationToken cancellationToken)
+        {
+            var query = Context.PkzpPositions
+                .Where(p => p.PkzpPositionType == PkzpPositionType.Contribution || p.PkzpPositionType == PkzpPositionType.Loan)
+                .Include(p => p.Worker)
+                .ThenInclude(w => w.PkzpContributions)
+                .Include(p => p.PkzpSchedules);
+
+            return new Pagination<EKadry.Domain.Pkzp.Position.PkzpPosition>(query, page, perPage);
         }
     }
 }

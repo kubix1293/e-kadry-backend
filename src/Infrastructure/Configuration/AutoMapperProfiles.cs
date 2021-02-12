@@ -8,6 +8,7 @@ using EKadry.Application.Services.Operators.OperatorAuthentication;
 using EKadry.Application.Services.Operators.OperatorDetail;
 using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Periods.PeriodList;
+using EKadry.Application.Services.Pkzp.PkzpAccounting;
 using EKadry.Application.Services.Pkzp.PkzpPositionList;
 using EKadry.Application.Services.Pkzp.PkzpSummary;
 using EKadry.Application.Services.Workers.WorkerList;
@@ -50,6 +51,7 @@ namespace EKadry.Infrastructure.Configuration
                             .Sum(x => x.Price)));
             CreateMap<PkzpPosition, PkzpPositionListDto>()
                 .ForMember(dest => dest.PkzpPositionType, opt => opt.MapFrom(src => EnumHelper<PkzpPositionType>.GetMap(src.PkzpPositionType)));
+            CreateMap<Worker, PkzpAccountingDto>();
 
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();

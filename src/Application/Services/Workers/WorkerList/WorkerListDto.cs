@@ -10,7 +10,7 @@ namespace EKadry.Application.Services.Workers.WorkerList
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DocumentType DoumnetType { get; set; }
+        public DocumentType DocumentType { get; set; }
         public string City { get; set; }
         public ICollection<Contract> Contracts { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,10 +9,10 @@
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="6.0.1" />
         <PackageReference Include="Dapper" Version="2.0.78" />
-        <PackageReference Include="FluentValidation" Version="9.3.0" />
+        <PackageReference Include="FluentValidation" Version="9.5.1" />
         <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.13" />
-        <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.19.80" />
+        <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.1" />
         <PackageReference Include="Serilog" Version="2.10.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
