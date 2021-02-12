@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EKadry.Domain.Pagination;
+using EKadry.Domain.Pkzp.Position;
 using EKadry.Domain.Workers;
 using EKadry.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -72,6 +73,27 @@ namespace EKadry.Infrastructure.Domain.Workers
             var worker = new Worker {Id = workerId};
             Context.Entry(worker).State = EntityState.Deleted;
             return await Context.SaveChangesAsync();
+        }
+
+        public IPagination<Worker> ToAccountingPaginated(
+            int page,
+            int perPage,
+            string orderDirection,
+            string orderBy,
+            string search,
+            Guid periodId,
+            CancellationToken cancellationToken)
+        {
+            var query = Context.Worker
+                .Where(p => p.Contracts.Any(c => c.IsPkzp))
+                .Include(w =>
+                    w.PkzpPositions.Where(pp =>
+                        pp.PkzpPositionType == PkzpPositionType.Contribution
+                        || pp.PkzpPositionType == PkzpPositionType.Loan
+                        || pp.PkzpPositionType == PkzpPositionType.Repayment))
+                .ThenInclude(pp => pp.PkzpSchedules.Where(ps => ps.IdPeriod == periodId));
+
+            return new Pagination<Worker>(query, page, perPage);
         }
     }
 }

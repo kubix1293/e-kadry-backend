@@ -70,13 +70,13 @@ namespace EKadry.API.Http.Pkzp
         }
         
         /// <summary>
-        /// Get PKZP parameters 
+        /// Get PKZP accounting information
         /// </summary>
         [HttpGet("accounting")]
-        [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.OK)] 
+        [ProducesResponseType(typeof(PkzpAccountingDto), (int) HttpStatusCode.OK)] 
         public async Task<IActionResult> PkzpAccounting([FromQuery] PkzpAccountingRequest request)
         {
-            var pkzp = await _mediator.Send(new PkzpAccountingQuery(
+            var accounting = await _mediator.Send(new PkzpAccountingQuery(
                 request.Page,
                 request.PerPage,
                 request.OrderDirection,
@@ -84,7 +84,7 @@ namespace EKadry.API.Http.Pkzp
                 request.Search,
                 request.PeriodId));
             
-            return Ok(pkzp); 
+            return Ok(accounting); 
         }
     }
 }

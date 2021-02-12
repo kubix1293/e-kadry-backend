@@ -13,14 +13,5 @@ namespace EKadry.Domain.Pkzp.Position
             string commandSearch,
             Guid workerId,
             CancellationToken cancellationToken);
-
-        IPagination<PkzpPosition> ToAccountingPaginated(
-            int page,
-            int perPage,
-            string orderDirection,
-            string orderBy,
-            string search,
-            Guid periodId,
-            CancellationToken cancellationToken);
     }
 }
