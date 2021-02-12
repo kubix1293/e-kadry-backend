@@ -69,13 +69,14 @@ ALTER TABLE kadry.pkzp
 ------  PKZP_POZ
 CREATE TABLE kadry.pkzp_poz
 (
-    id       RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    rodz     NUMBER                       NOT NULL,
-    kwot     FLOAT(15) DEFAULT 0          NOT NULL,
-    id_oks   RAW(32)                      NOT NULL,
-    id_prc   RAW(32)                      NOT NULL,
-    pkzp_poz RAW(32),
-    zamk     NUMBER(1) DEFAULT 0
+    id        RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    rodz      NUMBER                         NOT NULL,
+    kwot      FLOAT(15) DEFAULT 0            NOT NULL,
+    id_oks    RAW(32)                        NOT NULL,
+    id_prc    RAW(32)                        NOT NULL,
+    pkzp_poz  RAW(32),
+    zamk      NUMBER(1) DEFAULT 0,
+    utworzony DATE      DEFAULT current_date NOT NULL
 );
 /
 COMMENT ON COLUMN kadry.pkzp_poz.rodz IS
@@ -379,16 +380,17 @@ ALTER TABLE kadry.pkzp_c
 ------  PKZP_POZ_C
 CREATE TABLE kadry.pkzp_poz_c
 (
-    c_id    RAW(32)   DEFAULT SYS_GUID() NOT NULL,
-    c_data  DATE      DEFAULT sysdate    NOT NULL,
-    c_oper  RAW(32)                      NOT NULL,
-    id      RAW(32)                      NOT NULL,
-    rodz    NUMBER                       NOT NULL,
-    kwot    FLOAT(15) DEFAULT 0          NOT NULL,
-    ile_rat NUMBER    DEFAULT NULL,
-    id_pkzp RAW(32)                      NOT NULL,
-    id_oks  RAW(32)                      NOT NULL,
-    zamk    NUMBER    DEFAULT 0          NOT NULL
+    c_id      RAW(32)   DEFAULT SYS_GUID()   NOT NULL,
+    c_data    DATE      DEFAULT sysdate      NOT NULL,
+    c_oper    RAW(32)                        NOT NULL,
+    id        RAW(32)                        NOT NULL,
+    rodz      NUMBER                         NOT NULL,
+    kwot      FLOAT(15) DEFAULT 0            NOT NULL,
+    ile_rat   NUMBER    DEFAULT NULL,
+    id_pkzp   RAW(32)                        NOT NULL,
+    id_oks    RAW(32)                        NOT NULL,
+    zamk      NUMBER    DEFAULT 0            NOT NULL,
+    utworzony DATE      DEFAULT current_date NOT NULL
 );
 /
 ALTER TABLE kadry.pkzp_poz_c
