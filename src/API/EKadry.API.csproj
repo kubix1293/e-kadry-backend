@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\netcoreapp3.1\EKadry.API.XML</DocumentationFile>
+        <DocumentationFile>bin\Debug\net5.0\EKadry.API.XML</DocumentationFile>
         <NoWarn>1701;1702;1705;1591</NoWarn>
         <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     </PropertyGroup>
@@ -13,17 +13,17 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="Dapper" Version="2.0.78" />
-        <PackageReference Include="FluentValidation" Version="9.3.0" />
+        <PackageReference Include="FluentValidation" Version="9.5.1" />
         <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.1.1" />
         <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.12" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
         <PackageReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.13" />
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
