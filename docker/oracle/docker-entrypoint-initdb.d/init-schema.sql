@@ -611,6 +611,46 @@ EXCEPTION
 END;
 /
 
+--------------------------- UMOWY_PKZPSPLA_AUD
+
+create or replace TRIGGER kadry.umowy_pkzpspla_aui
+    AFTER UPDATE OR INSERT
+    ON kadry.umowy
+    FOR EACH ROW
+DECLARE
+    lTrue NUMBER;
+    lSkladMin NUMBER;
+    CURSOR c_pkzp IS
+        SELECT 1
+        FROM pkzp_sklad
+        WHERE id_prc = :NEW.id_prc;
+    CURSOR c_param IS
+        SELECT sklad_min
+        FROM pkzp_param;
+BEGIN
+    IF(:NEW.czy_pkzp = 1) THEN
+        OPEN c_pkzp;
+        FETCH c_pkzp INTO lTrue; 
+        CLOSE c_pkzp;
+        IF (lTrue IS null) THEN
+            OPEN c_param;
+            FETCH c_param INTO lSkladMin; 
+            CLOSE c_param;
+            ---
+            INSERT INTO pkzp_sklad (id_prc, sklad)
+            VALUES (:NEW.id_prc, lSkladMin);
+        ELSE
+            NULL;
+        END IF;
+    ELSE
+        NULL;
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        raise_application_error(-20002, SQLERRM);
+END;
+
+
 --------------------------- PKZPSKLAD_PKZPSKLADC_AUD
 create or replace
     TRIGGER kadry.pkzpsklad_pkzpskladc_aud
@@ -667,11 +707,16 @@ TRIGGER pkzpsklad_bi
     ON kadry.pkzp_sklad
     FOR EACH ROW
 DECLARE
+    lTrue RAW(32);
+    lSkladMin NUMBER;
+    lSkladMax NUMBER;
     CURSOR c_prc IS
         SELECT id
         FROM pkzp_sklad
-        WHERE id_prc = :NEW.id_prc;    
-    lTrue RAW(32);
+        WHERE id_prc = :NEW.id_prc;
+    CURSOR c_param IS
+        SELECT sklad_min, sklad_max
+        FROM pkzp_param;
 BEGIN
     OPEN c_prc;
     FETCH c_prc INTO lTrue;
@@ -679,9 +724,25 @@ BEGIN
     IF ( lTrue IS NOT NULL) THEN
         raise_application_error(-20002, 'PRACOWNIK MA JUZ WPIS DOTYCZACY SKLADKI');
     ELSE
-        NULL;
+        OPEN c_param;
+        FETCH c_param INTO lSkladMin, lSkladMax;
+        CLOSE c_param;
+        IF (lSkladMin = 0 AND lSkladMax = 0) THEN
+            NULL;
+        END IF;    
+        IF (lSkladMin > 0) THEN
+            IF(:NEW.sklad < lSkladMin) THEN
+                raise_application_error(-20002, 'SKŁADKA NIE MOŻE BYĆ MNIEJSZA NIŻ KWOTA MINIMALNA W PARAMETRACH');
+            END IF;
+        END IF;
+        IF (lSkladMax > 0) THEN
+            IF(:NEW.sklad > lSkladMax) THEN
+                raise_application_error(-20002, 'SKŁADKA NIE MOŻE BYĆ WIĘKSZA NIŻ KWOTA MAKSYMALNA W PARAMETRACH');
+            END IF;
+        END IF;
     END IF;
 END;
+
 
 --------------------------- PKZPPOZ_PKZP_AI
 
