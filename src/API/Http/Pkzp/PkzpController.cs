@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using EKadry.API.Http.Pkzp.Request;
 using EKadry.Application.Services.Pkzp;
+using EKadry.Application.Services.Pkzp.PkzpAccounting;
 using EKadry.Application.Services.Pkzp.PkzpCreate;
 using EKadry.Application.Services.Pkzp.PkzpParameters;
 using EKadry.Application.Services.Pkzp.PkzpSummary;
@@ -64,6 +65,24 @@ namespace EKadry.API.Http.Pkzp
         public async Task<IActionResult> PkzpParam()
         {
             var pkzp = await _mediator.Send(new PkzpParametersQuery());
+            
+            return Ok(pkzp); 
+        }
+        
+        /// <summary>
+        /// Get PKZP parameters 
+        /// </summary>
+        [HttpGet("accounting")]
+        [ProducesResponseType(typeof(PkzpDto), (int) HttpStatusCode.OK)] 
+        public async Task<IActionResult> PkzpAccounting([FromQuery] PkzpAccountingRequest request)
+        {
+            var pkzp = await _mediator.Send(new PkzpAccountingQuery(
+                request.Page,
+                request.PerPage,
+                request.OrderDirection,
+                request.OrderBy,
+                request.Search,
+                request.PeriodId));
             
             return Ok(pkzp); 
         }
