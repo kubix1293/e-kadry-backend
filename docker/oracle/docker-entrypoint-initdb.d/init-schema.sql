@@ -101,6 +101,7 @@ CREATE TABLE kadry.pkzp_harm
     kwot    FLOAT(15) DEFAULT 0          NOT NULL,
     okres   VARCHAR2(7)                  NOT NULL,
     id_pkzp RAW(32)                      NOT NULL,
+    id_oks  RAW(32)                      NOT NULL,
     zamk    NUMBER    DEFAULT 0          NOT NULL
 );
 /
@@ -800,7 +801,6 @@ create or replace TRIGGER kadry.pkzpharm_pkzppoz_au
     ON kadry.pkzp_harm
     FOR EACH ROW
 DECLARE
-    lOks   RAW(32);
     lIdprc RAW(32);
     lZamk NUMBER;
     CURSOR c_prc IS
@@ -808,10 +808,6 @@ DECLARE
       FROM pkzp
       WHERE pkzp_poz = :NEW.id_pkzp
       AND rodz = 20;
-    CURSOR c_oks IS
-      SELECT id
-      FROM okresy
-      WHERE to_char(dtod, 'RRRR-MM') = :NEW.okres;
 BEGIN
     IF (:NEW.zamk = 1) THEN
         OPEN c_oks;
@@ -830,7 +826,7 @@ BEGIN
         END IF;
         --
         INSERT INTO pkzp_poz (kwot, rodz, id_oks, id_prc, pkzp_poz)
-        VALUES (:NEW.kwot, 40, lOks, lIdprc, :NEW.id_pkzp);
+        VALUES (:NEW.kwot, 40, :NEW.id_oks, lIdprc, :NEW.id_pkzp);
     END IF;
 END;
 
@@ -1051,14 +1047,14 @@ create or replace PACKAGE BODY pkzp_pack AS
             FOR i IN 1 .. iIlerat
                 LOOP
                     IF (lKwota >= lBuf AND i < iIlerat) THEN
-                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'));
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
+                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'),iIdoks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;
                     ELSE
-                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres)
-                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'));
+                        INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
+                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'rrrr-mm-dd'), 'rrrr-mm'),iIdoks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;
