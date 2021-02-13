@@ -1046,16 +1046,16 @@ create or replace PACKAGE BODY pkzp_pack AS
                     SELECT id
                     INTO lIdOks
                     FROM okresy
-                    WHERE dtod = lOks 
+                    WHERE dtod = lOks;
                     IF (lKwota >= lBuf AND i < iIlerat) THEN
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
-                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'YYYY-MM-DD'), 'YYYY-MM'),lIdOks);
+                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'YYYY-MM-DD HH24:MI:SS'), 'rrrr-mm'),lIdOks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;
                     ELSE
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
-                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'YYYY-MM-DD'), 'YYYY-MM'),lIdOks);
+                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'YYYY-MM-DD HH24:MI:SS'), 'rrrr-mm'),lIdOks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;

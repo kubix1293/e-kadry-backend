@@ -13,13 +13,13 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Parameters
 
             builder.HasNoKey();
             
-            builder.Property(e => e.Form).HasColumnName("FORMA");
-            builder.Property(e => e.InstallmentsCount).HasColumnName("ILE_RAT");
-            builder.Property(e => e.Entry).HasColumnName("WPIS");
-            builder.Property(e => e.MinComposition).HasColumnName("SKLAD_MIN");
-            builder.Property(e => e.MaxComposition).HasColumnName("SKLAD_MAX");
-            builder.Property(e => e.MaxAmount).HasColumnName("KWOT_MAX");
-            builder.Property(e => e.MinContribution).HasColumnName("WKLAD_MIN");
+            builder.Property(e => e.Form).HasColumnName("FORMA").HasColumnType("NUMBER(1)");
+            builder.Property(e => e.InstallmentsCount).HasColumnName("ILE_RAT").HasColumnType("NUMBER(2)");
+            builder.Property(e => e.Entry).HasColumnName("WPIS").HasColumnType("FLOAT(10)");
+            builder.Property(e => e.MinComposition).HasColumnName("SKLAD_MIN").HasColumnType("FLOAT(10)");
+            builder.Property(e => e.MaxComposition).HasColumnName("SKLAD_MAX").HasColumnType("FLOAT(10)");
+            builder.Property(e => e.MaxAmount).HasColumnName("KWOT_MAX").HasColumnType("FLOAT(10)");
+            builder.Property(e => e.MinContribution).HasColumnName("WKLAD_MIN").HasColumnType("FLOAT(10)");
         }
     }
 }

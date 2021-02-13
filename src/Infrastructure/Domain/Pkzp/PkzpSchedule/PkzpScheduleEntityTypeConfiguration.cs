@@ -14,7 +14,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpSchedule
             builder.HasKey(b => b.Id);
             
             builder.Property(e => e.Id).HasColumnName("ID");
-            builder.Property(e => e.Price).HasColumnName("KWOT");
+            builder.Property(e => e.Price).HasColumnName("KWOT").HasColumnType("FLOAT(15)");
             builder.Property(e => e.Period).HasColumnName("OKRES");
             builder.Property(e => e.IdPeriod).HasColumnName("ID_OKS");
             builder.Property(e => e.IdPkzpPosition).HasColumnName("ID_PKZP");

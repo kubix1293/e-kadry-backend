@@ -18,7 +18,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.EmployedAt).HasColumnName("DTZAW");
             builder.Property(e => e.EmployedEndAt).HasColumnName("DTROZ");
-            builder.Property(e => e.BaseSalary).HasColumnName("ZASAD");
+            builder.Property(e => e.BaseSalary).HasColumnName("ZASAD").HasColumnType("FLOAT(15)");
             builder.Property(e => e.IdJobPosition).HasColumnName("ID_STANOW");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
             builder.Property(e => e.IdentifierZusNumber).HasColumnName("NR_TYT_ZUS");
@@ -31,7 +31,7 @@ namespace EKadry.Infrastructure.Domain.Contracts
             builder.Property(e => e.IsLeave).HasColumnName("CZY_URLOP").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsSickLeave).HasColumnName("CZY_AB_CHOR").HasConversion(new IntToBooleanConverter());
             builder.Property(e => e.IsPkzp).HasColumnName("CZY_PKZP").HasConversion(new IntToBooleanConverter());
-            builder.Property(e => e.WorkingTime).HasColumnName("NRM_CZAS_PRAC");
+            builder.Property(e => e.WorkingTime).HasColumnName("NRM_CZAS_PRAC").HasColumnType("FLOAT(15)");
             builder.Property(e => e.EntireInternship).HasColumnName("STOG").HasConversion(new IntToBooleanConverter());;
             builder.Property(e => e.ProfessionInternship).HasColumnName("STZW").HasConversion(new IntToBooleanConverter());;
             builder.Property(e => e.ServiceInternship).HasColumnName("STWS").HasConversion(new IntToBooleanConverter());;

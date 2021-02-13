@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using EKadry.Domain.Pkzp.Position;
-using EKadry.Domain.Pkzp.Schedule;
 using EKadry.Domain.Workers;
 
 namespace EKadry.Domain.Pkzp.Contributions

@@ -15,12 +15,13 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Contribution
             
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
-            builder.Property(e => e.Amount).HasColumnName("SKLAD");
+            builder.Property(e => e.Amount).HasColumnName("SKLAD").HasColumnType("FLOAT(10)");
             builder.Property(e => e.UpdatedAt).HasColumnName("DAKT");
             
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.PkzpContributions)
-                .HasForeignKey(p => p.IdWorker);
+                .HasForeignKey(p => p.IdWorker)
+                .IsRequired(false);
         }
     }
 }

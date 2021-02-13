@@ -16,7 +16,7 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
             
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.PkzpPositionType).HasColumnName("RODZ").HasConversion(new EnumToNumberConverter<PkzpPositionType, int>());
-            builder.Property(e => e.Amount).HasColumnName("KWOT");
+            builder.Property(e => e.Amount).HasColumnName("KWOT").HasColumnType("FLOAT(10)");
             builder.Property(e => e.IdPeriod).HasColumnName("ID_OKS");
             builder.Property(e => e.IdWorker).HasColumnName("ID_PRC");
             builder.Property(e => e.IdAncestorPkzpPosition).HasColumnName("PKZP_POZ").IsRequired(false);
@@ -24,7 +24,8 @@ namespace EKadry.Infrastructure.Domain.Pkzp.PkzpPosition
 
             builder.HasOne(d => d.Worker)
                 .WithMany(n => n.PkzpPositions)
-                .HasForeignKey(p => p.IdWorker);
+                .HasForeignKey(p => p.IdWorker)
+                .IsRequired(false);
             
             builder.HasOne(d => d.AncestorPkzpPosition)
                 .WithOne()
