@@ -18,6 +18,7 @@ namespace EKadry.Domain.Pkzp.Position
         public DateTime CreatedAt { get; set; }
         public PkzpPosition AncestorPkzpPosition { get; set; }
         public IEnumerable<Pkzp> Pkzp { get; set; }
+        public bool IsClosed { get; set; }
         public IEnumerable<PkzpSchedule> PkzpSchedules { get; set; }
 
         public static PkzpPosition Create()

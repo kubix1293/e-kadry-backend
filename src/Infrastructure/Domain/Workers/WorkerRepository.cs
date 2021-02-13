@@ -88,9 +88,10 @@ namespace EKadry.Infrastructure.Domain.Workers
                 .Where(p => p.Contracts.Any(c => c.IsPkzp))
                 .Include(w =>
                     w.PkzpPositions.Where(pp =>
-                        pp.PkzpPositionType == PkzpPositionType.Contribution
+                        pp.IsClosed == false &&
+                        (pp.PkzpPositionType == PkzpPositionType.Contribution
                         || pp.PkzpPositionType == PkzpPositionType.Loan
-                        || pp.PkzpPositionType == PkzpPositionType.Repayment))
+                        || pp.PkzpPositionType == PkzpPositionType.Repayment)))
                 .ThenInclude(pp => pp.PkzpSchedules.Where(ps => ps.IdPeriod == periodId));
 
             return new Pagination<Worker>(query, page, perPage);

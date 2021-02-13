@@ -6,6 +6,7 @@ namespace EKadry.Application.Services.Pkzp.PkzpAccounting
     {
         public Guid Id { get; set; }
         public decimal Price { get; set; }
+        public Guid IdPeriod { get; set; }
         public string Period { get; set; }
         public bool IsClosed { get; set; }
     }

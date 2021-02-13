@@ -9,6 +9,8 @@ namespace EKadry.Application.Services.Pkzp.PkzpAccounting
         public Guid Id { get; set; }
         public PkzpPositionType PkzpPositionType { get; set; }
         public decimal Amount { get; set; }
+        public Guid IdPeriod { get; set; }
+        public bool IsClosed { get; set; }
         public ICollection<PkzpAccountingPkzpScheduleDto> PkzpSchedules { get; set; }
         public DateTime CreatedAt { get; set; }
     }
