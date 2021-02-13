@@ -1,13 +1,10 @@
 using System;
 using EKadry.Application.Configuration.Queries.Common;
 using EKadry.Domain.Pagination;
-using EKadry.Domain.Pkzp.Position;
-using EKadry.Domain.Workers;
 
 namespace EKadry.Application.Services.Pkzp.PkzpAccounting
 {
-    // WorkerPkzpAccountingDto
-    public class PkzpAccountingQuery : ListQuery<PagedList<PkzpPosition>>
+    public class PkzpAccountingQuery : ListQuery<PagedList<PkzpAccountingDto>>
     {
         public Guid PeriodId { get; }
 

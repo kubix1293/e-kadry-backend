@@ -22,5 +22,13 @@ namespace EKadry.Domain.Workers
         Task AddAsync(Worker worker);
         Task UpdateAsync(Worker worker);
         Task<int> DeleteAsync(Guid workerId);
+        IPagination<Worker> ToAccountingPaginated(
+            int page,
+            int perPage,
+            string orderDirection,
+            string orderBy,
+            string search,
+            Guid periodId,
+            CancellationToken cancellationToken);
     }
 }

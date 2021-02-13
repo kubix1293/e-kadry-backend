@@ -21,6 +21,7 @@ using EKadry.Domain.Pagination;
 using EKadry.Domain.Pkzp;
 using EKadry.Domain.Pkzp.Period;
 using EKadry.Domain.Pkzp.Position;
+using EKadry.Domain.Pkzp.Schedule;
 using EKadry.Domain.Workers;
 using WorkerDetailDto = EKadry.Application.Services.Workers.WorkerDetail.WorkerDetailDto;
 using ContractWorkerDetailDto = EKadry.Application.Services.Contracts.ContractList.WorkerDetailDto;
@@ -52,6 +53,8 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<PkzpPosition, PkzpPositionListDto>()
                 .ForMember(dest => dest.PkzpPositionType, opt => opt.MapFrom(src => EnumHelper<PkzpPositionType>.GetMap(src.PkzpPositionType)));
             CreateMap<Worker, PkzpAccountingDto>();
+            CreateMap<PkzpPosition, PkzpAccountingPkzpPositionDto>();
+            CreateMap<PkzpSchedule, PkzpAccountingPkzpScheduleDto>();
 
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();

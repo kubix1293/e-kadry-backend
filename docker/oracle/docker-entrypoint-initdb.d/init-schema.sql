@@ -810,10 +810,6 @@ DECLARE
       AND rodz = 20;
 BEGIN
     IF (:NEW.zamk = 1) THEN
-        OPEN c_oks;
-        FETCH c_oks INTO lOks;
-        CLOSE c_oks;
-        --
         OPEN c_prc;
         FETCH c_prc INTO lIdprc, lZamk;
         CLOSE c_prc;

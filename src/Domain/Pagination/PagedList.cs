@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using EKadry.Domain.Operators;
 
 namespace EKadry.Domain.Pagination
 {
