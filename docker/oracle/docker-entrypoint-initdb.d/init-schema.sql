@@ -1028,6 +1028,7 @@ create or replace PACKAGE BODY pkzp_pack AS
     PROCEDURE pkzp_harmo(iIdpkzppoz RAW, lRata FLOAT, iIlerat NUMBER, iIdoks RAW)
         IS
         lOks   DATE;
+        lIdOks  RAW(32);
         lBuf   FLOAT;
         lKwota FLOAT;
     BEGIN
@@ -1046,15 +1047,19 @@ create or replace PACKAGE BODY pkzp_pack AS
         IF (iIlerat > 0) THEN
             FOR i IN 1 .. iIlerat
                 LOOP
+                    SELECT id
+                    INTO lIdOks
+                    FROM okres
+                    WHERE dtod = lOks 
                     IF (lKwota >= lBuf AND i < iIlerat) THEN
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
-                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'yyyy-mm-dd'), 'yyyy-mm'),iIdoks);
+                        VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'yyyy-mm-dd'), 'yyyy-mm'),lIdOks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;
                     ELSE
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
-                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'yyyy-mm-dd'), 'yyyy-mm'),iIdoks);
+                        VALUES (lRata + (lKwota - lBuf), iIdpkzppoz, to_char(to_date(lOks, 'yyyy-mm-dd'), 'yyyy-mm'),lIdOks);
                         --
                         lOks := add_months(lOks, 1);
                         lBuf := lBuf + lRata;
