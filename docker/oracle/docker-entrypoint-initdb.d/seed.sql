@@ -201,6 +201,12 @@ VALUES (GUID_TO_RAW('b06d4267-698b-4227-b268-c55322cc29ae'), 'Mariusz', 'Kozłow
         'A6', 'Karolina', 'Paweł', '887786814', null);
 /
 
+--------------------------------------------------------------
+---------------- PARAMETRY PKZP_PARAM
+
+INSERT INTO pkzp_param (forma, ile_rat, kwot_max, sklad_max, sklad_min, wklad_min, wpis)
+VALUES (1, 12, 0, 0, 0, 0, 0);
+
 ----------------  UMOWY
 INSERT INTO KADRY.UMOWY (DTZAW, DTROZ, ZASAD, ID_STANOW, ID_PRC, NR_TYT_ZUS, CZY_CHOR, CZY_REN, CZY_EMER, CZY_ZDROW, CZY_FP, CZY_FGSP, CZY_URLOP, CZY_AB_CHOR,NRM_CZAS_PRAC, STOG, STZW, STWS, STJB)
 VALUES (to_date('2021-01-11', 'yyyy-mm-dd'), NULL, 3500, GUID_TO_RAW('856adbec-812c-46e7-8cf2-0fc9e160dea1'), GUID_TO_RAW('8f3eacb6-5fa3-45dd-ba81-89036d328b2f'), '0110', 1, 1, 1, 1, 1, 1, 0, 1, F_HOURS_TO_MIN(8), 1, 1, 1, 1);
@@ -208,12 +214,6 @@ VALUES (to_date('2021-01-11', 'yyyy-mm-dd'), NULL, 3500, GUID_TO_RAW('856adbec-8
 INSERT INTO KADRY.UMOWY (DTZAW, DTROZ, ZASAD, ID_STANOW, ID_PRC, NR_TYT_ZUS, CZY_CHOR, CZY_REN, CZY_EMER, CZY_ZDROW, CZY_FP, CZY_FGSP, CZY_URLOP, CZY_AB_CHOR,NRM_CZAS_PRAC, STOG, STZW, STWS, STJB, CZY_PKZP)
 VALUES (to_date('2021-01-03', 'yyyy-mm-dd'), to_date('2021-06-03', 'yyyy-mm-dd'), 2800, GUID_TO_RAW('9af44338-43e4-4e2a-8755-5e8aaa4d3ac0'), GUID_TO_RAW('5fe1fda2-0572-4175-adee-52f3f7e5ee71'), '0110', 1, 1, 1, 1, 1, 1, 0, 1, F_HOURS_TO_MIN(8), 1, 1, 1, 1, 1);
 /
-
---------------------------------------------------------------
----------------- PARAMETRY PKZP_PARAM
-
-INSERT INTO pkzp_param (forma, ile_rat, kwot_max, sklad_max, sklad_min, wklad_min, wpis)
-VALUES (1, 12, 0, 0, 0, 0, 0);
 
 --------------------------------------------------------------
 ---------------- OPERATORZY
