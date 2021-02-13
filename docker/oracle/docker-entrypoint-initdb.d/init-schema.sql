@@ -1043,10 +1043,13 @@ create or replace PACKAGE BODY pkzp_pack AS
         IF (iIlerat > 0) THEN
             FOR i IN 1 .. iIlerat
                 LOOP
+<<<<<<< HEAD
                     SELECT id
                     INTO lIdOks
                     FROM okresy
                     WHERE dtod = lOks 
+=======
+>>>>>>> d0d42d87ecb97a4cca3d72b5cd8168ed3fff8c45
                     IF (lKwota >= lBuf AND i < iIlerat) THEN
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
                         VALUES (lRata, iIdpkzppoz, to_char(to_date(lOks, 'YYYY-MM-DD'), 'YYYY-MM'),lIdOks);
