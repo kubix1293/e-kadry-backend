@@ -1045,7 +1045,7 @@ create or replace PACKAGE BODY pkzp_pack AS
                 LOOP
                     SELECT id
                     INTO lIdOks
-                    FROM okres
+                    FROM okresy
                     WHERE dtod = lOks 
                     IF (lKwota >= lBuf AND i < iIlerat) THEN
                         INSERT INTO pkzp_harm (kwot, id_pkzp, okres,id_oks)
