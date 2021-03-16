@@ -1,16 +1,15 @@
 using System;
-using EKadry.Domain.Pkzp.Position;
+using System.Collections.Generic;
 
-namespace EKadry.Domain.Pkzp.Schedule
+namespace EKadry.Application.Services.Pkzp.PkzpSchedule
 {
-    public class PkzpSchedule
+    public class PkzpScheduleDto
     {
         public Guid Id { get; set; }
         public decimal Price { get; set; }
         public Guid IdPeriod { get; set; }
-        public Period.Period Period { get; set; }
+        public string Period { get; set; }
         public Guid IdPkzpPosition { get; set; }
-        public PkzpPosition PkzpPosition { get; set; }
         public bool IsClosed { get; set; }
     }
 }

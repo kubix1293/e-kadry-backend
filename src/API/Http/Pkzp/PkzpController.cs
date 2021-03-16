@@ -7,6 +7,7 @@ using EKadry.Application.Services.Pkzp;
 using EKadry.Application.Services.Pkzp.PkzpAccounting;
 using EKadry.Application.Services.Pkzp.PkzpCreate;
 using EKadry.Application.Services.Pkzp.PkzpParameters;
+using EKadry.Application.Services.Pkzp.PkzpSchedule;
 using EKadry.Application.Services.Pkzp.PkzpSummary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -85,6 +86,24 @@ namespace EKadry.API.Http.Pkzp
                 request.PeriodId));
             
             return Ok(accounting); 
+        }
+        
+        /// <summary>
+        /// Get PKZP position schedule
+        /// </summary>
+        [HttpGet("schedule")]
+        [ProducesResponseType(typeof(PkzpScheduleDto), (int) HttpStatusCode.OK)] 
+        public async Task<IActionResult> PkzpPositionSchedule([FromQuery] PkzpScheduleRequest request)
+        {
+            var schedule = await _mediator.Send(new PkzpScheduleQuery(
+                request.Page,
+                request.PerPage,
+                request.OrderDirection,
+                request.OrderBy,
+                request.Search,
+                request.PkzpPositionId));
+            
+            return Ok(schedule); 
         }
     }
 }

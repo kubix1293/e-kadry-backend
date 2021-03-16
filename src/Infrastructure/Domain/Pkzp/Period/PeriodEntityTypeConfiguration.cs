@@ -19,6 +19,10 @@ namespace EKadry.Infrastructure.Domain.Pkzp.Period
             builder.Property(e => e.WorkingDays).HasColumnName("DNI_ROB");
             builder.Property(e => e.WorkingHours).HasColumnName("NORMA");
             
+            builder.HasOne(d => d.PkzpSchedule)
+                .WithOne(n => n.Period)
+                .HasForeignKey<EKadry.Domain.Pkzp.Schedule.PkzpSchedule>(p => p.IdPeriod);
+            
             builder.HasOne(d => d.PkzpPosition)
                 .WithOne(n => n.Period)
                 .HasForeignKey<EKadry.Domain.Pkzp.Position.PkzpPosition>(p => p.IdPeriod);

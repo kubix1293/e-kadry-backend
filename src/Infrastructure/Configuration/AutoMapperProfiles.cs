@@ -10,6 +10,7 @@ using EKadry.Application.Services.Operators.OperatorList;
 using EKadry.Application.Services.Periods.PeriodList;
 using EKadry.Application.Services.Pkzp.PkzpAccounting;
 using EKadry.Application.Services.Pkzp.PkzpPositionList;
+using EKadry.Application.Services.Pkzp.PkzpSchedule;
 using EKadry.Application.Services.Pkzp.PkzpSummary;
 using EKadry.Application.Services.Workers.WorkerList;
 using EKadry.Application.Services.Workers.WorkerSearch;
@@ -55,6 +56,8 @@ namespace EKadry.Infrastructure.Configuration
             CreateMap<Worker, PkzpAccountingDto>();
             CreateMap<PkzpPosition, PkzpAccountingPkzpPositionDto>();
             CreateMap<PkzpSchedule, PkzpAccountingPkzpScheduleDto>();
+            
+            CreateMap<PkzpSchedule, PkzpScheduleDto>();
 
             CreateMap<Operator, OperatorListDto>();
             CreateMap<Operator, OperatorDetailDto>();

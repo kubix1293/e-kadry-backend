@@ -1,5 +1,6 @@
 using System;
 using EKadry.Domain.Pkzp.Position;
+using EKadry.Domain.Pkzp.Schedule;
 
 namespace EKadry.Domain.Pkzp.Period
 {
@@ -11,6 +12,7 @@ namespace EKadry.Domain.Pkzp.Period
         public int Days { get; set; }
         public int WorkingDays { get; set; }
         public int WorkingHours { get; set; }
+        public PkzpSchedule PkzpSchedule { get; set; }
         public PkzpPosition PkzpPosition { get; set; }
 
         public static Period Create(DateTime dateFrom, DateTime dateTo)
