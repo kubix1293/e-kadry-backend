@@ -956,21 +956,25 @@ create or replace PACKAGE BODY pkzp_pack AS
         lCt          FLOAT;
         CURSOR c_pkzp IS
           SELECT ct
-          FROM pkzp WHERE id_prc = iIdprc;
+          FROM pkzp 
+          WHERE id_prc = iIdprc;
+        CURSOR c_zasad IS
+          SELECT SUM(zasad)
+          FROM umowy
+          WHERE id_prc = iIdprc
+          AND dtzaw <= sysdate
+          AND (dtroz > sysdate OR dtroz IS null)
+          AND czy_pkzp = 1;
     BEGIN
         IF (iIdprc > 0) THEN
-            SELECT SUM(zasad)
-            INTO lZasad
-            FROM umowy
-            WHERE id_prc = iIdprc
-              AND dtzaw <= sysdate
-              AND (dtroz > sysdate OR dtroz IS null)
-              AND czy_pkzp = 1;
+            OPEN c_zasad;
+            FETCH c_zasad INTO lZasad;
+            CLOSE c_zasad;
             --
             OPEN c_pkzp;
             FETCH c_pkzp INTO lCt;
             CLOSE c_pkzp;
-            IF (lCt > 0) THEN
+            IF (lCt > 0 and lZasad > 0) THEN
                 IF (iKwota > 0 AND iIlerat > 0) THEN
                     IF (iKwota <= 3 * lZasad OR iKwota <= 3 * lSumaWkladow) THEN
                         lRata := ROUND(iKwota / iIlerat, -1);
